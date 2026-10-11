@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block title %}Vaccination & Medicine Reminders – Pet Care Companion{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- Header Banner -->
+  <div class="glass-card p-4 mb-4">
+    <div class="row align-items-center">
+      <div class="col-md-8">
+        <h3 class="fw-bold mb-1"><i class="fa-solid fa-bell text-warning me-2"></i> Preventive Care & Reminders Hub</h3>
+        <p class="text-muted small mb-0">Automated calculation of upcoming vaccinations, deworming cycles, and daily active medications.</p>
+      </div>
+      <div class="col-md-4 text-md-end mt-3 mt-md-0 d-flex justify-content-md-end gap-2">
+        {% if overdue_count > 0 %}
+          <span class="badge badge-overdue p-2 px-3 fs-6">
+            <i class="fa-solid fa-triangle-exclamation me-1"></i> {{ overdue_count }} Overdue
+          </span>
+        {% endif %}
+        {% if due_soon_count > 0 %}
+          <span class="badge badge-due-soon p-2 px-3 fs-6">
+            <i class="fa-solid fa-clock me-1"></i> {{ due_soon_count }} Due Soon
+          </span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <!-- Vaccinations Timeline -->
+    <div class="col-lg-6">
+      <div class="glass-card p-4 h-100">
+        <h5 class="fw-bold mb-3 text-success"><i class="fa-solid fa-syringe me-2"></i> Vaccination Boosters Schedule</h5>
+        {% if vaccinations %}
+          <div class="d-flex flex-column gap-3">
+            {% for v in vaccinations %}
+              <div class="p-3 rounded-4 bg-white border d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center gap-3">
+                  <img src="{{ v.pet.get_photo_url }}" class="rounded-circle border" width="46" height="46" style="object-fit: cover;">
+                  <div>
+                    <h6 class="fw-bold mb-0">{{ v.vaccine_name }}</h6>
+                    <div class="small text-muted">For <strong>{{ v.pet.name }}</strong> ({{ v.pet.breed }})</div>
+                    <div class="text-xs text-secondary mt-1">Last shot: {{ v.administered_date|date:"M d, Y" }}</div>
+                  </div>
+                </div>
+
+                <div class="text-end">
+                  <div class="badge {% if v.reminder_status == 'OVERDUE' %}badge-overdue{% elif v.reminder_status == 'DUE_SOON' %}badge-due-soon{% else %}badge-upcoming{% endif %} fs-6 mb-1">
+                    {{ v.get_reminder_status_display }}
+                  </div>
+                  <div class="text-xs text-muted">Due: {{ v.next_due_date|date:"M d, Y" }}</div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="text-center py-5 text-muted small">
+            <i class="fa-solid fa-circle-check fs-2 text-success mb-2 d-block"></i>
+            No upcoming booster shots required in the next 30 days.
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Active Medications -->
+    <div class="col-lg-6">
+      <div class="glass-card p-4 h-100">
+        <h5 class="fw-bold mb-3 text-primary"><i class="fa-solid fa-pills me-2"></i> Active Prescription Reminders</h5>
+        {% if active_meds %}
+          <div class="d-flex flex-column gap-3">
+            {% for m in active_meds %}
+              <div class="p-3 rounded-4 bg-white border">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="fw-bold text-dark fs-6">{{ m.medicine_name }}</span>
+                    <span class="badge bg-primary-subtle text-primary">For {{ m.pet.name }}</span>
+                  </div>
+                  <span class="badge bg-success-subtle text-success">Active Course</span>
+                </div>
+                <div class="small text-muted mb-1"><strong>Dosage:</strong> {{ m.dosage }} • {{ m.frequency }}</div>
+                <div class="small text-secondary"><strong>Schedule:</strong> {{ m.start_date|date:"M d" }} to {{ m.end_date|date:"M d, Y" }}</div>
+                {% if m.notes %}<div class="text-xs text-muted mt-2 fst-italic">"{{ m.notes }}"</div>{% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="text-center py-5 text-muted small">
+            <i class="fa-solid fa-pills fs-2 text-secondary mb-2 d-block"></i>
+            No active prescriptions recorded across your pets.
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

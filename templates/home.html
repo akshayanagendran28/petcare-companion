@@ -1,0 +1,252 @@
+{% extends 'base.html' %}
+
+{% block title %}Pet Care Companion – Your Pet's Care, One Companion Away{% endblock %}
+
+{% block content %}
+<div class="container">
+
+  <!-- HERO SECTION -->
+  <section class="py-5 my-3">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-7">
+        <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill bg-indigo-subtle border border-indigo-subtle mb-3">
+          <i class="fa-solid fa-sparkles text-primary"></i>
+          <span class="small fw-bold text-primary">AI & ML Powered Pet Ecosystem</span>
+        </div>
+        <h1 class="display-4 fw-extrabold mb-3" style="color: #0f172a; line-height: 1.15;">
+          Your Pet's Care, <br>
+          <span style="background: linear-gradient(135deg, #6366f1 0%, #10b981 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+            One Companion Away.
+          </span>
+        </h1>
+        <p class="lead text-secondary mb-4" style="max-width: 580px;">
+          Find certified caretakers, manage pet health with automatic vaccination reminders, adopt pets, match playmates, and enjoy 24/7 AI-guided pet care tailored to your pet's breed and lifestyle.
+        </p>
+
+        <div class="d-flex flex-wrap gap-3 mb-4">
+          <a href="{% url 'users:register' %}" class="btn btn-primary-custom btn-lg px-4 py-3">
+            <i class="fa-solid fa-paw me-2"></i> Get Started Free
+          </a>
+          <a href="{% url 'marketplace:caretaker_list' %}" class="btn btn-outline-custom btn-lg px-4 py-3">
+            <i class="fa-solid fa-magnifying-glass me-2"></i> Explore Services
+          </a>
+        </div>
+
+        <div class="d-flex align-items-center gap-4 pt-3 border-top">
+          <div>
+            <div class="fw-bold fs-5 text-dark">100% Verified</div>
+            <div class="small text-muted">Trusted Caretakers</div>
+          </div>
+          <div class="vr"></div>
+          <div>
+            <div class="fw-bold fs-5 text-dark">99.8% Accuracy</div>
+            <div class="small text-muted">ML Breed Detection</div>
+          </div>
+          <div class="vr"></div>
+          <div>
+            <div class="fw-bold fs-5 text-dark">Oracle DB</div>
+            <div class="small text-muted">Enterprise Relational Schema</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-5">
+        <div class="glass-card p-4 position-relative">
+          <div class="position-absolute top-0 end-0 translate-middle badge rounded-pill bg-success p-2 px-3 shadow">
+            <i class="fa-solid fa-shield-halved me-1"></i> QR Pet ID Enabled
+          </div>
+          <div class="text-center p-3">
+            <img src="/static/images/paw_logo.svg" alt="Illustration" width="110" height="110" class="mb-3">
+            <h4 class="fw-bold mb-2">Smart Companion Hub</h4>
+            <p class="small text-muted mb-4">Everything your dog or cat needs in one unified platform.</p>
+            
+            <div class="d-grid gap-2 text-start">
+              <div class="p-2 rounded bg-white border d-flex align-items-center gap-3">
+                <i class="fa-solid fa-calendar-check text-primary fs-5"></i>
+                <div class="small">
+                  <span class="fw-bold d-block">Instant Care Booking</span>
+                  <span class="text-muted">Sitting, walking & daycare</span>
+                </div>
+              </div>
+              <div class="p-2 rounded bg-white border d-flex align-items-center gap-3">
+                <i class="fa-solid fa-brain text-success fs-5"></i>
+                <div class="small">
+                  <span class="fw-bold d-block">ML Nutrition & Care Tips</span>
+                  <span class="text-muted">Trained Random Forest models</span>
+                </div>
+              </div>
+              <div class="p-2 rounded bg-white border d-flex align-items-center gap-3">
+                <i class="fa-solid fa-qrcode text-warning fs-5"></i>
+                <div class="small">
+                  <span class="fw-bold d-block">Printable Digital Pet ID</span>
+                  <span class="text-muted">Instant emergency profile scanning</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES SECTION -->
+  <section class="py-5" id="features">
+    <div class="text-center mb-5" id="about">
+      <h6 class="text-primary fw-bold text-uppercase tracking-wider">Comprehensive Ecosystem</h6>
+      <h2 class="fw-bold display-6">All-in-One AI Pet Platform</h2>
+      <p class="text-muted" style="max-width: 600px; margin: 0 auto;">
+        Designed from the ground up for modern pet parents and professional caretakers. Log in to access all smart tools.
+      </p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="glass-card glass-card-hover p-4 h-100">
+          <div class="quick-action-icon bg-primary-subtle text-primary">
+            <i class="fa-solid fa-user-doctor"></i>
+          </div>
+          <h5 class="fw-bold">Caretaker Marketplace</h5>
+          <p class="text-muted small">
+            Browse verified pet sitters and walkers with hourly pricing, verified customer reviews, service filters, and instant booking workflows.
+          </p>
+          <a href="{% url 'marketplace:caretaker_list' %}" class="fw-bold text-primary text-decoration-none small">Explore Caretakers <i class="fa-solid fa-arrow-right ms-1"></i></a>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="glass-card glass-card-hover p-4 h-100">
+          <div class="quick-action-icon bg-success-subtle text-success">
+            <i class="fa-solid fa-brain"></i>
+          </div>
+          <h5 class="fw-bold">ML Recommendation Engine</h5>
+          <p class="text-muted small">
+            A real trained Machine Learning model predicts custom food nutrition, optimal caretaker match scores, and personalized daily care tips.
+          </p>
+          <a href="{% url 'recommendations:recommendation_view' %}" class="fw-bold text-success text-decoration-none small">Get Recommendations <i class="fa-solid fa-arrow-right ms-1"></i></a>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="glass-card glass-card-hover p-4 h-100">
+          <div class="quick-action-icon bg-info-subtle text-info">
+            <i class="fa-solid fa-camera-retro"></i>
+          </div>
+          <h5 class="fw-bold">ML Pet Breed Identification</h5>
+          <p class="text-muted small">
+            Upload any pet photo to classify breed with top-3 rankings, confidence percentages, and 1-click links to tailored care recommendations.
+          </p>
+          <a href="{% url 'breed_detection:detect_breed' %}" class="fw-bold text-info text-decoration-none small">Identify Breed <i class="fa-solid fa-arrow-right ms-1"></i></a>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="glass-card glass-card-hover p-4 h-100">
+          <div class="quick-action-icon bg-warning-subtle text-warning">
+            <i class="fa-solid fa-qrcode"></i>
+          </div>
+          <h5 class="fw-bold">QR Pet ID & Emergency Card</h5>
+          <p class="text-muted small">
+            Generates unique dynamic QR code for every pet. Scan to view public emergency contact, medical notes, allergies, and vaccination logs.
+          </p>
+          <a href="{% url 'users:register' %}" class="fw-bold text-warning text-decoration-none small">Create Pet ID <i class="fa-solid fa-arrow-right ms-1"></i></a>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="glass-card glass-card-hover p-4 h-100">
+          <div class="quick-action-icon bg-danger-subtle text-danger">
+            <i class="fa-solid fa-heart-pulse"></i>
+          </div>
+          <h5 class="fw-bold">Health Tracker & Reminders</h5>
+          <p class="text-muted small">
+            Log vaccinations, active prescriptions, weight trends via Chart.js, and receive automated alerts when boosters are due soon or overdue.
+          </p>
+          <a href="{% url 'users:register' %}" class="fw-bold text-danger text-decoration-none small">Track Health <i class="fa-solid fa-arrow-right ms-1"></i></a>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="glass-card glass-card-hover p-4 h-100">
+          <div class="quick-action-icon bg-indigo-subtle text-indigo" style="background: rgba(99, 102, 241, 0.15); color: #6366f1;">
+            <i class="fa-solid fa-robot"></i>
+          </div>
+          <h5 class="fw-bold">24/7 Intelligent AI Pet Assistant</h5>
+          <p class="text-muted small">
+            Intelligent AI assistance embedded across every single page to answer pet nutrition, puppy/kitten training, breed traits, and health queries.
+          </p>
+          <a href="{% url 'chatbot:page' %}" class="fw-bold text-purple text-decoration-none small">Chat with PawPal <i class="fa-solid fa-arrow-right ms-1"></i></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS SECTION -->
+  <section class="py-5 my-4" id="how-it-works">
+    <div class="glass-card p-5">
+      <div class="text-center mb-5">
+        <h6 class="text-primary fw-bold text-uppercase">Simple Workflow</h6>
+        <h2 class="fw-bold">How Pet Care Companion Works</h2>
+        <p class="text-muted small">Step 1: Explore Landing Page → Step 2: Login / Sign Up → Step 3: Access Full Features</p>
+      </div>
+
+      <div class="row g-4 text-center">
+        <div class="col-md">
+          <div class="p-3">
+            <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center fw-bold fs-4 mb-3" style="width: 54px; height: 54px;">
+              1
+            </div>
+            <h6 class="fw-bold">Explore Platform</h6>
+            <p class="small text-muted">Learn about our AI and veterinary companion tools.</p>
+          </div>
+        </div>
+        <div class="col-md">
+          <div class="p-3">
+            <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center fw-bold fs-4 mb-3" style="width: 54px; height: 54px;">
+              2
+            </div>
+            <h6 class="fw-bold">Login / Sign Up</h6>
+            <p class="small text-muted">Secure role-based login for Pet Owners & Caretakers.</p>
+          </div>
+        </div>
+        <div class="col-md">
+          <div class="p-3">
+            <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center fw-bold fs-4 mb-3" style="width: 54px; height: 54px;">
+              3
+            </div>
+            <h6 class="fw-bold">Unlock All Options</h6>
+            <p class="small text-muted">Manage pets, bookings, AI tools, and QR emergency cards.</p>
+          </div>
+        </div>
+        <div class="col-md">
+          <div class="p-3">
+            <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center fw-bold fs-4 mb-3" style="width: 54px; height: 54px;">
+              4
+            </div>
+            <h6 class="fw-bold">24/7 AI Assistance</h6>
+            <p class="small text-muted">Get tailored nutrition, health reminders, and smart matching.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CALL TO ACTION -->
+  <section class="py-5 text-center">
+    <div class="glass-card p-5" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: #ffffff;">
+      <h2 class="display-6 fw-bold mb-3">Ready to give your pet the care they deserve?</h2>
+      <p class="lead text-secondary mb-4" style="max-width: 600px; margin: 0 auto; color: #cbd5e1 !important;">
+        Login or create an account today to unlock full access to bookings, AI tools, health reminders, and verified caretakers.
+      </p>
+      <div class="d-flex justify-content-center gap-3">
+        <a href="{% url 'users:login' %}" class="btn btn-primary-custom btn-lg px-4">
+          <i class="fa-solid fa-right-to-bracket me-2"></i> Login to Access
+        </a>
+        <a href="{% url 'users:register' %}" class="btn btn-outline-light btn-lg px-4">
+          <i class="fa-solid fa-user-plus me-2"></i> Create Free Account
+        </a>
+      </div>
+    </div>
+  </section>
+
+</div>
+{% endblock %}

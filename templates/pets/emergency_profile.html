@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}EMERGENCY PET PROFILE – {{ pet.name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <!-- Emergency Header Alert -->
+      <div class="alert alert-danger glass-card shadow-sm border-0 d-flex align-items-center gap-3 p-3 mb-4">
+        <i class="fa-solid fa-triangle-exclamation fs-2 text-danger"></i>
+        <div>
+          <h5 class="fw-bold mb-1">Official Pet Emergency Profile</h5>
+          <p class="small mb-0">You scanned the QR Code for <strong>{{ pet.name }}</strong>. Please use the contact details below to alert the owner immediately.</p>
+        </div>
+      </div>
+
+      <div class="glass-card p-4 p-md-5">
+        <div class="row g-4 align-items-center mb-4 pb-4 border-bottom">
+          <div class="col-md-4 text-center">
+            <img src="{{ pet.get_photo_url }}" class="rounded-4 border shadow-sm img-fluid" style="max-height: 220px; width: 100%; object-fit: cover;">
+          </div>
+          <div class="col-md-8">
+            <div class="d-flex align-items-center gap-2 mb-2">
+              <h2 class="fw-bold mb-0 text-dark">{{ pet.name }}</h2>
+              <span class="badge bg-primary-subtle text-primary fs-6">{{ pet.gender }}</span>
+            </div>
+            <h5 class="text-secondary fw-semibold mb-3">{{ pet.breed }} ({{ pet.species }})</h5>
+
+            <div class="p-3 rounded bg-light border mb-3">
+              <h6 class="fw-bold text-danger mb-2"><i class="fa-solid fa-phone me-1"></i> Owner Emergency Contact:</h6>
+              <div class="fw-bold fs-5 text-dark">{{ pet.owner.get_full_name|default:pet.owner.username }}</div>
+              {% if pet.owner.phone %}
+                <a href="tel:{{ pet.owner.phone }}" class="btn btn-success btn-lg w-100 mt-2 fw-bold">
+                  <i class="fa-solid fa-phone-volume me-2"></i> Call Owner: {{ pet.owner.phone }}
+                </a>
+              {% endif %}
+              {% if pet.owner.email %}
+                <a href="mailto:{{ pet.owner.email }}?subject=Regarding your pet {{ pet.name }}" class="btn btn-outline-dark w-100 mt-2 small">
+                  <i class="fa-solid fa-envelope me-1"></i> Email: {{ pet.owner.email }}
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <!-- Medical & Health Critical Information -->
+        <h5 class="fw-bold text-dark mb-3"><i class="fa-solid fa-notes-medical text-primary me-2"></i> Critical Health Information</h5>
+        <div class="row g-3 small mb-4">
+          <div class="col-md-6">
+            <div class="p-3 rounded bg-white border">
+              <span class="text-muted d-block mb-1">KNOWN ALLERGIES:</span>
+              <strong class="text-danger fs-6">{{ pet.allergies|default:'None Reported' }}</strong>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="p-3 rounded bg-white border">
+              <span class="text-muted d-block mb-1">VACCINATION STATUS:</span>
+              <strong class="text-success fs-6">{{ pet.vaccination_status }}</strong>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="p-3 rounded bg-white border">
+              <span class="text-muted d-block mb-1">WEIGHT & AGE:</span>
+              <strong>{{ pet.weight }} kg • {{ pet.age }} years old</strong>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="p-3 rounded bg-white border">
+              <span class="text-muted d-block mb-1">HEALTH CONDITION:</span>
+              <strong>{{ pet.health_condition }}</strong>
+            </div>
+          </div>
+        </div>
+
+        {% if pet.medical_notes %}
+          <div class="p-3 rounded bg-warning-subtle border border-warning-subtle small mb-4">
+            <h6 class="fw-bold text-dark mb-1"><i class="fa-solid fa-circle-exclamation text-warning me-1"></i> Special Owner Instructions / Medical Notes:</h6>
+            <p class="mb-0 text-secondary">{{ pet.medical_notes }}</p>
+          </div>
+        {% endif %}
+
+        <div class="text-center pt-3 border-top">
+          <a href="{% url 'lostfound:report_lost' %}" class="btn btn-outline-danger btn-sm">
+            <i class="fa-solid fa-flag me-1"></i> Report Sighting on Community Lost & Found Board
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}Match Requests – Pet Match Hub{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h3 class="fw-bold mb-1"><i class="fa-solid fa-heart text-danger me-2"></i> Match Requests Inbox</h3>
+      <p class="text-muted small mb-0">Coordinate playdates and breeding inquiries with other pet parents.</p>
+    </div>
+    <a href="{% url 'matchhub:match_list' %}" class="btn btn-warning text-dark fw-bold">
+      <i class="fa-solid fa-magnifying-glass me-1"></i> Browse Match Hub
+    </a>
+  </div>
+
+  <div class="row g-4">
+    <!-- Incoming Requests -->
+    <div class="col-lg-6">
+      <div class="glass-card p-4 h-100">
+        <h5 class="fw-bold mb-3 text-primary"><i class="fa-solid fa-inbox me-2"></i> Incoming Match Requests ({{ incoming_requests.count }})</h5>
+        {% if incoming_requests %}
+          <div class="d-flex flex-column gap-3">
+            {% for req in incoming_requests %}
+              <div class="p-3 rounded-4 bg-white border">
+                <div class="d-flex align-items-center gap-3 mb-2">
+                  <img src="{{ req.sender_profile.pet.get_photo_url }}" class="rounded-3 border" width="50" height="50" style="object-fit: cover;">
+                  <div>
+                    <h6 class="fw-bold mb-0">{{ req.sender_profile.pet.name }} ({{ req.sender_profile.pet.breed }})</h6>
+                    <div class="text-xs text-muted">Requested to match with: <strong>{{ req.receiver_profile.pet.name }}</strong></div>
+                  </div>
+                </div>
+
+                {% if req.message %}
+                  <p class="small text-secondary mb-2 fst-italic">"{{ req.message }}"</p>
+                {% endif %}
+
+                <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                  <span class="badge {% if req.status == 'ACCEPTED' %}bg-success{% elif req.status == 'PENDING' %}bg-warning text-dark{% else %}bg-danger{% endif %}">
+                    {{ req.get_status_display }}
+                  </span>
+
+                  {% if req.status == 'PENDING' %}
+                    <div class="d-flex gap-2">
+                      <a href="{% url 'matchhub:update_status' req.id 'accept' %}" class="btn btn-sm btn-success px-3">Accept</a>
+                      <a href="{% url 'matchhub:update_status' req.id 'reject' %}" class="btn btn-sm btn-outline-danger px-3">Decline</a>
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p class="text-muted small text-center py-4">No incoming match requests at this time.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Outgoing Requests -->
+    <div class="col-lg-6">
+      <div class="glass-card p-4 h-100">
+        <h5 class="fw-bold mb-3 text-secondary"><i class="fa-solid fa-paper-plane me-2"></i> Sent Requests ({{ outgoing_requests.count }})</h5>
+        {% if outgoing_requests %}
+          <div class="d-flex flex-column gap-3">
+            {% for req in outgoing_requests %}
+              <div class="p-3 rounded-4 bg-white border">
+                <div class="d-flex align-items-center gap-3 mb-2">
+                  <img src="{{ req.receiver_profile.pet.get_photo_url }}" class="rounded-3 border" width="50" height="50" style="object-fit: cover;">
+                  <div>
+                    <h6 class="fw-bold mb-0">{{ req.receiver_profile.pet.name }} ({{ req.receiver_profile.pet.breed }})</h6>
+                    <div class="text-xs text-muted">Sent from your pet: <strong>{{ req.sender_profile.pet.name }}</strong></div>
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                  <span class="text-xs text-muted">{{ req.created_at|date:"M d, Y" }}</span>
+                  <span class="badge {% if req.status == 'ACCEPTED' %}bg-success{% elif req.status == 'PENDING' %}bg-warning text-dark{% else %}bg-danger{% endif %}">
+                    {{ req.get_status_display }}
+                  </span>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p class="text-muted small text-center py-4">You haven't sent any match requests yet.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

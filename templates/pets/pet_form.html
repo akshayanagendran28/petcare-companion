@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} – Pet Care Companion{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="glass-card p-4 p-md-5">
+        <div class="mb-4 pb-3 border-bottom">
+          <h3 class="fw-bold mb-1"><i class="fa-solid fa-paw text-primary me-2"></i> {{ title }}</h3>
+          <p class="text-muted small mb-0">Fill in your pet's details to generate their QR Pet ID Card and ML profile.</p>
+        </div>
+
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Pet Name *</label>
+              {{ form.name }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Species *</label>
+              {{ form.species }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Breed *</label>
+              {{ form.breed }}
+            </div>
+            <div class="col-md-3">
+              <label class="form-label fw-semibold">Age (Years) *</label>
+              {{ form.age }}
+            </div>
+            <div class="col-md-3">
+              <label class="form-label fw-semibold">Gender *</label>
+              {{ form.gender }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold">Weight (kg) *</label>
+              {{ form.weight }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold">Health Condition</label>
+              {{ form.health_condition }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold">Activity Level</label>
+              {{ form.activity_level }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Vaccination Status</label>
+              {{ form.vaccination_status }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Allergies (If any)</label>
+              {{ form.allergies }}
+            </div>
+            <div class="col-12">
+              <label class="form-label fw-semibold">Emergency / Medical Notes</label>
+              {{ form.medical_notes }}
+            </div>
+            <div class="col-12">
+              <label class="form-label fw-semibold">Pet Photo</label>
+              {{ form.photo }}
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-end gap-2">
+            <a href="{% url 'pets:pet_list' %}" class="btn btn-outline-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary-custom px-4">
+              <i class="fa-solid fa-check me-1"></i> Save Pet & Generate QR ID
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

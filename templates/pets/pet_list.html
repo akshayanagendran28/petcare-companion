@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}My Pets – Pet Care Companion{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h3 class="fw-bold mb-1"><i class="fa-solid fa-paw text-primary me-2"></i> My Pets</h3>
+      <p class="text-muted small mb-0">Manage pet profiles, health logs, and digital QR ID cards.</p>
+    </div>
+    <a href="{% url 'pets:pet_create' %}" class="btn btn-primary-custom">
+      <i class="fa-solid fa-plus me-1"></i> Add New Pet
+    </a>
+  </div>
+
+  {% if pets %}
+    <div class="row g-4">
+      {% for pet in pets %}
+        <div class="col-md-6 col-lg-4">
+          <div class="glass-card glass-card-hover p-4 h-100 d-flex flex-column justify-content-between">
+            <div>
+              <div class="d-flex align-items-start gap-3 mb-3">
+                <a href="{% url 'pets:pet_detail' pet.pk %}" class="d-block text-decoration-none flex-shrink-0" title="View {{ pet.name }}'s Profile">
+                  <img src="{{ pet.get_photo_url }}" class="rounded-4 border shadow-sm" width="80" height="80" style="object-fit: cover; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                </a>
+                <div class="flex-grow-1">
+                  <div class="d-flex justify-content-between align-items-start">
+                    <h5 class="fw-bold mb-0">
+                      <a href="{% url 'pets:pet_detail' pet.pk %}" class="text-decoration-none text-white" title="View Profile">{{ pet.name }}</a>
+                    </h5>
+                    <span class="badge bg-primary-subtle text-primary">{{ pet.gender }}</span>
+                  </div>
+                  <div class="text-muted small">{{ pet.breed }}</div>
+                  <div class="text-secondary small">{{ pet.age }} years • {{ pet.weight }} kg</div>
+                </div>
+              </div>
+
+
+              <div class="p-2 rounded bg-light border mb-3 small">
+                <div class="d-flex justify-content-between mb-1">
+                  <span class="text-muted">Health:</span>
+                  <span class="fw-bold">{{ pet.health_condition }}</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <span class="text-muted">Vaccination:</span>
+                  <span class="badge bg-success-subtle text-success">{{ pet.vaccination_status }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-grid gap-2">
+              <div class="btn-group w-100">
+                <a href="{% url 'pets:pet_detail' pet.pk %}" class="btn btn-sm btn-outline-primary fw-bold">Full Profile</a>
+                <a href="{% url 'pets:pet_id_card' pet.pk %}" class="btn btn-sm btn-outline-dark"><i class="fa-solid fa-qrcode me-1"></i> ID Card</a>
+                <a href="{% url 'health:dashboard' pet.pk %}" class="btn btn-sm btn-outline-success"><i class="fa-solid fa-heart-pulse me-1"></i> Health</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="glass-card p-5 text-center text-muted">
+      <i class="fa-solid fa-paw fs-1 text-secondary mb-3 d-block"></i>
+      <h4 class="fw-bold text-dark mb-2">No Pets Registered Yet</h4>
+      <p class="small mb-4">Register your pet to generate their official QR Pet ID card, track vaccines, and get tailored ML nutrition recommendations.</p>
+      <a href="{% url 'pets:pet_create' %}" class="btn btn-primary-custom">Register Your Pet Now</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

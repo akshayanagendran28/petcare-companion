@@ -1,0 +1,314 @@
+-- =============================================================================
+-- PET CARE COMPANION - PRODUCTION ORACLE DATABASE DDL SCHEMA
+-- Target Database: Oracle Database 19c / 21c / 23ai / Oracle Express Edition (XE)
+-- Total Tables: 17 Normalized Entities with Constraints, Foreign Keys & Indexes
+-- =============================================================================
+
+-- 1. USERS TABLE
+CREATE TABLE USERS (
+    id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    username VARCHAR2(150) NOT NULL UNIQUE,
+    email VARCHAR2(254) NOT NULL UNIQUE,
+    password VARCHAR2(128) NOT NULL,
+    first_name VARCHAR2(150),
+    last_name VARCHAR2(150),
+    role VARCHAR2(20) DEFAULT 'PET_OWNER' NOT NULL,
+    phone VARCHAR2(20),
+    address VARCHAR2(255),
+    profile_photo VARCHAR2(500),
+    is_active NUMBER(1) DEFAULT 1 NOT NULL,
+    is_staff NUMBER(1) DEFAULT 0 NOT NULL,
+    is_superuser NUMBER(1) DEFAULT 0 NOT NULL,
+    date_joined TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    last_login TIMESTAMP WITH TIME ZONE,
+    CONSTRAINT chk_user_role CHECK (role IN ('PET_OWNER', 'CARETAKER', 'ADMIN'))
+);
+
+CREATE INDEX idx_users_email ON USERS(email);
+CREATE INDEX idx_users_role ON USERS(role);
+
+-- 2. CARETAKERS TABLE
+CREATE TABLE CARETAKERS (
+    id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_id NUMBER NOT NULL UNIQUE,
+    experience_years NUMBER(4,1) DEFAULT 1.0 NOT NULL,
+    hourly_rate NUMBER(8,2) DEFAULT 25.00 NOT NULL,
+    services_offered VARCHAR2(500) NOT NULL,
+    availability_status VARCHAR2(20) DEFAULT 'AVAILABLE' NOT NULL,
+    bio CLOB,
+    rating NUMBER(3,2) DEFAULT 5.00 NOT NULL,
+    total_reviews NUMBER DEFAULT 0 NOT NULL,
+    total_earnings NUMBER(10,2) DEFAULT 0.00 NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT fk_caretaker_user FOREIGN KEY (user_id) REFERENCES USERS(id) ON DELETE CASCADE,
+    CONSTRAINT chk_caretaker_avail CHECK (availability_status IN ('AVAILABLE', 'BUSY', 'UNAVAILABLE'))
+);
+
+CREATE INDEX idx_caretakers_rating ON CARETAKERS(rating);
+CREATE INDEX idx_caretakers_rate ON CARETAKERS(hourly_rate);
+
+-- 3. PETS TABLE
+CREATE TABLE PETS (
+    id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    owner_id NUMBER NOT NULL,
+    name VARCHAR2(100) NOT NULL,
+    species VARCHAR2(30) DEFAULT 'Dog' NOT NULL,
+    breed VARCHAR2(100) NOT NULL,
+    age NUMBER(4,1) NOT NULL,
+    gender VARCHAR2(10) NOT NULL,
+    weight NUMBER(5,2) NOT NULL,
+    health_condition VARCHAR2(100) DEFAULT 'Healthy' NOT NULL,
+    activity_level VARCHAR2(20) DEFAULT 'Moderate' NOT NULL,
+    vaccination_status VARCHAR2(20) DEFAULT 'Up to Date' NOT NULL,
+    allergies VARCHAR2(255),
+    medical_notes CLOB,
+    photo VARCHAR2(500),
+    qr_code VARCHAR2(500),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT fk_pets_owner FOREIGN KEY (owner_id) REFERENCES USERS(id) ON DELETE CASCADE,
+    CONSTRAINT chk_pet_gender CHECK (gender IN ('Male', 'Female')),
+    CONSTRAINT chk_pet_activity CHECK (activity_level IN ('Low', 'Moderate', 'High', 'Very High'))
+);
+
+CREATE INDEX idx_pets_owner ON PETS(owner_id);
+CREATE INDEX idx_pets_breed ON PETS(breed);
+
+-- 4. BOOKINGS TABLE
+CREATE TABLE BOOKINGS (
+    id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    owner_id NUMBER NOT NULL,
+    caretaker_id NUMBER NOT NULL,
+    pet_id NUMBER NOT NULL,
+    service_type VARCHAR2(100) NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    start_time VARCHAR2(10),
+    end_time VARCHAR2(10),
+    total_price NUMBER(10,2) NOT NULL,
+    notes CLOB,
+    status VARCHAR2(20) DEFAULT 'PENDING' NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT fk_booking_owner FOREIGN KEY (owner_id) REFERENCES USERS(id) ON DELETE CASCADE,
+    CONSTRAINT fk_booking_caretaker FOREIGN KEY (caretaker_id) REFERENCES CARETAKERS(id) ON DELETE CASCADE,
+    CONSTRAINT fk_booking_pet FOREIGN KEY (pet_id) REFERENCES PETS(id) ON DELETE CASCADE,
+    CONSTRAINT chk_booking_status CHECK (status IN ('PENDING', 'ACCEPTED', 'REJECTED', 'COMPLETED', 'CANCELLED'))
+);
+
+CREATE INDEX idx_bookings_status ON BOOKINGS(status);
+CREATE INDEX idx_bookings_dates ON BOOKINGS(start_date, end_date);
+
+-- 5. REVIEWS TABLE
+CREATE TABLE REVIEWS (
+    id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    booking_id NUMBER NOT NULL UNIQUE,
+    reviewer_id NUMBER NOT NULL,
+    caretaker_id NUMBER NOT NULL,
+    rating NUMBER(1) NOT NULL,
+    comment CLOB,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT fk_review_booking FOREIGN KEY (booking_id) REFERENCES BOOKINGS(id) ON DELETE CASCADE,
+    CONSTRAINT fk_review_reviewer FOREIGN KEY (reviewer_id) REFERENCES USERS(id) ON DELETE CASCADE,
+    CONSTRAINT fk_review_caretaker FOREIGN KEY (caretaker_id) REFERENCES CARETAKERS(id) ON DELETE CASCADE,
+    CONSTRAINT chk_review_rating CHECK (rating BETWEEN 1 AND 5)
+);
+
+CREATE INDEX idx_reviews_caretaker ON REVIEWS(caretaker_id);
+
+-- 6. ADOPTION_LISTINGS TABLE
+CREATE TABLE ADOPTION_LISTINGS (
+    id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    owner_id NUMBER NOT NULL,
+    pet_name VARCHAR2(100) NOT NULL,
+    species VARCHAR2(30) NOT NULL,
+    breed VARCHAR2(100) NOT NULL,
+    age NUMBER(4,1) NOT NULL,
+    gender VARCHAR2(10) NOT NULL,
+    listing_type VARCHAR2(20) DEFAULT 'ADOPTION' NOT NULL,
+    price NUMBER(10,2) DEFAULT 0.00 NOT NULL,
+    location VARCHAR2(200) NOT NULL,
+    vaccination_status VARCHAR2(50) DEFAULT 'Vaccinated' NOT NULL,
+    description CLOB NOT NULL,
+    photo VARCHAR2(500),
+    contact_phone VARCHAR2(20) NOT NULL,
+    contact_email VARCHAR2(254) NOT NULL,
+    status VARCHAR2(20) DEFAULT 'ACTIVE' NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT fk_adoption_owner FOREIGN KEY (owner_id) REFERENCES USERS(id) ON DELETE CASCADE,
+    CONSTRAINT chk_listing_type CHECK (listing_type IN ('ADOPTION', 'SALE')),
+    CONSTRAINT chk_listing_status CHECK (status IN ('ACTIVE', 'PENDING', 'ADOPTED', 'SOLD'))
+);
+
+CREATE INDEX idx_adoption_status ON ADOPTION_LISTINGS(status);
+CREATE INDEX idx_adoption_breed ON ADOPTION_LISTINGS(breed);
+
+-- 7. MATCH_PROFILES TABLE
+CREATE TABLE MATCH_PROFILES (
+    id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    pet_id NUMBER NOT NULL UNIQUE,
+    bio CLOB,
+    looking_for VARCHAR2(100) DEFAULT 'Playmate & Walking Buddy' NOT NULL,
+    location VARCHAR2(200) NOT NULL,
+    is_active NUMBER(1) DEFAULT 1 NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT fk_match_pet FOREIGN KEY (pet_id) REFERENCES PETS(id) ON DELETE CASCADE
+);
+
+-- 8. MATCH_REQUESTS TABLE
+CREATE TABLE MATCH_REQUESTS (
+    id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    sender_profile_id NUMBER NOT NULL,
+    receiver_profile_id NUMBER NOT NULL,
+    message VARCHAR2(500),
+    status VARCHAR2(20) DEFAULT 'PENDING' NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT fk_match_req_sender FOREIGN KEY (sender_profile_id) REFERENCES MATCH_PROFILES(id) ON DELETE CASCADE,
+    CONSTRAINT fk_match_req_receiver FOREIGN KEY (receiver_profile_id) REFERENCES MATCH_PROFILES(id) ON DELETE CASCADE,
+    CONSTRAINT chk_match_req_status CHECK (status IN ('PENDING', 'ACCEPTED', 'REJECTED'))
+);
+
+-- 9. HEALTH_RECORDS TABLE
+CREATE TABLE HEALTH_RECORDS (
+    id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    pet_id NUMBER NOT NULL,
+    record_date DATE NOT NULL,
+    condition_title VARCHAR2(200) NOT NULL,
+    diagnosis CLOB,
+    treatment_plan CLOB,
+    vet_name VARCHAR2(150),
+    clinic_name VARCHAR2(200),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT fk_health_pet FOREIGN KEY (pet_id) REFERENCES PETS(id) ON DELETE CASCADE
+);
+
+CREATE INDEX idx_health_records_pet ON HEALTH_RECORDS(pet_id);
+
+-- 10. VACCINATIONS TABLE
+CREATE TABLE VACCINATIONS (
+    id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    pet_id NUMBER NOT NULL,
+    vaccine_name VARCHAR2(150) NOT NULL,
+    administered_date DATE NOT NULL,
+    next_due_date DATE NOT NULL,
+    batch_number VARCHAR2(50),
+    vet_name VARCHAR2(150),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT fk_vaccine_pet FOREIGN KEY (pet_id) REFERENCES PETS(id) ON DELETE CASCADE
+);
+
+CREATE INDEX idx_vaccines_due_date ON VACCINATIONS(next_due_date);
+
+-- 11. MEDICINES TABLE
+CREATE TABLE MEDICINES (
+    id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    pet_id NUMBER NOT NULL,
+    medicine_name VARCHAR2(150) NOT NULL,
+    dosage VARCHAR2(100) NOT NULL,
+    frequency VARCHAR2(100) NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    notes CLOB,
+    is_active NUMBER(1) DEFAULT 1 NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT fk_medicine_pet FOREIGN KEY (pet_id) REFERENCES PETS(id) ON DELETE CASCADE
+);
+
+-- 12. WEIGHT_HISTORY TABLE
+CREATE TABLE WEIGHT_HISTORY (
+    id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    pet_id NUMBER NOT NULL,
+    recorded_date DATE NOT NULL,
+    weight_kg NUMBER(5,2) NOT NULL,
+    notes VARCHAR2(255),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT fk_weight_pet FOREIGN KEY (pet_id) REFERENCES PETS(id) ON DELETE CASCADE
+);
+
+CREATE INDEX idx_weight_history_pet ON WEIGHT_HISTORY(pet_id, recorded_date);
+
+-- 13. LOST_PETS TABLE
+CREATE TABLE LOST_PETS (
+    id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    reporter_id NUMBER NOT NULL,
+    pet_name VARCHAR2(100) NOT NULL,
+    breed VARCHAR2(100) NOT NULL,
+    species VARCHAR2(30) DEFAULT 'Dog' NOT NULL,
+    last_seen_location VARCHAR2(255) NOT NULL,
+    date_lost DATE NOT NULL,
+    description CLOB NOT NULL,
+    contact_number VARCHAR2(20) NOT NULL,
+    photo VARCHAR2(500),
+    reward_amount NUMBER(10,2) DEFAULT 0.00,
+    status VARCHAR2(20) DEFAULT 'LOST' NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT fk_lost_pet_reporter FOREIGN KEY (reporter_id) REFERENCES USERS(id) ON DELETE CASCADE,
+    CONSTRAINT chk_lost_status CHECK (status IN ('LOST', 'REUNITED'))
+);
+
+CREATE INDEX idx_lost_pets_status ON LOST_PETS(status);
+
+-- 14. LOST_PET_SIGHTINGS TABLE
+CREATE TABLE LOST_PET_SIGHTINGS (
+    id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    lost_pet_id NUMBER NOT NULL,
+    reporter_name VARCHAR2(150) NOT NULL,
+    reporter_contact VARCHAR2(100) NOT NULL,
+    sighting_location VARCHAR2(255) NOT NULL,
+    sighting_date DATE NOT NULL,
+    description CLOB NOT NULL,
+    photo VARCHAR2(500),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT fk_sighting_lost_pet FOREIGN KEY (lost_pet_id) REFERENCES LOST_PETS(id) ON DELETE CASCADE
+);
+
+-- 15. NOTIFICATIONS TABLE
+CREATE TABLE NOTIFICATIONS (
+    id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_id NUMBER NOT NULL,
+    title VARCHAR2(150) NOT NULL,
+    message VARCHAR2(500) NOT NULL,
+    notification_type VARCHAR2(30) DEFAULT 'GENERAL' NOT NULL,
+    link VARCHAR2(255),
+    is_read NUMBER(1) DEFAULT 0 NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT fk_notif_user FOREIGN KEY (user_id) REFERENCES USERS(id) ON DELETE CASCADE
+);
+
+CREATE INDEX idx_notif_user_unread ON NOTIFICATIONS(user_id, is_read);
+
+-- 16. CHAT_HISTORY TABLE
+CREATE TABLE CHAT_HISTORY (
+    id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_id NUMBER,
+    session_id VARCHAR2(100) NOT NULL,
+    user_query CLOB NOT NULL,
+    bot_response CLOB NOT NULL,
+    model_used VARCHAR2(50) DEFAULT 'qwen3:4b' NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT fk_chat_user FOREIGN KEY (user_id) REFERENCES USERS(id) ON DELETE SET NULL
+);
+
+CREATE INDEX idx_chat_session ON CHAT_HISTORY(session_id);
+
+-- 17. RECOMMENDATIONS TABLE
+CREATE TABLE RECOMMENDATIONS (
+    id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    pet_id NUMBER,
+    user_id NUMBER NOT NULL,
+    input_breed VARCHAR2(100) NOT NULL,
+    input_age NUMBER(4,1) NOT NULL,
+    input_weight NUMBER(5,2) NOT NULL,
+    input_health VARCHAR2(100) NOT NULL,
+    input_activity VARCHAR2(50) NOT NULL,
+    diet_category VARCHAR2(150) NOT NULL,
+    recommended_food VARCHAR2(200) NOT NULL,
+    recommended_service VARCHAR2(200) NOT NULL,
+    care_tip CLOB NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT fk_rec_pet FOREIGN KEY (pet_id) REFERENCES PETS(id) ON DELETE SET NULL,
+    CONSTRAINT fk_rec_user FOREIGN KEY (user_id) REFERENCES USERS(id) ON DELETE CASCADE
+);
+
+CREATE INDEX idx_rec_user ON RECOMMENDATIONS(user_id);

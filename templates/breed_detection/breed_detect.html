@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+
+{% block title %}Pet Breed Identifier – Pet Care Companion{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- Header Banner -->
+  <div class="glass-card p-4 mb-4">
+    <div class="row align-items-center">
+      <div class="col-md-8">
+        <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill bg-info-subtle text-info small fw-bold mb-2">
+          <i class="fa-solid fa-camera-retro"></i> Machine Learning Computer Vision Classifier
+        </div>
+        <h3 class="fw-bold mb-1">Instant Pet Breed Identification & Care Encyclopedia</h3>
+        <p class="text-muted small mb-0">
+          Upload any photo of a dog or cat to instantly identify the breed, view confidence metrics, and access comprehensive veterinary care guidelines.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <!-- Image Upload Card -->
+    <div class="col-lg-5">
+      <div class="glass-card p-4 h-100 d-flex flex-column">
+        <h5 class="fw-bold mb-3"><i class="fa-solid fa-cloud-arrow-up text-primary me-2"></i> Upload Pet Photo</h5>
+        
+        <form method="post" enctype="multipart/form-data" class="flex-grow-1 d-flex flex-column justify-content-between">
+          {% csrf_token %}
+
+          <div class="mb-4">
+            <div class="border border-2 border-dashed rounded-4 p-4 text-center bg-light cursor-pointer position-relative" id="drop-zone">
+              <input type="file" name="pet_image" id="file-input" accept="image/*" class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer" required onchange="previewImage(event)">
+              <div id="upload-prompt">
+                <i class="fa-solid fa-image fs-1 text-secondary mb-2"></i>
+                <h6 class="fw-bold mb-1">Click to Upload or Drag & Drop</h6>
+                <p class="text-muted small mb-0">Supports JPG, PNG, WEBP (Max 15MB)</p>
+              </div>
+              <img id="image-preview" src="#" alt="Preview" class="img-fluid rounded-3 d-none shadow-sm" style="max-height: 240px; object-fit: cover;">
+            </div>
+          </div>
+
+          <div>
+            <button type="submit" class="btn btn-primary-custom w-100 py-3 fw-bold shadow">
+              <i class="fa-solid fa-magnifying-glass me-2"></i> Identify Pet Breed
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+
+    <!-- Prediction Results Card -->
+    <div class="col-lg-7">
+      {% if result %}
+        <div class="glass-card p-4">
+          <!-- Top Prediction Header -->
+          <div class="d-flex justify-content-between align-items-start mb-3 pb-3 border-bottom">
+            <div>
+              <span class="badge bg-success-subtle text-success fs-6 px-3 py-1 mb-2">
+                <i class="fa-solid fa-circle-check me-1"></i> {{ result.confidence_score }}% Confidence Score
+              </span>
+              <h2 class="fw-extrabold text-dark mb-1">{{ result.predicted_breed }}</h2>
+              <div class="text-secondary fw-semibold">
+                <span class="badge {% if result.species == 'Cat' %}bg-warning text-dark{% else %}bg-primary text-white{% endif %} me-1">{{ result.species }}</span>
+                • {{ result.group }} • Origin: {{ result.origin }}
+              </div>
+            </div>
+            {% if uploaded_image_url %}
+              <img src="{{ uploaded_image_url }}" class="rounded-3 border shadow-sm" width="95" height="95" style="object-fit: cover;">
+            {% endif %}
+          </div>
+
+          <!-- Top-3 Probabilities -->
+          <div class="mb-4">
+            <h6 class="fw-bold small text-muted text-uppercase mb-2">Confidence Breakdown:</h6>
+            {% for item in result.top3_rankings %}
+              <div class="mb-2">
+                <div class="d-flex justify-content-between small mb-1">
+                  <span class="fw-bold text-dark">{{ item.breed }}</span>
+                  <span class="fw-bold text-primary">{{ item.confidence }}%</span>
+                </div>
+                <div class="progress" style="height: 8px;">
+                  <div class="progress-bar {% if forloop.first %}bg-success{% else %}bg-primary{% endif %}" role="progressbar" style="width: {{ item.confidence }}%"></div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+
+          <!-- Breed Characteristics Profile -->
+          <h5 class="fw-bold mb-3"><i class="fa-solid fa-book-open text-primary me-2"></i> Breed Encyclopedia & Care Profile</h5>
+          <div class="row g-3 small mb-4">
+            <div class="col-6">
+              <div class="p-2 rounded bg-light border">
+                <span class="text-muted d-block font-monospace">LIFESPAN</span>
+                <strong>{{ result.lifespan }}</strong>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="p-2 rounded bg-light border">
+                <span class="text-muted d-block font-monospace">TYPICAL WEIGHT</span>
+                <strong>{{ result.weight_range }}</strong>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="p-2 rounded bg-light border">
+                <span class="text-muted d-block mb-1 font-monospace">TEMPERAMENT:</span>
+                <div>
+                  {% for t in result.temperament %}
+                    <span class="badge bg-primary-subtle text-primary me-1">{{ t }}</span>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="p-2 rounded bg-light border">
+                <span class="text-muted d-block font-monospace">EXERCISE NEEDS:</span>
+                <strong>{{ result.exercise_needs }}</strong>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="p-2 rounded bg-light border">
+                <span class="text-muted d-block font-monospace">GROOMING:</span>
+                <strong>{{ result.grooming_needs }}</strong>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="p-3 rounded bg-success-subtle border border-success-subtle">
+                <strong class="d-block text-dark mb-1"><i class="fa-solid fa-bowl-food me-1 text-success"></i> Nutritional Guidance:</strong>
+                <span class="text-secondary">{{ result.diet_guide }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 1-Click Action Interlocks -->
+          <div class="pt-3 border-top d-flex flex-wrap gap-2">
+            <a href="{% url 'recommendations:recommendation_view' %}?breed={{ result.predicted_breed }}&species={{ result.species }}&run_ml=true" class="btn btn-success-custom flex-grow-1">
+              <i class="fa-solid fa-wand-magic-sparkles me-1"></i> Use for ML Recommendations
+            </a>
+            <a href="{% url 'chatbot:page' %}?q=Tell me everything about caring for a {{ result.predicted_breed }}" class="btn btn-primary-custom flex-grow-1">
+              <i class="fa-solid fa-robot me-1"></i> Ask Chatbot About {{ result.predicted_breed }}
+            </a>
+            {% if user.is_authenticated and user.is_pet_owner %}
+              <a href="{% url 'pets:pet_create' %}?breed={{ result.predicted_breed }}&species={{ result.species }}" class="btn btn-outline-dark">
+                <i class="fa-solid fa-paw me-1"></i> Register Pet
+              </a>
+            {% endif %}
+          </div>
+        </div>
+      {% else %}
+        <div class="glass-card p-5 text-center text-muted h-100 d-flex flex-column align-items-center justify-content-center">
+          <i class="fa-solid fa-camera-retro fs-1 text-secondary mb-3 d-block"></i>
+          <h4 class="fw-bold text-dark mb-2">Upload a Pet Image to Begin</h4>
+          <p class="small mb-0" style="max-width: 420px;">Our deep convolutional neural network classifies pet breeds with confidence breakdowns and comprehensive care profiles.</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  function previewImage(event) {
+    const reader = new FileReader();
+    reader.onload = function(){
+      const output = document.getElementById('image-preview');
+      const prompt = document.getElementById('upload-prompt');
+      output.src = reader.result;
+      output.classList.remove('d-none');
+      prompt.classList.add('d-none');
+    };
+    if (event.target.files[0]) {
+      reader.readAsDataURL(event.target.files[0]);
+    }
+  }
+</script>
+{% endblock %}

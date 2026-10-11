@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block title %}Pet Match Hub – Pet Care Companion{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- Header Banner -->
+  <div class="glass-card p-4 mb-4">
+    <div class="row align-items-center">
+      <div class="col-md-8">
+        <h3 class="fw-bold mb-1"><i class="fa-solid fa-users-rays text-warning me-2"></i> Pet Match Hub</h3>
+        <p class="text-muted small mb-0">Find companion playmates, walking buddies, or pedigree breeding partners for your pet.</p>
+      </div>
+      <div class="col-md-4 text-md-end mt-3 mt-md-0 d-flex justify-content-md-end gap-2">
+        {% if user.is_authenticated %}
+          <a href="{% url 'matchhub:match_requests' %}" class="btn btn-outline-dark">
+            <i class="fa-solid fa-envelope me-1"></i> Match Requests
+          </a>
+          <a href="{% url 'matchhub:create_profile' %}" class="btn btn-primary-custom">
+            <i class="fa-solid fa-plus me-1"></i> Add Pet to Hub
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <!-- Filter Sidebar -->
+    <div class="col-lg-3">
+      <div class="glass-card p-4 sticky-top" style="top: 85px;">
+        <h5 class="fw-bold mb-3"><i class="fa-solid fa-filter text-warning me-2"></i> Filter Pets</h5>
+        <form method="get">
+          <div class="mb-3">
+            <label class="form-label small fw-semibold">Search Keywords</label>
+            <input type="text" name="q" value="{{ q }}" class="form-control form-control-sm" placeholder="Breed, city, name...">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label small fw-semibold">Species</label>
+            <select name="species" class="form-select form-select-sm">
+              <option value="">All Species</option>
+              <option value="Dog" {% if species == 'Dog' %}selected{% endif %}>Dogs</option>
+              <option value="Cat" {% if species == 'Cat' %}selected{% endif %}>Cats</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label small fw-semibold">Looking For</label>
+            <select name="looking_for" class="form-select form-select-sm">
+              <option value="">All Match Types</option>
+              <option value="Playmate & Walking Buddy" {% if looking_for == 'Playmate & Walking Buddy' %}selected{% endif %}>Playmate & Walking Buddy</option>
+              <option value="Socialization Partner" {% if looking_for == 'Socialization Partner' %}selected{% endif %}>Socialization Partner</option>
+              <option value="Breeding Companion" {% if looking_for == 'Breeding Companion' %}selected{% endif %}>Breeding Partner</option>
+            </select>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label small fw-semibold">Gender</label>
+            <select name="gender" class="form-select form-select-sm">
+              <option value="">Any Gender</option>
+              <option value="Male" {% if gender == 'Male' %}selected{% endif %}>Male</option>
+              <option value="Female" {% if gender == 'Female' %}selected{% endif %}>Female</option>
+            </select>
+          </div>
+
+          <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-sm btn-warning fw-bold text-dark">Apply Filters</button>
+            <a href="{% url 'matchhub:match_list' %}" class="btn btn-sm btn-outline-secondary">Reset</a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Match Profiles Grid -->
+    <div class="col-lg-9">
+      {% if profiles %}
+        <div class="row g-4">
+          {% for profile in profiles %}
+            <div class="col-md-6 col-xl-4">
+              <div class="glass-card glass-card-hover p-3 h-100 d-flex flex-column justify-content-between">
+                <div>
+                  <div class="position-relative mb-3">
+                    <img src="{{ profile.pet.get_photo_url }}" class="rounded-4 border w-100 shadow-sm" style="height: 180px; object-fit: cover;">
+                    <span class="position-absolute top-0 end-0 m-2 badge bg-warning text-dark shadow">
+                      {{ profile.looking_for }}
+                    </span>
+                  </div>
+
+                  <div class="d-flex justify-content-between align-items-start mb-1">
+                    <h5 class="fw-bold mb-0 text-truncate">{{ profile.pet.name }}</h5>
+                    <span class="badge bg-light text-dark border small">{{ profile.pet.gender }}</span>
+                  </div>
+                  <div class="text-secondary small fw-semibold mb-2">{{ profile.pet.breed }} • {{ profile.pet.age }} yrs</div>
+
+                  <div class="small text-muted mb-2">
+                    <i class="fa-solid fa-location-dot text-danger me-1"></i> {{ profile.location }}
+                  </div>
+                  <p class="small text-secondary mb-3" style="min-height: 44px; line-height: 1.4;">
+                    {{ profile.bio|truncatechars:80 }}
+                  </p>
+                </div>
+
+                {% if user.is_authenticated and user.is_pet_owner %}
+                  <a href="{% url 'matchhub:send_request' profile.pk %}" class="btn btn-sm btn-warning text-dark fw-bold w-100">
+                    <i class="fa-solid fa-heart me-1"></i> Send Match Request
+                  </a>
+                {% else %}
+                  <a href="{% url 'users:login' %}" class="btn btn-sm btn-outline-dark w-100">
+                    Sign in to Match
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="glass-card p-5 text-center text-muted">
+          <i class="fa-solid fa-users-slash fs-1 text-secondary mb-3 d-block"></i>
+          <h4 class="fw-bold text-dark mb-2">No Matching Pets Found</h4>
+          <p class="small mb-3">Be the first to list your pet in the Match Hub for your neighborhood!</p>
+          {% if user.is_authenticated %}
+            <a href="{% url 'matchhub:create_profile' %}" class="btn btn-primary-custom btn-sm">Add Your Pet Profile</a>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}

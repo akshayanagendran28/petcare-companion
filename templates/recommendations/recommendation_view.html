@@ -1,0 +1,260 @@
+{% extends 'base.html' %}
+
+{% block title %}ML Pet Care Recommendations – Pet Care Companion{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- Header Banner -->
+  <div class="glass-card p-4 mb-4" style="position: relative; z-index: 1040; overflow: visible;">
+    <div class="row align-items-center">
+      <div class="col-md-7">
+        <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill bg-primary-subtle text-primary small fw-bold mb-2">
+          <i class="fa-solid fa-brain"></i> Genuine Scikit-Learn MultiOutput Random Forest Pipeline
+        </div>
+        <h3 class="fw-bold mb-1">AI-Powered Pet Care & Nutrition Recommendations</h3>
+        <p class="text-muted small mb-0">Analyzes species, breed characteristics, weight, age, health condition, and activity level to generate tailored nutrition, compatible caretakers, and care tips.</p>
+      </div>
+      <div class="col-md-5 text-md-end mt-3 mt-md-0">
+        {% if user_pets %}
+          <div class="dropdown d-inline-block" style="position: relative; z-index: 1050;">
+            <button class="btn btn-primary-custom dropdown-toggle btn-sm shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fa-solid fa-paw me-1"></i> Auto-Fill from My Pets ({{ user_pets|length }})
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow-lg border border-secondary border-opacity-25 glass-card py-2" style="z-index: 9999 !important; min-width: 280px; max-height: 420px; overflow-y: auto;">
+              <li class="dropdown-header small text-muted text-uppercase fw-bold px-3 py-1">
+                <i class="fa-solid fa-list-check me-1"></i> Registered Pets ({{ user_pets|length }})
+              </li>
+              {% for p in user_pets %}
+                <li>
+                  <a class="dropdown-item py-2 px-3 d-flex align-items-center justify-content-between {% if selected_pet.id == p.id %}active bg-primary text-white{% endif %}" href="?pet_id={{ p.id }}&run_ml=true">
+                    <div class="d-flex align-items-center gap-2">
+                      <i class="fa-solid fa-paw text-primary"></i>
+                      <div>
+                        <strong class="d-block {% if selected_pet.id == p.id %}text-white{% else %}text-dark{% endif %}">{{ p.name }}</strong>
+                        <span class="text-xs {% if selected_pet.id == p.id %}text-white-50{% else %}text-muted{% endif %}">{{ p.species }} • {{ p.breed }}</span>
+                      </div>
+                    </div>
+                    <span class="badge {% if selected_pet.id == p.id %}bg-light text-primary{% else %}bg-secondary-subtle text-secondary{% endif %} small">{{ p.age }}y</span>
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <!-- Input Form Column -->
+    <div class="col-lg-4">
+      <div class="glass-card p-4 sticky-top" style="top: 85px;">
+        <h5 class="fw-bold mb-3"><i class="fa-solid fa-sliders text-primary me-2"></i> Pet Attributes</h5>
+
+        {% if user_pets %}
+          <div class="mb-3 p-3 rounded-4 bg-light border">
+            <div class="small fw-bold text-muted mb-2 d-flex justify-content-between align-items-center">
+              <span><i class="fa-solid fa-paw text-primary me-1"></i> Quick Select Pet:</span>
+              <span class="badge bg-primary-subtle text-primary">{{ user_pets|length }} Available</span>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+              {% for p in user_pets %}
+                <a href="?pet_id={{ p.id }}&run_ml=true" 
+                   class="btn btn-sm {% if selected_pet.id == p.id %}btn-primary text-white shadow-sm{% else %}btn-outline-dark{% endif %} py-1 px-2 text-xs d-flex align-items-center gap-1"
+                   style="font-size: 0.8rem;">
+                  <i class="fa-solid fa-circle-check {% if selected_pet.id == p.id %}text-white{% else %}text-primary{% endif %}"></i>
+                  <strong>{{ p.name }}</strong>
+                  <span class="{% if selected_pet.id == p.id %}text-white-50{% else %}text-muted{% endif %}">({{ p.breed }})</span>
+                </a>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+        
+        <form method="post">
+
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <label class="form-label small fw-semibold">Species</label>
+            <select name="species" class="form-select form-select-sm">
+              <option value="Dog" {% if initial_species == 'Dog' %}selected{% endif %}>Dog</option>
+              <option value="Cat" {% if initial_species == 'Cat' %}selected{% endif %}>Cat</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label small fw-semibold">Breed</label>
+            <input type="text" name="breed" value="{{ initial_breed }}" class="form-control form-control-sm" placeholder="e.g. Labrador Retriever" required>
+          </div>
+
+          <div class="row g-2 mb-3">
+            <div class="col-6">
+              <label class="form-label small fw-semibold">Age (Years)</label>
+              <input type="number" step="0.1" name="age" value="{{ initial_age }}" class="form-control form-control-sm" required>
+            </div>
+            <div class="col-6">
+              <label class="form-label small fw-semibold">Weight (kg)</label>
+              <input type="number" step="0.1" name="weight" value="{{ initial_weight }}" class="form-control form-control-sm" required>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label small fw-semibold">Health Condition</label>
+            <select name="health_condition" class="form-select form-select-sm">
+              <option value="Healthy" {% if initial_health == 'Healthy' %}selected{% endif %}>Healthy / Normal</option>
+              <option value="Overweight" {% if initial_health == 'Overweight' %}selected{% endif %}>Overweight / Weight Control</option>
+              <option value="Joint Issues / Arthritis" {% if initial_health == 'Joint Issues / Arthritis' %}selected{% endif %}>Joint Issues / Arthritis</option>
+              <option value="Sensitive Stomach / Allergies" {% if initial_health == 'Sensitive Stomach / Allergies' %}selected{% endif %}>Sensitive Stomach / Allergies</option>
+              <option value="Senior Cognitive Decline" {% if initial_health == 'Senior Cognitive Decline' %}selected{% endif %}>Senior Care</option>
+            </select>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label small fw-semibold">Activity Level</label>
+            <select name="activity_level" class="form-select form-select-sm">
+              <option value="Low" {% if initial_activity == 'Low' %}selected{% endif %}>Low (Calm / Indoor)</option>
+              <option value="Moderate" {% if initial_activity == 'Moderate' %}selected{% endif %}>Moderate (1-2 walks/day)</option>
+              <option value="High" {% if initial_activity == 'High' %}selected{% endif %}>High (Energetic / Active)</option>
+              <option value="Very High" {% if initial_activity == 'Very High' %}selected{% endif %}>Very High (Athletic / Agility)</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary-custom w-100 py-2 fw-bold">
+            <i class="fa-solid fa-wand-magic-sparkles me-1"></i> Generate ML Recommendations
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Recommendations Result Column -->
+    <div class="col-lg-8">
+      {% if recommendations %}
+        <div class="d-flex flex-column gap-4">
+          
+          <!-- 1. Tailored Diet Card -->
+          <div class="glass-card p-4 border-start border-4 border-success">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <div class="d-flex align-items-center gap-2">
+                <div class="bg-success-subtle text-success p-2 rounded-circle">
+                  <i class="fa-solid fa-bowl-food fs-5"></i>
+                </div>
+                <div>
+                  <h5 class="fw-bold mb-0 text-success">Recommended Diet & Nutrition Formula</h5>
+                  <div class="text-muted small">{{ recommendations.diet_category }}</div>
+                </div>
+              </div>
+              <span class="badge bg-success">ML Predicted</span>
+            </div>
+
+            <div class="p-3 rounded-4 bg-white border my-3">
+              <div class="fw-bold text-dark fs-5 mb-1">{{ recommendations.recommended_food }}</div>
+              <p class="small text-secondary mb-0"><strong>Why this was selected:</strong> {{ recommendations.why_diet }}</p>
+            </div>
+          </div>
+
+          <!-- 2. Caretaker Compatibility Rankings -->
+          <div class="glass-card p-4 border-start border-4 border-primary">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <div class="d-flex align-items-center gap-2">
+                <div class="bg-primary-subtle text-primary p-2 rounded-circle">
+                  <i class="fa-solid fa-user-check fs-5"></i>
+                </div>
+                <div>
+                  <h5 class="fw-bold mb-0 text-primary">AI & ML Compatible Caretakers</h5>
+                  <div class="text-muted small">Matched on Breed Experience, Wages, Reliability, Rejection History & Daily Capacity (Max 2 pets/day)</div>
+                </div>
+              </div>
+              <span class="badge bg-primary">ML Ranked</span>
+            </div>
+
+            <div class="d-flex flex-column gap-3">
+              {% for item in recommendations.matched_caretakers %}
+                <div class="p-3 rounded-4 bg-white border d-flex flex-column gap-3 shadow-sm">
+                  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                    <div class="d-flex align-items-center gap-3">
+                      <img src="{{ item.caretaker.user.get_photo_url }}" class="rounded-circle border shadow-sm" width="58" height="58" style="object-fit: cover;">
+                      <div>
+                        <div class="d-flex align-items-center gap-2">
+                          <h6 class="fw-bold mb-0">{{ item.caretaker.user.get_full_name|default:item.caretaker.user.username }}</h6>
+                          <span class="badge {{ item.capacity_summary.badge_class }} text-xs py-1 px-2">
+                            {{ item.capacity_summary.status_text }}
+                          </span>
+                        </div>
+                        <div class="small text-muted mt-1">
+                          <strong class="text-success">₹{{ item.caretaker.hourly_rate }}/hr</strong> • 
+                          <span>{{ item.caretaker.experience_years }} yrs exp</span> • 
+                          <span>{{ item.caretaker.rating }}★ ({{ item.caretaker.total_reviews }} reviews)</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="text-md-end d-flex align-items-center justify-content-between justify-content-md-end gap-3">
+                      <div class="text-center">
+                        <div class="fs-4 fw-extrabold text-success">{{ item.match_score }}%</div>
+                        <div class="text-xs text-muted fw-semibold">Match Score</div>
+                      </div>
+                      {% if item.is_available_today %}
+                        <a href="{% url 'bookings:create_booking' item.caretaker.pk %}" class="btn btn-sm btn-primary-custom px-3">
+                          <i class="fa-solid fa-calendar-plus me-1"></i> Book Care
+                        </a>
+                      {% else %}
+                        <div class="text-end">
+                          <a href="{% url 'bookings:create_booking' item.caretaker.pk %}" class="btn btn-sm btn-outline-primary px-3">
+                            <i class="fa-solid fa-calendar me-1"></i> Book Next Slot
+                          </a>
+                          {% if item.capacity_summary.next_available_date %}
+                            <div class="text-xs text-muted mt-1">Avail: {{ item.capacity_summary.next_available_date|date:"M d" }}</div>
+                          {% endif %}
+                        </div>
+                      {% endif %}
+                    </div>
+                  </div>
+
+                  <!-- ML Multi-Factor Match Breakdown Badges -->
+                  <div class="p-2 rounded bg-light border d-flex flex-wrap gap-2 text-xs">
+                    {% for r in item.match_reasons %}
+                      <span class="badge bg-success-subtle text-success border border-success-subtle">
+                        <i class="fa-solid fa-circle-check me-1"></i> {{ r }}
+                      </span>
+                    {% endfor %}
+                    {% if item.rejected_count > 0 %}
+                      <span class="badge bg-danger-subtle text-danger border border-danger-subtle">
+                        <i class="fa-solid fa-triangle-exclamation me-1"></i> {{ item.rejected_count }} Rejections factored
+                      </span>
+                    {% endif %}
+                  </div>
+                </div>
+              {% empty %}
+                <p class="text-muted small">No caretakers currently registered in this area.</p>
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- 3. Daily Care Tips Card -->
+          <div class="glass-card p-4 border-start border-4 border-warning">
+            <div class="d-flex align-items-center gap-2 mb-2">
+              <div class="bg-warning-subtle text-warning p-2 rounded-circle">
+                <i class="fa-solid fa-lightbulb fs-5"></i>
+              </div>
+              <h5 class="fw-bold mb-0 text-dark">Personalized Daily Care Guideline</h5>
+            </div>
+            <div class="p-3 rounded-4 bg-white border my-2">
+              <p class="text-secondary mb-0 leading-relaxed">{{ recommendations.care_tip }}</p>
+            </div>
+          </div>
+
+        </div>
+      {% else %}
+        <div class="glass-card p-5 text-center text-muted">
+          <i class="fa-solid fa-brain fs-1 text-primary mb-3 d-block"></i>
+          <h4 class="fw-bold text-dark mb-2">Ready to Run Recommendations</h4>
+          <p class="small mb-4">Select your pet or adjust parameters on the left and click "Generate ML Recommendations".</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}

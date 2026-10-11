@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+
+{% block title %}Caretaker Marketplace – Pet Care Companion{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- Header Banner -->
+  <div class="glass-card p-4 mb-4">
+    <div class="row align-items-center">
+      <div class="col-md-8">
+        <h3 class="fw-bold mb-1"><i class="fa-solid fa-user-doctor text-success me-2"></i> Trusted Caretakers Marketplace</h3>
+        <p class="text-muted small mb-0">Browse verified pet sitters, walkers, and overnight boarding specialists.</p>
+      </div>
+      <div class="col-md-4 text-md-end mt-3 mt-md-0">
+        <span class="badge bg-success-subtle text-success fs-6 px-3 py-2">
+          <i class="fa-solid fa-check-double me-1"></i> {{ total_count }} Verified Sitters
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <!-- Filter Sidebar Column -->
+    <div class="col-lg-3">
+      <div class="glass-card p-4 sticky-top" style="top: 85px;">
+        <h5 class="fw-bold mb-3"><i class="fa-solid fa-filter text-primary me-2"></i> Filter Sitters</h5>
+        <form method="get">
+          <!-- Search input -->
+          <div class="mb-3">
+            <label class="form-label small fw-semibold">Search Keywords</label>
+            <input type="text" name="q" value="{{ q }}" class="form-control form-control-sm" placeholder="Name, area, keyword...">
+          </div>
+
+          <!-- Availability -->
+          <div class="mb-3">
+            <label class="form-label small fw-semibold">Availability</label>
+            <select name="availability" class="form-select form-select-sm">
+              <option value="">All Availability</option>
+              <option value="AVAILABLE" {% if availability == 'AVAILABLE' %}selected{% endif %}>Available Now</option>
+              <option value="BUSY" {% if availability == 'BUSY' %}selected{% endif %}>Busy / Limited</option>
+            </select>
+          </div>
+
+          <!-- Service -->
+          <div class="mb-3">
+            <label class="form-label small fw-semibold">Service</label>
+            <select name="service" class="form-select form-select-sm">
+              <option value="">All Services</option>
+              <option value="Sitting" {% if service == 'Sitting' %}selected{% endif %}>Pet Sitting</option>
+              <option value="Walking" {% if service == 'Walking' %}selected{% endif %}>Dog Walking</option>
+              <option value="Boarding" {% if service == 'Boarding' %}selected{% endif %}>Overnight Boarding</option>
+              <option value="Daycare" {% if service == 'Daycare' %}selected{% endif %}>Daycare</option>
+            </select>
+          </div>
+
+          <!-- Max Price -->
+          <div class="mb-3">
+            <label class="form-label small fw-semibold">Max Price (₹/hr)</label>
+            <input type="number" name="max_price" value="{{ max_price }}" class="form-control form-control-sm" placeholder="e.g. 500">
+          </div>
+
+          <!-- Min Rating -->
+          <div class="mb-3">
+            <label class="form-label small fw-semibold">Minimum Rating</label>
+            <select name="min_rating" class="form-select form-select-sm">
+              <option value="">Any Rating</option>
+              <option value="4.8" {% if min_rating == '4.8' %}selected{% endif %}>4.8+ Stars ★</option>
+              <option value="4.5" {% if min_rating == '4.5' %}selected{% endif %}>4.5+ Stars ★</option>
+              <option value="4.0" {% if min_rating == '4.0' %}selected{% endif %}>4.0+ Stars ★</option>
+            </select>
+          </div>
+
+          <!-- Sort -->
+          <div class="mb-4">
+            <label class="form-label small fw-semibold">Sort By</label>
+            <select name="sort" class="form-select form-select-sm">
+              <option value="-rating" {% if sort_by == '-rating' %}selected{% endif %}>Top Rated</option>
+              <option value="hourly_rate" {% if sort_by == 'hourly_rate' %}selected{% endif %}>Price: Low to High</option>
+              <option value="-hourly_rate" {% if sort_by == '-hourly_rate' %}selected{% endif %}>Price: High to Low</option>
+              <option value="-experience_years" {% if sort_by == '-experience_years' %}selected{% endif %}>Most Experienced</option>
+            </select>
+          </div>
+
+          <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-sm btn-primary-custom">Apply Filters</button>
+            <a href="{% url 'marketplace:caretaker_list' %}" class="btn btn-sm btn-outline-secondary">Reset</a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Caretakers Grid -->
+    <div class="col-lg-9">
+      {% if page_obj.object_list %}
+        <div class="row g-4">
+          {% for ct in page_obj.object_list %}
+            <div class="col-md-6 col-xl-4">
+              <div class="glass-card glass-card-hover p-4 h-100 d-flex flex-column justify-content-between">
+                <div>
+                  <div class="d-flex align-items-center gap-3 mb-3">
+                    <img src="{{ ct.user.get_photo_url }}" class="rounded-circle border shadow-sm" width="60" height="60" style="object-fit: cover;">
+                    <div>
+                      <h6 class="fw-bold mb-0 text-truncate">{{ ct.user.get_full_name|default:ct.user.username }}</h6>
+                      <div class="text-xs text-muted">{{ ct.user.address|default:'Local Area' }}</div>
+                      <div class="d-flex align-items-center gap-1 text-warning small fw-bold mt-1">
+                        <i class="fa-solid fa-star"></i> {{ ct.rating }}
+                        <span class="text-muted fw-normal">({{ ct.total_reviews }} reviews)</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="d-flex justify-content-between align-items-center p-2 rounded bg-light border mb-3 small">
+                    <div>
+                      <span class="text-muted">Rate:</span>
+                      <strong class="text-success fs-6">₹{{ ct.hourly_rate }}/hr</strong>
+                    </div>
+                    <div>
+                      <span class="text-muted">Exp:</span>
+                      <strong>{{ ct.experience_years }} yrs</strong>
+                    </div>
+                  </div>
+
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="badge {{ ct.capacity_summary.badge_class }} text-xs py-1 px-2">
+                      {{ ct.capacity_summary.status_text }}
+                    </span>
+                    {% if ct.capacity_summary.is_fully_booked and ct.capacity_summary.next_available_date %}
+                      <span class="text-xs text-muted">Next: {{ ct.capacity_summary.next_available_date|date:"M d" }}</span>
+                    {% endif %}
+                  </div>
+
+                  <p class="small text-secondary mb-3" style="min-height: 48px; line-height: 1.4;">
+                    {{ ct.bio|default:"Dedicated animal lover providing gentle care, regular walking, and timely medication feeding."|truncatechars:85 }}
+                  </p>
+
+                  <div class="d-flex flex-wrap gap-1 mb-3">
+                    {% for serv in ct.get_services_list|slice:":3" %}
+                      <span class="badge bg-primary-subtle text-primary text-xs" style="font-size: 0.72rem;">{{ serv }}</span>
+                    {% endfor %}
+                  </div>
+                </div>
+
+                <div class="d-grid gap-2">
+                  <div class="d-flex gap-2">
+                    <a href="{% url 'marketplace:caretaker_detail' ct.pk %}" class="btn btn-sm btn-outline-dark flex-grow-1">View Profile</a>
+                    {% if user.is_authenticated and user.is_pet_owner %}
+                      {% if ct.capacity_summary.is_fully_booked %}
+                        <a href="{% url 'bookings:create_booking' ct.pk %}" class="btn btn-sm btn-outline-success flex-grow-1">Book Slot</a>
+                      {% else %}
+                        <a href="{% url 'bookings:create_booking' ct.pk %}" class="btn btn-sm btn-success-custom flex-grow-1">Book Now</a>
+                      {% endif %}
+                    {% else %}
+                      <a href="{% url 'marketplace:caretaker_detail' ct.pk %}" class="btn btn-sm btn-primary-custom flex-grow-1">Book</a>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if page_obj.has_other_pages %}
+          <div class="d-flex justify-content-center mt-5">
+            <nav>
+              <ul class="pagination">
+                {% if page_obj.has_previous %}
+                  <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ q }}&availability={{ availability }}&max_price={{ max_price }}&min_rating={{ min_rating }}&service={{ service }}&sort={{ sort_by }}">Previous</a></li>
+                {% endif %}
+                <li class="page-item active"><span class="page-link">{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+                {% if page_obj.has_next %}
+                  <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ q }}&availability={{ availability }}&max_price={{ max_price }}&min_rating={{ min_rating }}&service={{ service }}&sort={{ sort_by }}">Next</a></li>
+                {% endif %}
+              </ul>
+            </nav>
+          </div>
+        {% endif %}
+      {% else %}
+        <div class="glass-card p-5 text-center text-muted">
+          <i class="fa-solid fa-user-xmark fs-1 text-secondary mb-3 d-block"></i>
+          <h4 class="fw-bold text-dark mb-2">No Caretakers Match Criteria</h4>
+          <p class="small mb-3">Try adjusting your filters or price range to find available pet sitters.</p>
+          <a href="{% url 'marketplace:caretaker_list' %}" class="btn btn-primary-custom btn-sm">Reset All Filters</a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}

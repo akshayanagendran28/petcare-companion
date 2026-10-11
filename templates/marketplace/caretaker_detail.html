@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ caretaker.user.get_full_name|default:caretaker.user.username }} – Caretaker Profile{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- Caretaker Header Card -->
+  <div class="glass-card p-4 p-md-5 mb-4">
+    <div class="row align-items-center g-4">
+      <div class="col-md-3 text-center">
+        <img src="{{ caretaker.user.get_photo_url }}" class="rounded-circle border shadow img-fluid" style="width: 140px; height: 140px; object-fit: cover;">
+      </div>
+      <div class="col-md-6">
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <h2 class="fw-bold mb-0 text-dark">{{ caretaker.user.get_full_name|default:caretaker.user.username }}</h2>
+          <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1">
+            <i class="fa-solid fa-circle-check me-1"></i> Verified
+          </span>
+        </div>
+        <div class="text-secondary small mb-2"><i class="fa-solid fa-location-dot me-1 text-danger"></i> {{ caretaker.user.address|default:'Local City' }}</div>
+        
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <div class="text-warning fw-bold fs-5">
+            <i class="fa-solid fa-star"></i> {{ caretaker.rating }}
+            <span class="text-muted fs-6 fw-normal">({{ caretaker.total_reviews }} client reviews)</span>
+          </div>
+          <div class="vr"></div>
+          <div class="text-muted small"><strong>{{ caretaker.experience_years }}</strong> years experience</div>
+        </div>
+
+        <p class="text-muted small mb-0">{{ caretaker.bio|default:"Experienced and compassionate pet caretaker dedicated to keeping your dog or cat comfortable, safe, and happy." }}</p>
+      </div>
+
+      <div class="col-md-3 text-center text-md-end">
+        <div class="p-3 rounded-4 bg-light border d-inline-block text-center w-100">
+          <div class="text-xs text-muted text-uppercase mb-1">Standard Rate</div>
+          <div class="fs-2 fw-extrabold text-success mb-2">₹{{ caretaker.hourly_rate }} <span class="fs-6 text-muted fw-normal">/ hr</span></div>
+          <span class="badge {{ caretaker.capacity_summary.badge_class }} mb-2 w-100 py-2">
+            <i class="fa-solid fa-paw me-1"></i> {{ caretaker.capacity_summary.status_text }}
+          </span>
+          {% if caretaker.capacity_summary.is_fully_booked and caretaker.capacity_summary.next_available_date %}
+            <div class="text-xs text-secondary mb-3">
+              <i class="fa-solid fa-calendar-check text-success me-1"></i> Next open slot: <strong>{{ caretaker.capacity_summary.next_available_date|date:"M d, Y" }}</strong>
+            </div>
+          {% else %}
+            <div class="mb-3"></div>
+          {% endif %}
+          {% if user.is_authenticated and user.is_pet_owner %}
+            {% if caretaker.capacity_summary.is_fully_booked %}
+              <a href="{% url 'bookings:create_booking' caretaker.pk %}" class="btn btn-outline-success w-100 py-2 fw-bold">
+                <i class="fa-solid fa-calendar-plus me-1"></i> Book for Next Available Slot
+              </a>
+            {% else %}
+              <a href="{% url 'bookings:create_booking' caretaker.pk %}" class="btn btn-success-custom w-100 py-2 fw-bold">
+                <i class="fa-solid fa-calendar-plus me-1"></i> Book Caretaker
+              </a>
+            {% endif %}
+          {% elif not user.is_authenticated %}
+            <a href="{% url 'users:login' %}?next={% url 'bookings:create_booking' caretaker.pk %}" class="btn btn-primary-custom w-100 py-2">
+              Sign In to Book
+            </a>
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Services Offered & Verified Reviews -->
+  <div class="row g-4">
+    <!-- Services -->
+    <div class="col-md-5">
+      <div class="glass-card p-4 h-100">
+        <h5 class="fw-bold mb-3"><i class="fa-solid fa-list-check text-primary me-2"></i> Services Offered</h5>
+        <div class="d-flex flex-column gap-2">
+          {% for s in caretaker.get_services_list %}
+            <div class="p-3 rounded bg-white border d-flex align-items-center gap-3">
+              <div class="bg-primary-subtle text-primary p-2 rounded-circle">
+                <i class="fa-solid fa-check small"></i>
+              </div>
+              <div class="fw-semibold small">{{ s }}</div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Verified Client Reviews -->
+    <div class="col-md-7">
+      <div class="glass-card p-4 h-100">
+        <h5 class="fw-bold mb-3"><i class="fa-solid fa-comments text-warning me-2"></i> Verified Reviews ({{ caretaker.total_reviews }})</h5>
+        {% if reviews %}
+          <div class="d-flex flex-column gap-3">
+            {% for r in reviews %}
+              <div class="p-3 rounded bg-white border">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <div class="d-flex align-items-center gap-2">
+                    <img src="{{ r.reviewer.get_photo_url }}" class="rounded-circle border" width="36" height="36" style="object-fit: cover;">
+                    <div>
+                      <strong class="d-block small">{{ r.reviewer.get_full_name|default:r.reviewer.username }}</strong>
+                      <span class="text-xs text-muted">{{ r.created_at|date:"M d, Y" }}</span>
+                    </div>
+                  </div>
+                  <div class="text-warning small fw-bold">
+                    {% for _ in "12345"|slice:r.rating %}★{% endfor %}
+                  </div>
+                </div>
+                <p class="small text-secondary mb-0">{{ r.comment }}</p>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p class="text-muted small text-center py-4">No reviews yet for this caretaker.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

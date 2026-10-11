@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Pet to Match Hub – Pet Care Companion{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
+      <div class="glass-card p-4 p-md-5">
+        <div class="mb-4 pb-3 border-bottom">
+          <h3 class="fw-bold mb-1"><i class="fa-solid fa-users-rays text-warning me-2"></i> Join Pet Match Hub</h3>
+          <p class="text-muted small mb-0">Help your pet find park playmates, walking companions, or breeding partners.</p>
+        </div>
+
+        <form method="post">
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Select Pet *</label>
+            {{ form.pet }}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Looking For *</label>
+            {{ form.looking_for }}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Neighborhood / Location *</label>
+            {{ form.location }}
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label fw-semibold">Pet Social Bio & Play Style</label>
+            {{ form.bio }}
+          </div>
+
+          <div class="d-flex justify-content-end gap-2">
+            <a href="{% url 'matchhub:match_list' %}" class="btn btn-outline-secondary">Cancel</a>
+            <button type="submit" class="btn btn-warning text-dark fw-bold px-4">
+              <i class="fa-solid fa-check me-1"></i> Enable Matchmaking
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

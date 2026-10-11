@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Send Match Request – {{ receiver_profile.pet.name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      <div class="glass-card p-4 p-md-5">
+        
+        <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
+          <img src="{{ receiver_profile.pet.get_photo_url }}" class="rounded-3 border" width="64" height="64" style="object-fit: cover;">
+          <div>
+            <h4 class="fw-bold mb-0">Match with {{ receiver_profile.pet.name }}</h4>
+            <div class="small text-muted">{{ receiver_profile.pet.breed }} • {{ receiver_profile.looking_for }}</div>
+          </div>
+        </div>
+
+        <form method="post">
+          {% csrf_token %}
+
+          <div class="mb-3">
+            {{ form.sender_profile.label_tag }}
+            {{ form.sender_profile }}
+            {% if not form.sender_profile.field.queryset.exists %}
+              <div class="alert alert-warning small mt-2">
+                You need to list your pet in the Match Hub first! <a href="{% url 'matchhub:create_profile' %}">Create Match Profile</a>.
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label fw-semibold">Friendly Message to Owner</label>
+            {{ form.message }}
+          </div>
+
+          <div class="d-flex justify-content-end gap-2">
+            <a href="{% url 'matchhub:match_list' %}" class="btn btn-outline-secondary">Cancel</a>
+            <button type="submit" class="btn btn-warning text-dark fw-bold px-4">
+              <i class="fa-solid fa-heart me-1"></i> Send Request
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

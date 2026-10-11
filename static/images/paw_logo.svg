@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="40" height="40">
+  <defs>
+    <linearGradient id="pawGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="50" cy="62" rx="22" ry="18" fill="url(#pawGrad)"/>
+  <circle cx="30" cy="36" r="8.5" fill="url(#pawGrad)"/>
+  <circle cx="70" cy="36" r="8.5" fill="url(#pawGrad)"/>
+  <circle cx="16" cy="52" r="7.5" fill="url(#pawGrad)"/>
+  <circle cx="84" cy="52" r="7.5" fill="url(#pawGrad)"/>
+</svg>

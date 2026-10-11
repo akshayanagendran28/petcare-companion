@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+
+{% block title %}Pet Adoption & Marketplace – Pet Care Companion{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- Header Banner -->
+  <div class="glass-card p-4 mb-4">
+    <div class="row align-items-center">
+      <div class="col-md-8">
+        <h3 class="fw-bold mb-1"><i class="fa-solid fa-heart text-danger me-2"></i> Pet Adoption & Marketplace</h3>
+        <p class="text-muted small mb-0">Find a furry companion looking for a loving forever home or list a pet for adoption.</p>
+      </div>
+      <div class="col-md-4 text-md-end mt-3 mt-md-0">
+        <a href="{% url 'adoption:listing_create' %}" class="btn btn-danger px-4">
+          <i class="fa-solid fa-plus me-1"></i> List a Pet for Adoption / Sale
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <!-- Filter Sidebar -->
+    <div class="col-lg-3">
+      <div class="glass-card p-4 sticky-top" style="top: 85px;">
+        <h5 class="fw-bold mb-3"><i class="fa-solid fa-filter text-danger me-2"></i> Filters</h5>
+        <form method="get">
+          <div class="mb-3">
+            <label class="form-label small fw-semibold">Search</label>
+            <input type="text" name="q" value="{{ q }}" class="form-control form-control-sm" placeholder="Breed, name, city...">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label small fw-semibold">Species</label>
+            <select name="species" class="form-select form-select-sm">
+              <option value="">All Species</option>
+              <option value="Dog" {% if species == 'Dog' %}selected{% endif %}>Dogs</option>
+              <option value="Cat" {% if species == 'Cat' %}selected{% endif %}>Cats</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label small fw-semibold">Listing Type</label>
+            <select name="type" class="form-select form-select-sm">
+              <option value="">All Listings</option>
+              <option value="ADOPTION" {% if listing_type == 'ADOPTION' %}selected{% endif %}>Free Adoption / Rescue</option>
+              <option value="SALE" {% if listing_type == 'SALE' %}selected{% endif %}>Pet Sale / Breeder</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label small fw-semibold">Gender</label>
+            <select name="gender" class="form-select form-select-sm">
+              <option value="">Any Gender</option>
+              <option value="Male" {% if gender == 'Male' %}selected{% endif %}>Male</option>
+              <option value="Female" {% if gender == 'Female' %}selected{% endif %}>Female</option>
+            </select>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label small fw-semibold">Max Price / Fee (₹)</label>
+            <input type="number" name="max_price" value="{{ max_price }}" class="form-control form-control-sm" placeholder="0 for Free">
+          </div>
+
+          <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-sm btn-danger">Apply Filters</button>
+            <a href="{% url 'adoption:listing_list' %}" class="btn btn-sm btn-outline-secondary">Reset</a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Listings Grid -->
+    <div class="col-lg-9">
+      {% if page_obj.object_list %}
+        <div class="row g-4">
+          {% for item in page_obj.object_list %}
+            <div class="col-md-6 col-xl-4">
+              <div class="glass-card glass-card-hover p-3 h-100 d-flex flex-column justify-content-between">
+                <div>
+                  <div class="position-relative mb-3">
+                    <img src="{{ item.get_photo_url }}" class="rounded-4 border w-100 shadow-sm" style="height: 190px; object-fit: cover;">
+                    <span class="position-absolute top-0 start-0 m-2 badge {% if item.listing_type == 'ADOPTION' %}bg-success{% else %}bg-primary{% endif %} shadow">
+                      {{ item.get_listing_type_display }}
+                    </span>
+                    <span class="position-absolute bottom-0 end-0 m-2 badge bg-dark bg-opacity-75 shadow">
+                      {% if item.price == 0 %}Free{% else %}₹{{ item.price }}{% endif %}
+                    </span>
+                  </div>
+
+                  <div class="d-flex justify-content-between align-items-start mb-1">
+                    <h5 class="fw-bold mb-0 text-truncate">{{ item.pet_name }}</h5>
+                    <span class="badge bg-light text-dark border small">{{ item.gender }}</span>
+                  </div>
+                  <div class="text-secondary small fw-semibold mb-2">{{ item.breed }} • {{ item.age }} yrs</div>
+
+                  <div class="small text-muted mb-2">
+                    <i class="fa-solid fa-location-dot text-danger me-1"></i> {{ item.location }}
+                  </div>
+                  <p class="small text-secondary mb-3" style="min-height: 40px;">
+                    {{ item.description|truncatechars:75 }}
+                  </p>
+                </div>
+
+                <a href="{% url 'adoption:listing_detail' item.pk %}" class="btn btn-sm btn-outline-danger w-100 fw-bold">
+                  View Pet Details
+                </a>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if page_obj.has_other_pages %}
+          <div class="d-flex justify-content-center mt-5">
+            <nav>
+              <ul class="pagination">
+                {% if page_obj.has_previous %}
+                  <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ q }}&species={{ species }}&type={{ listing_type }}&gender={{ gender }}&max_price={{ max_price }}">Previous</a></li>
+                {% endif %}
+                <li class="page-item active"><span class="page-link">{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+                {% if page_obj.has_next %}
+                  <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ q }}&species={{ species }}&type={{ listing_type }}&gender={{ gender }}&max_price={{ max_price }}">Next</a></li>
+                {% endif %}
+              </ul>
+            </nav>
+          </div>
+        {% endif %}
+      {% else %}
+        <div class="glass-card p-5 text-center text-muted">
+          <i class="fa-solid fa-heart-crack fs-1 text-secondary mb-3 d-block"></i>
+          <h4 class="fw-bold text-dark mb-2">No Listings Found</h4>
+          <p class="small mb-3">No pet listings match your search criteria. Check back soon or list a pet!</p>
+          <a href="{% url 'adoption:listing_create' %}" class="btn btn-danger btn-sm">Create First Listing</a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,243 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} – Pet Care Companion{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <div class="glass-card p-4 p-md-5 border-0 shadow-sm" style="border-radius: 20px;">
+        
+        <!-- Header -->
+        <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
+          <div class="p-3 bg-danger text-white rounded-4 shadow-sm">
+            <i class="fa-solid fa-bullhorn fs-3"></i>
+          </div>
+          <div>
+            <h3 class="fw-extrabold mb-1 text-dark">{{ title }}</h3>
+            <p class="text-muted small mb-0">
+              Publish comprehensive details including unique birthmarks, disappearance timeline, police CSR status, and reward to alert the community immediately.
+            </p>
+          </div>
+        </div>
+
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+
+          {% if form.errors %}
+            <div class="alert alert-danger p-3 mb-4 rounded-3">
+              <strong class="d-block mb-1"><i class="fa-solid fa-circle-exclamation me-1"></i> Please correct the highlighted errors:</strong>
+              <ul class="mb-0 small ps-3">
+                {% for field, errors in form.errors.items %}
+                  {% for error in errors %}
+                    <li><strong>{{ field|title }}:</strong> {{ error }}</li>
+                  {% endfor %}
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+
+          <!-- Section 1: Basic Identity -->
+          <div class="p-3 rounded-4 bg-light border mb-4">
+            <h5 class="fw-bold text-dark mb-3"><i class="fa-solid fa-paw text-primary me-2"></i> 1. Missing Pet Identity</h5>
+            <div class="row g-3">
+              <div class="col-md-4">
+                <label class="form-label fw-semibold small text-muted">Pet Name *</label>
+                {{ form.pet_name }}
+              </div>
+              <div class="col-md-4">
+                <label class="form-label fw-semibold small text-muted">Species *</label>
+                {{ form.species }}
+              </div>
+              <div class="col-md-4">
+                <label class="form-label fw-semibold small text-muted">Breed *</label>
+                {{ form.breed }}
+              </div>
+              <div class="col-md-4">
+                <label class="form-label fw-semibold small text-muted">Gender *</label>
+                {{ form.gender }}
+              </div>
+              <div class="col-md-4">
+                <label class="form-label fw-semibold small text-muted">Approximate Age</label>
+                {{ form.approx_age }}
+              </div>
+              <div class="col-md-4">
+                <label class="form-label fw-semibold small text-muted">Color & Coat Pattern</label>
+                {{ form.color_pattern }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 2: Distinctive Marks & Identifiers -->
+          <div class="p-3 rounded-4 bg-warning bg-opacity-10 border border-warning border-opacity-30 mb-4">
+            <h5 class="fw-bold text-dark mb-2">
+              <i class="fa-solid fa-fingerprint text-warning me-2"></i> 2. Birth Marks & Unique Identifiers
+            </h5>
+            <p class="text-xs text-muted mb-3">Crucial for verifying ownership and distinguishing from similar looking neighborhood pets.</p>
+            
+            <div class="row g-3">
+              <div class="col-12">
+                <label class="form-label fw-semibold small text-dark">Distinctive Birth Marks, Scars, Patches & Eye Colors</label>
+                {{ form.distinctive_marks }}
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold small text-dark">Collar & Tag Description</label>
+                {{ form.collar_description }}
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold small text-dark">Microchip ID / RFID Tag Number</label>
+                {{ form.microchip_id }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 3: Where, When & How Lost -->
+          <div class="p-3 rounded-4 bg-light border mb-4">
+            <h5 class="fw-bold text-dark mb-3"><i class="fa-solid fa-location-dot text-danger me-2"></i> 3. Where, When & How It Happened</h5>
+            
+            <div class="row g-3">
+              <div class="col-12">
+                <label class="form-label fw-semibold small text-muted">Last Seen Location (Street, Landmark, Area, City) *</label>
+                {{ form.last_seen_location }}
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold small text-muted">Date Missing / Lost *</label>
+                {{ form.date_lost }}
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold small text-muted">Time of Disappearance</label>
+                {{ form.time_lost }}
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-semibold small text-muted">How It Was Lost / Circumstances</label>
+                {{ form.how_lost }}
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-semibold small text-muted">Personality Traits & Behavioral Cues</label>
+                {{ form.description }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 4: Police Complaint Details -->
+          <div class="p-3 rounded-4 bg-white border shadow-sm mb-4">
+            <h5 class="fw-bold text-dark mb-2">
+              <i class="fa-solid fa-building-shield text-primary me-2"></i> 4. Police Complaint & Official CSR Record
+            </h5>
+            <p class="text-xs text-muted mb-3">If you have filed an official complaint or CSR at a police station, enter details below for verification badge.</p>
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold small text-muted">Police Complaint Status *</label>
+                {{ form.police_complaint_status }}
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold small text-muted">Police Station Name</label>
+                {{ form.police_station_name }}
+              </div>
+              <div class="col-md-4">
+                <label class="form-label fw-semibold small text-muted">CSR / FIR Reference Number</label>
+                {{ form.police_csr_number }}
+              </div>
+              <div class="col-md-4">
+                <label class="form-label fw-semibold small text-muted">Police Filing Date</label>
+                {{ form.police_filing_date }}
+              </div>
+              <div class="col-md-4">
+                <label class="form-label fw-semibold small text-muted">Officer / Station Desk Contact</label>
+                {{ form.police_contact_details }}
+              </div>
+              <div class="col-12 mt-3 pt-2 border-top">
+                <label class="form-label fw-semibold small text-dark d-flex align-items-center gap-2">
+                  <span>Upload Police CSR Acknowledgement Slip / FIR Copy (Image / PDF)</span>
+                  <span class="badge bg-primary-subtle text-primary border border-primary-subtle text-xs">
+                    <i class="fa-solid fa-robot me-1"></i> Instant AI Verification on Upload
+                  </span>
+                </label>
+                {{ form.police_document }}
+                <div class="form-text text-xs text-muted">
+                  Our Machine Learning Document Inspector automatically scans the police seal, CSR reference number, and station jurisdiction to grant an official AI Verified badge.
+                </div>
+                {% if is_edit and report.police_document %}
+                  <div class="mt-2 text-xs text-secondary">
+                    Current Document: <a href="{{ report.police_document.url }}" target="_blank" class="fw-bold text-primary">{{ report.police_document.name }}</a>
+                    {% if report.police_verified_by_ai %}
+                      <span class="badge bg-success ms-2"><i class="fa-solid fa-circle-check me-1"></i> AI Verified ({{ report.police_verification_confidence }}%)</span>
+                    {% endif %}
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 5: Reward, Contacts & Photo -->
+          <div class="p-3 rounded-4 bg-light border mb-4">
+            <h5 class="fw-bold text-dark mb-3"><i class="fa-solid fa-phone text-success me-2"></i> 5. Reward, Contact Information & Photo</h5>
+
+            <div class="row g-3">
+              <div class="col-md-4">
+                <label class="form-label fw-semibold small text-muted">Reward Amount (₹ in INR)</label>
+                {{ form.reward_amount }}
+              </div>
+              <div class="col-md-8">
+                <label class="form-label fw-semibold small text-muted">Reward Details / Conditions</label>
+                {{ form.reward_details }}
+              </div>
+              <div class="col-md-4">
+                <label class="form-label fw-semibold small text-muted">Primary Contact Name *</label>
+                {{ form.contact_name }}
+              </div>
+              <div class="col-md-4">
+                <label class="form-label fw-semibold small text-muted">Primary Phone Number *</label>
+                {{ form.contact_number }}
+              </div>
+              <div class="col-md-4">
+                <label class="form-label fw-semibold small text-muted">Alternate Emergency Phone</label>
+                {{ form.alternate_contact }}
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-semibold small text-muted">Pet Photo (Clear recent photo)</label>
+                {{ form.photo }}
+                {% if is_edit and report.photo %}
+                  <div class="mt-2 text-xs text-muted">
+                    Current photo: <a href="{{ report.photo.url }}" target="_blank">{{ report.photo.name }}</a>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 6: Status & Reunion Details (If editing or updating) -->
+          {% if is_edit %}
+            <div class="p-3 rounded-4 bg-success bg-opacity-10 border border-success border-opacity-30 mb-4">
+              <h5 class="fw-bold text-success mb-3"><i class="fa-solid fa-heart me-2"></i> 6. Status & Reunion Resolution (Optional)</h5>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold small text-dark">Current Alert Status</label>
+                  {{ form.status }}
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold small text-dark">Reunited Date (if resolved)</label>
+                  {{ form.reunited_date }}
+                </div>
+                <div class="col-12">
+                  <label class="form-label fw-semibold small text-dark">Reunion Story / How It Was Resolved</label>
+                  {{ form.reunited_details }}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+
+          <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+            <a href="{% url 'lostfound:lost_list' %}" class="btn btn-outline-secondary px-4">Cancel</a>
+            <button type="submit" class="btn btn-danger px-5 fw-bold shadow-sm">
+              <i class="fa-solid fa-paper-plane me-1"></i> {% if is_edit %}Save & Update Alert{% else %}Publish Urgent Alert to Community{% endif %}
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

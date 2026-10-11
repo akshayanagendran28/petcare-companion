@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}Notifications – Pet Care Companion{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="glass-card p-4 p-md-5">
+        <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+          <div>
+            <h3 class="fw-bold mb-1"><i class="fa-solid fa-bell text-primary me-2"></i> Notifications Center</h3>
+            <p class="text-muted small mb-0">Alerts regarding your bookings, reminders, and match requests.</p>
+          </div>
+          {% if notifications %}
+            <a href="{% url 'notifications:mark_all_read' %}" class="btn btn-sm btn-outline-secondary">Mark All as Read</a>
+          {% endif %}
+        </div>
+
+        {% if notifications %}
+          <div class="d-flex flex-column gap-3">
+            {% for notif in notifications %}
+              <div class="p-3 rounded-4 bg-white border d-flex justify-content-between align-items-center {% if not notif.is_read %}border-primary shadow-sm{% endif %}">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="p-2 rounded-circle {% if not notif.is_read %}bg-primary-subtle text-primary{% else %}bg-light text-secondary{% endif %}">
+                    {% if notif.notification_type == 'BOOKING' %}
+                      <i class="fa-solid fa-calendar-check fs-5"></i>
+                    {% elif notif.notification_type == 'REMINDER' %}
+                      <i class="fa-solid fa-syringe fs-5 text-success"></i>
+                    {% elif notif.notification_type == 'MATCH' %}
+                      <i class="fa-solid fa-heart fs-5 text-danger"></i>
+                    {% elif notif.notification_type == 'LOST_FOUND' %}
+                      <i class="fa-solid fa-triangle-exclamation fs-5 text-warning"></i>
+                    {% else %}
+                      <i class="fa-solid fa-bell fs-5"></i>
+                    {% endif %}
+                  </div>
+                  <div>
+                    <h6 class="fw-bold mb-0 text-dark">{{ notif.title }}</h6>
+                    <p class="small text-secondary mb-0">{{ notif.message }}</p>
+                    <span class="text-xs text-muted">{{ notif.created_at|date:"M d, Y • H:i" }}</span>
+                  </div>
+                </div>
+
+                <div class="text-end">
+                  {% if not notif.is_read %}
+                    <span class="badge bg-primary mb-2 d-block">New</span>
+                  {% endif %}
+                  {% if notif.link %}
+                    <a href="{% url 'notifications:mark_read' notif.id %}" class="btn btn-sm btn-primary-custom py-1 px-3 small">
+                      View
+                    </a>
+                  {% endif %}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="text-center py-5 text-muted">
+            <i class="fa-regular fa-bell-slash fs-1 text-secondary mb-3 d-block"></i>
+            <h5 class="fw-bold text-dark">No Notifications</h5>
+            <p class="small mb-0">You're all caught up! Booking updates and reminders will appear here.</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,165 +1,189 @@
-﻿# 🇮🇳 SCHEME SATHI (स्कीम साथी)
-### AI-Driven Scheme Matching for Marginalized Entrepreneurs
-**Smart India Hackathon 2026 &bull; Problem Statement ID: SIH26092**
+# Pet Care Companion – AI-Powered Pet Care and Marketplace Platform
+
+**Pet Care Companion** is a modern, full-stack, AI/ML-driven web application designed to connect pet owners with certified caretakers, manage pet health with automatic vaccination reminders, facilitate pet adoption and companion matching, generate digital QR Pet ID cards, and provide 24/7 intelligent pet care guidance using local LLMs and trained Machine Learning models.
 
 ---
 
-## 🌟 Executive Summary
+## 🐾 Key Features
 
-**Scheme Sathi** is an intelligent, multilingual government financial scheme discovery and readiness platform designed specifically for marginalized entrepreneurs (SC/ST founders, Women entrepreneurs, Minorities, Street Vendors, Traditional Artisans, and Differently-Abled individuals).
-
-Integrated with the official **myScheme.gov.in** dataset, Scheme Sathi implements:
-1. **Deterministic Rule Engine (100% Gazette Compliance)**: Legal criteria evaluated without LLM hallucinations.
-2. **Official myScheme.gov.in Dataset**: 25+ comprehensive Central and State government schemes with statutory gazette rules, subsidy slabs, and direct portal hyperlinks.
-3. **Explainable SHAP-Style Compatibility Ranking**: Multi-factor scoring showing transparently *why* a scheme is recommended or rejected.
-4. **OCR Document Verification Studio**: Cross-checks demographic certificates (Aadhaar, Caste, Income, Udyam) against profile data with mismatch alerts.
-5. **Interactive OpenStreetMap + Leaflet Partner Routing**: Dual-factor suitability scoring based on physical distance (km) + scheme authorization capability.
-6. **Interactive EMI & Subsidy Simulator**: Calculates exact monthly installments, margin money requirements (5% vs 10%), and capital subsidies (up to 35%).
-7. **Multilingual Conversational AI (Powered by Qwen via Ollama)**: 6 Regional Indian Languages (English, हिंदी, தமிழ், తెలుగు, ಕನ್ನಡ, മലയാളം).
-8. **Application Readiness Scorecard (0–100%)**: Multi-pillar audit guaranteeing rejection-free submission.
-9. **Comprehensive Admin & Policy Suite**: Scheme versioning (v1.0 to v2.0), gazette rule builder, channel partner directory, and national inclusion analytics.
-
----
-
-## 🏛️ Verified myScheme.gov.in Government Scheme Catalog
-
-### Central Government Schemes (Pan-India)
-| Scheme Code | Scheme Name | Nodal Ministry / Dept | Max Loan | Subsidy % (Special / Rural) | Official Portal |
-|---|---|---|---|---|---|
-| **PMEGP** | Prime Minister's Employment Generation Programme | Ministry of MSME / KVIC | ₹50 Lakh | Up to **35%** (Rural Special) | [myScheme Link](https://www.myscheme.gov.in/schemes/pmegp) |
-| **STAND_UP_INDIA** | Stand-Up India Scheme (SC/ST/Women) | Department of Financial Services | ₹1 Crore | 15% Margin / CGSSI Cover | [myScheme Link](https://www.myscheme.gov.in/schemes/suis) |
-| **MUDRA_SHISHU** | Pradhan Mantri MUDRA Yojana - Shishu | Ministry of Finance | ₹50,000 | Zero Collateral / Micro | [myScheme Link](https://www.myscheme.gov.in/schemes/pmmy) |
-| **MUDRA_KISHORE** | Pradhan Mantri MUDRA Yojana - Kishore | Ministry of Finance | ₹5 Lakh | Concessional Rate | [myScheme Link](https://www.myscheme.gov.in/schemes/pmmy) |
-| **PM_SVANIDHI** | PM Street Vendor's AtmaNirbhar Nidhi | MoHUA | ₹50,000 | **7%** Interest Subvention | [myScheme Link](https://www.myscheme.gov.in/schemes/pmsvanidhi) |
-| **PM_VISHWAKARMA** | PM Vishwakarma Scheme (Artisans & Craftsmen) | Ministry of MSME | ₹3 Lakh | **5%** Concession + Toolkit | [myScheme Link](https://www.myscheme.gov.in/schemes/pm-vishwakarma) |
-| **MAHILA_SAMRIDHI** | Mahila Samridhi Yojana (NBCFDC) | MoSJE | ₹1.4 Lakh | **4%** Interest for Women | [myScheme Link](https://www.myscheme.gov.in/schemes/msy-nbcfdc) |
-| **NMDFC_TERM_LOAN**| NMDFC Term Loan Scheme for Minorities | Ministry of Minority Affairs | ₹30 Lakh | **6%** Subsidized Interest | [myScheme Link](https://www.myscheme.gov.in/schemes/nmdfc-tls) |
-| **ASIIM_STUDENT** | Ambedkar Social Innovation & Incubation (SC) | MoSJE / IFCI | ₹30 Lakh | **₹30L Equity Grant** (3 Years) | [myScheme Link](https://www.myscheme.gov.in/schemes/asiim) |
-| **COIR_UDYAMI** | Coir Udyami Yojana | Ministry of MSME / Coir Board | ₹10 Lakh | **25%** Capital Subsidy | [myScheme Link](https://www.myscheme.gov.in/schemes/cuy) |
-| **NSSH_SCST** | National SC-ST Hub Support Scheme | Ministry of MSME / NSIC | ₹25 Lakh | **25%** Special Capital Subsidy | [myScheme Link](https://www.myscheme.gov.in/schemes/nssh) |
-
-### State Government Schemes
-| State | Scheme Code | Scheme Name | Max Sanction | Special Subsidy |
-|---|---|---|---|---|
-| **Tamil Nadu** | **TN-NEEDS** | New Entrepreneur-cum-Enterprise Development Scheme | ₹5 Crore | **25%** (Up to ₹75 Lakh) |
-| **Karnataka** | **KA-UDYOGINI** | Udyogini Scheme for Women Entrepreneurs | ₹3 Lakh | **30%** Subsidy |
-| **Maharashtra** | **MH-CMEGP** | Chief Minister Employment Generation Programme | ₹50 Lakh | Up to **35%** (Rural/Special) |
-| **Kerala** | **KL-ESS** | Entrepreneur Support Scheme (ESS) | ₹30 Lakh | **15% - 25%** Capital Subsidy |
-| **Uttar Pradesh** | **UP-MMYSY** | Mukhyamantri Yuva Swarojgar Yojana | ₹25 Lakh | **25%** Margin Money Grant |
-| **West Bengal** | **WB-KARMA-SATHI** | Karma Sathi Prakalpa | ₹2 Lakh | **15%** Subsidy + 50% Interest Subvention |
+- **Caretaker Marketplace & Booking Workflow**: Multi-criteria search (price, rating, experience, service, availability), auto-calculated pricing, booking state machine (`PENDING` → `ACCEPTED` / `REJECTED` → `COMPLETED` → `REVIEWED`).
+- **Dynamic QR Pet ID Card**: Automatically generates high-resolution QR codes linking to public emergency profiles (`/pets/<id>/emergency/`) for instant owner contact and critical medical info. Printable/downloadable ID badge layout included.
+- **ML Feature 1 — Smart Recommendation System**: Genuine Scikit-Learn Multi-Output Random Forest model trained on pet age, weight, breed, health conditions, and activity levels. Delivers tailored diet formulas, compatible caretaker rankings with match scores, and daily care tips.
+- **ML Feature 2 — Pet Breed Identification**: Computer vision classifier extracting multi-channel visual moments and luminance descriptors across 15 dog and cat breeds with top-3 rankings, confidence percentages, and 1-click interlocks to the recommendation and chatbot engines.
+- **Local AI Chatbot (Ollama + Qwen3 4B)**: Embedded as a global floating widget on **every single page** (`base.html`) and as a dedicated assistant page. Stores full chat history in the database with domain rule fallback.
+- **Health Tracker & Preventive Reminders**: Chart.js interactive weight tracking, vaccination logs with urgency badges (`Upcoming`, `Due Soon`, `Overdue`), active prescriptions, and allergy records.
+- **Pet Adoption & Marketplace**: Publish adoption/sale listings with species, location, price, and direct guardian contact channels.
+- **Pet Match Hub**: Companion matching for playdates, walking buddies, and pedigree breeding with incoming/outgoing requests.
+- **Community Lost & Found Board**: Urgent missing pet alerts with sighting submission and direct owner notification.
+- **Three.js 3D Background**: Subtle interactive 3D particle background with floating glowing elements and mouse parallax.
+- **Oracle Database Readiness**: 17 normalized tables with constraints, indexes, sequences, and DDL schema script (`oracle_sql/schema_ddl.sql`).
 
 ---
 
-## 🛠️ Technology Architecture
+## 🛠️ Technology Stack
 
-- **Backend**: Python 3.12, FastAPI, SQLAlchemy ORM, SQLite (local zero-config default) / PostgreSQL PostGIS ready, Pydantic v2, PyJWT, Bcrypt, Scikit-Learn.
-- **Frontend**: React 18, Vite 5, Tailwind CSS, Lucide Icons, Leaflet & React-Leaflet, OpenStreetMap, Recharts Data Visualization.
-- **Dataset Integration**: Official `myScheme.gov.in` dataset synchronization covering 25+ Central and State programs.
-- **AI & Explainability**: Pure deterministic rule verification + SHAP-style positive/limiting factor attribution + Grounded Multilingual Chat engine.
-- **OCR Engine**: Field extraction for Aadhaar, PAN, Caste Certificate, and Income Certificates with fuzzy profile cross-verification.
+| Layer | Technologies |
+|---|---|
+| **Frontend** | HTML5, CSS3, JavaScript (ES6+), Bootstrap 5, Three.js, Chart.js, Font Awesome 6, Glassmorphism |
+| **Backend** | Python 3.12, Django 4.2, Django ORM, Django Forms, Django REST Framework |
+| **Database** | **Oracle Database** (Oracle XE / Free / 19c / 21c / 23ai) via `python-oracledb` (with instant local dev switch) |
+| **AI Chatbot** | **Ollama** running **Qwen3 4B** (`http://localhost:11434/api/generate`) |
+| **Machine Learning** | **Scikit-Learn**, **NumPy**, **Pandas**, **Pillow**, **Joblib** |
+| **QR Engine** | `qrcode` Python library with PIL image rendering |
 
 ---
 
-## 🚀 Quickstart Guide
+## 📁 Project Structure
 
-### 1. Prerequisites
-- Python 3.10+
-- Node.js 18+ and npm
-
-### 2. Backend Setup
-```bash
-cd backend
-pip install fastapi uvicorn pydantic pydantic-settings sqlalchemy bcrypt pyjwt scikit-learn pillow requests email-validator
-python -m uvicorn app.main:app --host 127.0.0.1 --port 8008 --reload
 ```
-*API Documentation & Swagger UI*: `http://127.0.0.1:8008/docs`
-
-### 3. Frontend Setup
-```bash
-cd frontend
-npm install
-npm run dev
+pet_care_companion/
+│
+├── manage.py
+├── requirements.txt
+├── README.md
+│
+├── config/                  # Django project settings & root URLs
+│   ├── settings.py
+│   ├── urls.py
+│   ├── wsgi.py
+│   └── asgi.py
+│
+├── users/                   # Role-based Auth & Dashboards (Owner/Caretaker)
+├── pets/                    # Pet profiles, QR generation & ID cards
+├── marketplace/             # Caretaker directory & search filters
+├── bookings/                # Booking engine & price calculator
+├── reviews/                 # Caretaker ratings (1-5★) & feedback
+├── adoption/                # Pet adoption & sale listings
+├── matchhub/                # Pet playmate & companion matchmaking
+├── health/                  # Health records, Chart.js weights & reminders
+├── lostfound/               # Lost pet alerts & community sightings
+├── notifications/           # In-app notifications & navbar badge
+├── chatbot/                 # Ollama Qwen3 4B integration & history
+├── recommendations/         # ML Recommendation pipeline & model
+├── breed_detection/         # ML Image breed classifier & encyclopedia
+│
+├── templates/               # Django HTML templates
+│   ├── base.html            # Global template with 3D canvas & floating chatbot
+│   ├── home.html            # Landing page
+│   └── ...                  # App-specific view templates
+│
+├── static/                  # Static assets (CSS, JS, SVGs)
+│   ├── css/custom.css
+│   ├── js/three_bg.js
+│   ├── js/chatbot.js
+│   ├── js/charts.js
+│   └── images/
+│
+├── ml_models/               # Serialized ML models (.joblib) & metadata
+│   ├── pet_recommendation_model.joblib
+│   ├── breed_classifier.joblib
+│   └── breed_metadata.json
+│
+├── datasets/                # Generated training datasets (.csv)
+│   ├── pet_care_dataset.csv
+│   └── breed_training_data.csv
+│
+└── oracle_sql/              # Oracle DDL schema & configuration guide
+    ├── schema_ddl.sql
+    └── oracle_setup_guide.md
 ```
-*Frontend Application*: `http://127.0.0.1:5173`
-
-Or simply double click **`start_all.bat`** to launch both services simultaneously!
 
 ---
 
-## 🔑 Demo Login Credentials
+## 🚀 Quick Setup & Installation Guide
 
-You can use the one-click quick login buttons on `/login` or enter the credentials below:
+### 1. Clone or Open Project
+```bash
+cd pet_care_companion
+```
 
-| User Role | Email | Password | Persona |
+### 2. Install Dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### 3. (Optional) Re-Train ML Models
+Both models are pre-trained and included in `ml_models/`. To retrain from scratch:
+```bash
+python recommendations/train_recommendation_model.py
+python breed_detection/train_breed_model.py
+```
+
+### 4. Database Setup & Migrations
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+### 5. Seed Comprehensive Sample Data
+```bash
+python manage.py seed_data
+```
+
+### 6. Run the Development Server
+```bash
+python manage.py runserver
+```
+Visit **`http://127.0.0.1:8000`** in your browser.
+
+---
+
+## 🗄️ Oracle Database Configuration
+
+To connect directly to an active Oracle Database instance (Oracle XE / Free / 23ai):
+
+1. Follow the steps in [`oracle_sql/oracle_setup_guide.md`](oracle_sql/oracle_setup_guide.md) to create the `pet_care_user` user and tablespace.
+2. In your terminal or `.env` file:
+   ```bash
+   set USE_ORACLE=True
+   set ORACLE_DB_USER=pet_care_user
+   set ORACLE_DB_PASSWORD=PetCare123#
+   set ORACLE_DB_HOST=localhost
+   set ORACLE_DB_PORT=1521
+   set ORACLE_DB_SERVICE_NAME=FREEPDB1
+   ```
+3. Run `python manage.py migrate` and `python manage.py seed_data`.
+4. Pure Oracle DDL script is available at [`oracle_sql/schema_ddl.sql`](oracle_sql/schema_ddl.sql).
+
+---
+
+## 🤖 Ollama + Qwen3 4B Local AI Setup
+
+1. Install Ollama from [https://ollama.com](https://ollama.com).
+2. Download the Qwen3 4B model:
+   ```bash
+   ollama run qwen3:4b
+   ```
+3. Ensure Ollama service is running on default port `11434`.
+4. The floating chatbot widget on every page and `/chatbot/` will communicate directly with Ollama.
+*(Note: If Ollama is not active, the system automatically uses an intelligent veterinary domain fallback so your demonstration is always 100% functional).*
+
+---
+
+## 🔑 Demo Test Credentials
+
+All sample accounts are seeded via `python manage.py seed_data`:
+
+| Role | Username | Password | Notes |
 |---|---|---|---|
-| **Woman SC Founder** | `priya@example.com` | `password123` | SC Woman Manufacturing Entrepreneur (₹12L Loan, Rural Tamil Nadu / MH) |
-| **Street Vendor** | `rahul@example.com` | `password123` | OBC Urban Street Vendor (₹50K Micro Loan, Delhi / Karnataka) |
-| **Portal Administrator** | `admin@schemesathi.gov.in` | `admin123` | National Nodal Admin with Scheme & Rule Management privileges |
+| **Admin** | `admin` | `Admin123#` | Full Django administration |
+| **Pet Owner** | `sarah_jenkins` | `PetOwner123#` | Owns Max (Golden Retriever) & Luna (Persian) |
+| **Pet Owner** | `david_miller` | `PetOwner123#` | Owns Rocky (German Shepherd) |
+| **Pet Owner** | `priya_sharma` | `PetOwner123#` | Owns Bella (French Bulldog) |
+| **Caretaker** | `alex_rivera` | `Caretaker123#` | Top rated sitter ($28/hr) |
+| **Caretaker** | `elena_rostova` | `Caretaker123#` | Senior pet specialist ($35/hr) |
 
 ---
 
-## 📂 Project Structure
+## 🎓 College Viva / Project Walkthrough Steps
 
-```
-scheme-sathi/
-├── backend/
-│   ├── app/
-│   │   ├── auth/              # Security, JWT, RBAC & Dependencies
-│   │   ├── database/          # SQLAlchemy Engine, Session & myScheme.gov.in Seeder
-│   │   │   ├── myscheme_dataset.py  # 17+ Verified myScheme official dataset
-│   │   │   ├── seed.py              # Master database seeder
-│   │   ├── models/            # User, Scheme, Partner, Application models
-│   │   ├── schemas/           # Pydantic v2 validation models
-│   │   ├── rules/             # Pure Deterministic Rule Engine
-│   │   ├── services/          # Ranking, Geo-routing, OCR, Chat, Readiness
-│   │   ├── routers/           # 10 FastAPI Routers
-│   │   ├── config.py          # App & Security settings
-│   │   └── main.py            # FastAPI Application Entrypoint
-│   └── uploads/               # Document OCR store
-├── frontend/
-│   ├── src/
-│   │   ├── context/           # AuthContext & LanguageContext (6 languages)
-│   │   ├── layouts/           # Navbar, Footer, DashboardLayout
-│   │   ├── pages/             # 24 Functional React Pages
-│   │   │   ├── admin/         # Admin Management Suite (6 pages)
-│   │   │   ├── LandingPage.jsx (myScheme.gov.in highlights)
-│   │   │   ├── LoginPage.jsx
-│   │   │   ├── RegisterPage.jsx
-│   │   │   ├── UserDashboard.jsx
-│   │   │   ├── UserProfilePage.jsx
-│   │   │   ├── FindMySchemePage.jsx (5-Step Guided Wizard)
-│   │   │   ├── RequirementQuestionnairePage.jsx
-│   │   │   ├── SchemeResultsPage.jsx (Central vs State filters, myScheme badges)
-│   │   │   ├── SchemeDetailsPage.jsx
-│   │   │   ├── EligibilityExplanationPage.jsx
-│   │   │   ├── EmiCalculatorPage.jsx
-│   │   │   ├── DocumentAssistantPage.jsx (AI OCR Studio)
-│   │   │   ├── DocumentChecklistPage.jsx
-│   │   │   ├── PartnerMapPage.jsx (OpenStreetMap Leaflet)
-│   │   │   ├── ChatAssistantPage.jsx (Multilingual Sathi)
-│   │   │   ├── ApplicationReadinessPage.jsx
-│   │   │   ├── NotificationsPage.jsx
-│   │   │   └── HistoryPage.jsx
-│   │   ├── services/          # Axios API Interceptor
-│   │   ├── App.jsx            # React Router v6 Configuration
-│   │   └── main.jsx
-│   ├── package.json
-│   └── vite.config.js
-├── start_all.bat
-├── start_backend.bat
-├── start_frontend.bat
-└── README.md
-```
-
----
-
-## 🏆 Smart India Hackathon 2026 Evaluation Highlights
-
-1. **Deterministic Legality**: Unlike LLM-only wrappers, legal eligibility is calculated by deterministic rule constraints matching official gazettes.
-2. **myScheme.gov.in Synchronized Dataset**: Comprehensive Central & State coverage ensuring accurate subsidies, margin rules, and official links.
-3. **SHAP-Style Explainability**: Every matched or rejected scheme transparently lists exact contributing demographic and financial factors.
-4. **OCR Mismatch Detection**: Automatically catches spelling, date of birth, and caste certificate mismatches before formal bank submission.
-5. **OpenStreetMap Dual-Factor Locator**: Routes entrepreneurs to the nearest bank branch authorized for their specific scheme.
-6. **Real-time Multilingual Inclusivity**: Supports 6 languages enabling rural entrepreneurs across India to access financial schemes effortlessly.
-
-
+1. **Landing Page**: Showcase responsive UI, 3D particle background, feature breakdown, and global floating chatbot.
+2. **Owner Flow**: Log in as `sarah_jenkins`, view dashboard, check **Max's** profile, display the dynamic **QR Pet ID Card**, click Print/PDF, and test the public emergency view.
+3. **Health Tracker**: Navigate to Max's health dashboard, view the interactive **Chart.js weight curve**, view upcoming vaccine booster alerts.
+4. **Marketplace & Booking**: Search caretakers with filters, book **Alex Rivera** for pet sitting, observe price auto-calculation.
+5. **Caretaker Flow**: Log in as `alex_rivera`, view pending booking requests on Caretaker Dashboard, accept the request, and review earnings.
+6. **ML Recommendation Feature**: Open `/recommendations/`, select Max or input custom age/weight/activity, generate ML predictions, and explain the Decision Tree/Random Forest multi-target architecture.
+7. **ML Breed Detection Feature**: Open `/breed-detection/`, upload a pet image, view predicted breed with confidence percentages and encyclopedia, and click "Use for Recommendations".
+8. **AI Chatbot**: Test the bottom-right floating widget on any page or full page at `/chatbot/` asking pet questions ("What foods are toxic for dogs?", "How to potty train a puppy?").
+#   p e t c a r e c o m p a n i o n  
+ 

@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+
+{% block title %}Book Caretaker – Pet Care Companion{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="glass-card p-4 p-md-5">
+        
+        <!-- Caretaker Header & Live Daily Capacity Status -->
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4 pb-3 border-bottom">
+          <div class="d-flex align-items-center gap-3">
+            <img src="{{ caretaker.user.get_photo_url }}" class="rounded-circle border shadow-sm" width="64" height="64" style="object-fit: cover;">
+            <div>
+              <h4 class="fw-bold mb-1">Book Care with {{ caretaker.user.get_full_name|default:caretaker.user.username }}</h4>
+              <div class="text-muted small">Standard Rate: <strong class="text-success">₹{{ caretaker.hourly_rate }}/hr</strong> • Rating: <strong>{{ caretaker.rating }}★</strong> • Experience: <strong>{{ caretaker.experience_years }} yrs</strong></div>
+            </div>
+          </div>
+
+          <div>
+            <span class="badge {{ capacity_summary.badge_class }} px-3 py-2 fs-6">
+              <i class="fa-solid fa-paw me-1"></i> {{ capacity_summary.status_text }}
+            </span>
+          </div>
+        </div>
+
+        <!-- 2-Pet Capacity Notice -->
+        <div class="alert alert-info border-0 rounded-4 d-flex align-items-start gap-3 mb-4">
+          <i class="fa-solid fa-circle-info fs-5 text-primary mt-1"></i>
+          <div>
+            <strong class="d-block text-dark mb-1">Caretaker Daily Capacity Policy (Max 2 Pets / Day)</strong>
+            <div class="small text-secondary">
+              To ensure attentive, high-quality care, each caretaker can take care of at most <strong>2 pets per day</strong>.
+              {% if unavailable_dates %}
+                <div class="mt-2 text-danger fw-semibold">
+                  <i class="fa-solid fa-calendar-xmark me-1"></i> Fully Booked Dates: 
+                  <span class="badge bg-danger-subtle text-danger border border-danger-subtle ms-1">
+                    {{ unavailable_dates|join:", " }}
+                  </span>
+                </div>
+              {% endif %}
+              {% if capacity_summary.next_available_date %}
+                <div class="mt-1 text-success fw-semibold">
+                  <i class="fa-solid fa-calendar-check me-1"></i> Next fully open date slot: <strong>{{ capacity_summary.next_available_date|date:"F d, Y" }}</strong>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <!-- Inline Validation Error Box (dynamic) -->
+        <div id="dateConflictAlert" class="alert alert-danger border-0 rounded-4 d-none align-items-center gap-3 mb-4" role="alert">
+          <i class="fa-solid fa-triangle-exclamation fs-4 text-danger"></i>
+          <div>
+            <strong class="d-block text-dark mb-1">Date Slot Unavailable!</strong>
+            <span id="dateConflictMessage" class="small text-danger">This caretaker is fully booked on this date.</span>
+          </div>
+        </div>
+
+        <form method="post" id="bookingForm">
+          {% csrf_token %}
+
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Select Your Pet *</label>
+              {{ form.pet }}
+              {% if form.pet.errors %}<div class="text-danger small mt-1">{{ form.pet.errors.0 }}</div>{% endif %}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Service Requested *</label>
+              {{ form.service_type }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Start Date *</label>
+              {{ form.start_date }}
+              {% if form.start_date.errors %}<div class="text-danger small mt-1">{{ form.start_date.errors.0 }}</div>{% endif %}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">End Date *</label>
+              {{ form.end_date }}
+              {% if form.end_date.errors %}<div class="text-danger small mt-1">{{ form.end_date.errors.0 }}</div>{% endif %}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Daily Start Time</label>
+              {{ form.start_time }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Daily End Time</label>
+              {{ form.end_time }}
+            </div>
+            <div class="col-12">
+              <label class="form-label fw-semibold">Special Notes / Feeding & Medication Instructions</label>
+              {{ form.notes }}
+            </div>
+          </div>
+
+          <div class="p-3 rounded-4 bg-light border mb-4 small">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <strong class="d-block text-dark">Estimated Fee Calculation:</strong>
+                <span class="text-muted">Calculated at ₹{{ caretaker.hourly_rate }}/hr based on service duration.</span>
+              </div>
+              <span class="badge bg-success-subtle text-success fs-6 px-3 py-2">Fair Pricing Guaranteed</span>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-end gap-2">
+            <a href="{% url 'marketplace:caretaker_detail' caretaker.pk %}" class="btn btn-outline-secondary">Cancel</a>
+            <button type="submit" id="submitBookingBtn" class="btn btn-success-custom px-4 py-2 fw-bold">
+              <i class="fa-solid fa-paper-plane me-1"></i> Send Booking Request
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const unavailableDates = {{ unavailable_dates_json|safe }};
+  const startDateInput = document.getElementById('id_start_date');
+  const endDateInput = document.getElementById('id_end_date');
+  const submitBtn = document.getElementById('submitBookingBtn');
+  const conflictAlert = document.getElementById('dateConflictAlert');
+  const conflictMsg = document.getElementById('dateConflictMessage');
+  const nextAvailableStr = "{{ capacity_summary.next_available_date|date:'Y-m-d' }}";
+
+  function parseDate(str) {
+    if (!str) return null;
+    const parts = str.split('-');
+    return new Date(parts[0], parts[1] - 1, parts[2]);
+  }
+
+  function formatDate(d) {
+    return d.toISOString().split('T')[0];
+  }
+
+  function validateSelectedDates() {
+    const startVal = startDateInput.value;
+    const endVal = endDateInput.value;
+
+    if (!startVal) {
+      conflictAlert.classList.add('d-none');
+      conflictAlert.classList.remove('d-flex');
+      submitBtn.disabled = false;
+      return true;
+    }
+
+    const startDate = parseDate(startVal);
+    const endDate = endVal ? parseDate(endVal) : startDate;
+
+    if (endDate < startDate) {
+      conflictMsg.innerText = "End date must be on or after the start date.";
+      conflictAlert.classList.remove('d-none');
+      conflictAlert.classList.add('d-flex');
+      submitBtn.disabled = true;
+      return false;
+    }
+
+    // Check all dates in range against unavailableDates
+    let cur = new Date(startDate);
+    while (cur <= endDate) {
+      const curStr = formatDate(cur);
+      if (unavailableDates.includes(curStr)) {
+        conflictMsg.innerHTML = `Caretaker is <strong>fully booked (2/2 pets limit)</strong> on <strong>${curStr}</strong>. Please choose another date or book for the next open slot (${nextAvailableStr}).`;
+        conflictAlert.classList.remove('d-none');
+        conflictAlert.classList.add('d-flex');
+        submitBtn.disabled = true;
+        return false;
+      }
+      cur.setDate(cur.getDate() + 1);
+    }
+
+    conflictAlert.classList.add('d-none');
+    conflictAlert.classList.remove('d-flex');
+    submitBtn.disabled = false;
+    return true;
+  }
+
+  if (startDateInput) startDateInput.addEventListener('change', validateSelectedDates);
+  if (endDateInput) endDateInput.addEventListener('change', validateSelectedDates);
+
+  // Initial check on load
+  validateSelectedDates();
+});
+</script>
+{% endblock %}

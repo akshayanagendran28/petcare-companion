@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}Pet ID Card – {{ pet.name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h3 class="fw-bold mb-1"><i class="fa-solid fa-id-card text-primary me-2"></i> Digital Pet ID Card</h3>
+      <p class="text-muted small mb-0">Official identification badge with verifiable QR emergency profile.</p>
+    </div>
+    <div class="d-flex gap-2">
+      <button onclick="window.print()" class="btn btn-outline-dark">
+        <i class="fa-solid fa-print me-1"></i> Print / Save as PDF
+      </button>
+      <a href="{% url 'pets:pet_detail' pet.pk %}" class="btn btn-primary-custom">
+        <i class="fa-solid fa-arrow-left me-1"></i> Back to Profile
+      </a>
+    </div>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-lg-7 col-md-9">
+      <!-- Printable Pet ID Badge Card -->
+      <div class="pet-id-badge p-4 p-md-5">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary">
+          <div class="d-flex align-items-center gap-2">
+            <img src="/static/images/paw_logo.svg" width="36" height="36">
+            <div>
+              <div class="fw-bold text-white fs-5 tracking-wide">PET CARE COMPANION</div>
+              <div class="text-xs text-secondary tracking-widest" style="font-size: 0.68rem; letter-spacing: 2px;">DIGITAL IDENTIFICATION & EMERGENCY PASS</div>
+            </div>
+          </div>
+          <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1 fw-bold">ACTIVE ID</span>
+        </div>
+
+        <!-- Body -->
+        <div class="row g-4 align-items-center">
+          <div class="col-sm-5 text-center">
+            <img src="{{ pet.get_photo_url }}" class="rounded-4 border border-2 border-secondary shadow img-fluid mb-3" style="max-height: 180px; width: 100%; object-fit: cover;">
+            <div class="p-2 rounded bg-dark border border-secondary">
+              <div class="text-xs text-secondary text-uppercase font-monospace" style="font-size: 0.7rem;">PET ID NO.</div>
+              <div class="font-monospace fw-bold text-warning small">PCC-{{ pet.id|stringformat:"05d" }}-{{ pet.species|upper|slice:":3" }}</div>
+            </div>
+          </div>
+
+          <div class="col-sm-7">
+            <h2 class="fw-extrabold text-white mb-1">{{ pet.name }}</h2>
+            <div class="text-primary-light fw-bold fs-6 mb-3" style="color: #818cf8;">{{ pet.breed }} ({{ pet.species }})</div>
+
+            <div class="row g-2 text-white small mb-3">
+              <div class="col-6">
+                <span class="text-secondary d-block text-xs">AGE & GENDER</span>
+                <strong>{{ pet.age }} yrs • {{ pet.gender }}</strong>
+              </div>
+              <div class="col-6">
+                <span class="text-secondary d-block text-xs">WEIGHT</span>
+                <strong>{{ pet.weight }} kg</strong>
+              </div>
+              <div class="col-6">
+                <span class="text-secondary d-block text-xs">VACCINATION</span>
+                <span class="text-success fw-bold">{{ pet.vaccination_status }}</span>
+              </div>
+              <div class="col-6">
+                <span class="text-secondary d-block text-xs">ALLERGIES</span>
+                <strong class="text-warning">{{ pet.allergies|default:'None' }}</strong>
+              </div>
+            </div>
+
+            <div class="p-2 rounded bg-black bg-opacity-40 border border-secondary mb-3 small">
+              <div class="text-secondary text-xs text-uppercase mb-1">EMERGENCY CONTACT:</div>
+              <div class="fw-bold text-white">{{ pet.owner.get_full_name|default:pet.owner.username }}</div>
+              <div class="text-light"><i class="fa-solid fa-phone text-success me-1"></i> {{ pet.owner.phone|default:'Contact in Profile' }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer with QR Code -->
+        <div class="pt-4 mt-3 border-top border-secondary d-flex justify-content-between align-items-center">
+          <div class="small text-secondary">
+            <i class="fa-solid fa-shield-halved text-warning me-1"></i> If lost or found, please scan the QR code to view owner contact details & medical history.
+          </div>
+          {% if pet.qr_code %}
+            <div class="p-1 bg-white rounded-3 ms-3">
+              <img src="{{ pet.qr_code.url }}" width="80" height="80" alt="QR Code">
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

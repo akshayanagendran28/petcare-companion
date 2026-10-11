@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ pet.name }} Profile – Pet Care Companion{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- Pet Banner & ID QR Preview -->
+  <div class="glass-card p-4 p-md-5 mb-4 position-relative">
+    <div class="row align-items-center g-4">
+      <div class="col-md-3 text-center">
+        <img src="{{ pet.get_photo_url }}" class="rounded-4 border shadow-sm img-fluid" style="max-height: 200px; width: 100%; object-fit: cover;">
+      </div>
+      <div class="col-md-6">
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <h2 class="fw-bold mb-0">{{ pet.name }}</h2>
+          <span class="badge bg-primary-subtle text-primary">{{ pet.gender }}</span>
+          <span class="badge bg-secondary-subtle text-secondary">{{ pet.species }}</span>
+        </div>
+        <h5 class="text-secondary fw-semibold mb-3">{{ pet.breed }}</h5>
+        
+        <div class="row g-2 small text-muted mb-3">
+          <div class="col-6 col-sm-4"><strong>Age:</strong> {{ pet.age }} years</div>
+          <div class="col-6 col-sm-4"><strong>Weight:</strong> {{ pet.weight }} kg</div>
+          <div class="col-6 col-sm-4"><strong>Activity:</strong> {{ pet.activity_level }}</div>
+          <div class="col-6 col-sm-4"><strong>Health:</strong> {{ pet.health_condition }}</div>
+          <div class="col-6 col-sm-4"><strong>Vaccines:</strong> <span class="text-success fw-bold">{{ pet.vaccination_status }}</span></div>
+          <div class="col-6 col-sm-4"><strong>Allergies:</strong> {{ pet.allergies|default:'None' }}</div>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2">
+          <a href="{% url 'pets:pet_update' pet.pk %}" class="btn btn-sm btn-outline-dark"><i class="fa-solid fa-pen-to-square me-1"></i> Edit Profile</a>
+          <a href="{% url 'pets:pet_id_card' pet.pk %}" class="btn btn-sm btn-primary-custom"><i class="fa-solid fa-qrcode me-1"></i> Digital Pet ID Card</a>
+          <a href="{% url 'health:dashboard' pet.pk %}" class="btn btn-sm btn-success-custom"><i class="fa-solid fa-heart-pulse me-1"></i> Health Dashboard</a>
+          <a href="{% url 'recommendations:recommendation_view' %}?pet_id={{ pet.pk }}" class="btn btn-sm btn-info text-white"><i class="fa-solid fa-brain me-1"></i> ML Nutrition Advice</a>
+        </div>
+      </div>
+
+      <!-- Dynamic QR Code Card -->
+      <div class="col-md-3 text-center">
+        <div class="p-3 bg-white rounded-4 border shadow-sm d-inline-block">
+          {% if pet.qr_code %}
+            <img src="{{ pet.qr_code.url }}" width="130" height="130" class="img-fluid mb-2">
+          {% endif %}
+          <div class="fw-bold small text-dark"><i class="fa-solid fa-qrcode me-1 text-primary"></i> Scan for Emergency</div>
+          <div class="text-xs text-muted" style="font-size: 0.72rem;">Links to public emergency info</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Health & Medical Overview Tabs -->
+  <div class="row g-4">
+    <!-- Vaccinations List -->
+    <div class="col-md-6">
+      <div class="glass-card p-4 h-100">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="fw-bold mb-0 text-success"><i class="fa-solid fa-syringe me-2"></i> Vaccinations</h5>
+          <a href="{% url 'health:add_record' pet.pk 'vaccination' %}" class="btn btn-sm btn-outline-success py-0 px-2">+ Add Shot</a>
+        </div>
+        {% if vaccinations %}
+          <div class="d-flex flex-column gap-2 small">
+            {% for v in vaccinations %}
+              <div class="p-2 rounded bg-white border d-flex justify-content-between align-items-center">
+                <div>
+                  <span class="fw-bold">{{ v.vaccine_name }}</span>
+                  <div class="text-muted text-xs">Administered: {{ v.administered_date|date:"M d, Y" }}</div>
+                </div>
+                <div class="text-end">
+                  <span class="badge {% if v.reminder_status == 'OVERDUE' %}badge-overdue{% elif v.reminder_status == 'DUE_SOON' %}badge-due-soon{% else %}badge-upcoming{% endif %}">
+                    Due: {{ v.next_due_date|date:"M d, Y" }}
+                  </span>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p class="text-muted small text-center py-3">No vaccination records logged yet.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Active Medicines & Medical Notes -->
+    <div class="col-md-6">
+      <div class="glass-card p-4 h-100">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="fw-bold mb-0 text-primary"><i class="fa-solid fa-pills me-2"></i> Active Medicines</h5>
+          <a href="{% url 'health:add_record' pet.pk 'medicine' %}" class="btn btn-sm btn-outline-primary py-0 px-2">+ Add Med</a>
+        </div>
+        {% if medicines %}
+          <div class="d-flex flex-column gap-2 small">
+            {% for m in medicines %}
+              <div class="p-2 rounded bg-white border">
+                <div class="d-flex justify-content-between">
+                  <span class="fw-bold">{{ m.medicine_name }}</span>
+                  <span class="badge bg-success-subtle text-success">Active</span>
+                </div>
+                <div class="text-muted">{{ m.dosage }} • {{ m.frequency }}</div>
+                <div class="text-xs text-secondary">Until: {{ m.end_date|date:"M d, Y" }}</div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p class="text-muted small text-center py-3">No active medications currently prescribed.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

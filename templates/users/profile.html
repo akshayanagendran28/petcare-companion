@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block title %}My Profile – Pet Care Companion{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="glass-card p-4 p-md-5">
+        <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
+          <img src="{{ user.get_photo_url }}" class="rounded-circle border" width="70" height="70" style="object-fit: cover;">
+          <div>
+            <h4 class="fw-bold mb-1">{{ user.get_full_name|default:user.username }}</h4>
+            <span class="badge bg-primary-subtle text-primary">{{ user.get_role_display }}</span>
+          </div>
+        </div>
+
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          
+          <h5 class="fw-bold text-dark mb-3">Account Details</h5>
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">First Name</label>
+              {{ user_form.first_name }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Last Name</label>
+              {{ user_form.last_name }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Email</label>
+              {{ user_form.email }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Phone</label>
+              {{ user_form.phone }}
+            </div>
+            <div class="col-12">
+              <label class="form-label fw-semibold">Address / City</label>
+              {{ user_form.address }}
+            </div>
+            <div class="col-12">
+              <label class="form-label fw-semibold">Change Profile Photo</label>
+              {{ user_form.profile_photo }}
+            </div>
+          </div>
+
+          {% if caretaker_form %}
+            <h5 class="fw-bold text-success mb-3 pt-3 border-top">Caretaker Professional Settings</h5>
+            <div class="row g-3 mb-4">
+              <div class="col-md-4">
+                <label class="form-label fw-semibold">Experience (Years)</label>
+                {{ caretaker_form.experience_years }}
+              </div>
+              <div class="col-md-4">
+                <label class="form-label fw-semibold">Hourly Rate (₹/hr)</label>
+                {{ caretaker_form.hourly_rate }}
+              </div>
+              <div class="col-md-4">
+                <label class="form-label fw-semibold">Availability Status</label>
+                {{ caretaker_form.availability_status }}
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-semibold">Offered Services</label>
+                {{ caretaker_form.services_offered }}
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-semibold">Bio & Experience Description</label>
+                {{ caretaker_form.bio }}
+              </div>
+            </div>
+          {% endif %}
+
+          <div class="d-flex justify-content-end gap-2">
+            <a href="{% url 'users:dashboard' %}" class="btn btn-outline-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary-custom px-4">
+              <i class="fa-solid fa-floppy-disk me-1"></i> Save Changes
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
