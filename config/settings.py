@@ -64,6 +64,9 @@ CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1',
     'http://localhost',
     'http://0.0.0.0:8000',
+    'https://*.onrender.com',
+    'https://*.railway.app',
+    'https://*.pythonanywhere.com',
 ]
 
 CSRF_COOKIE_HTTPONLY = False
@@ -72,6 +75,7 @@ CSRF_COOKIE_AGE = 86400
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -149,6 +153,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Media files (User uploads, Pet Photos, QR Codes)
 MEDIA_URL = '/media/'
