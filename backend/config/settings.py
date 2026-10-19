@@ -170,12 +170,11 @@ elif USE_ORACLE:
         }
     }
 else:
-    # Pure in-memory runtime cache populated dynamically from MongoDB Atlas NoSQL collections
+    # Ephemeral local runtime cache (Ignored by Git, dynamically populated from MongoDB Atlas)
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': 'file:petcare_memdb?mode=memory&cache=shared',
-            'OPTIONS': {'uri': True},
+            'NAME': PROJECT_ROOT / 'database' / 'app_cache.sqlite3',
         }
     }
 

@@ -114,7 +114,9 @@ class Command(BaseCommand):
                     count = 0
                     with transaction.atomic():
                         for doc in docs:
-                            pk_val = doc.get('id', doc.get('_id'))
+                            pk_val = doc.get('sql_id', doc.get('id'))
+                            if not isinstance(pk_val, int) and isinstance(doc.get('_id'), int):
+                                pk_val = doc.get('_id')
                             instance = model()
                             for f in model._meta.fields:
                                 rel_key = f.name + '_id'
@@ -122,7 +124,7 @@ class Command(BaseCommand):
                                     setattr(instance, f.attname, doc[rel_key])
                                 elif f.name in doc and doc[f.name] is not None:
                                     setattr(instance, f.name, doc[f.name])
-                            if pk_val:
+                            if isinstance(pk_val, int):
                                 instance.pk = pk_val
                             instance.save()
                             count += 1
