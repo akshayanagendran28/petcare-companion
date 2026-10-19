@@ -1,0 +1,2854 @@
+{
+  "Affenpinscher": {
+    "species": "Dog",
+    "group": "Toy Dog / Terrier Group",
+    "origin": "Germany (The Monkey Dog / Affe)",
+    "lifespan": "12 - 15 years",
+    "weight_range": "3.0 - 6.0 kg",
+    "temperament": [
+      "Confident",
+      "Affectionate",
+      "Comical",
+      "Loyal",
+      "Curious",
+      "Playful",
+      "Fearless"
+    ],
+    "exercise_needs": "Moderate (30-45 mins daily walking and indoor play)",
+    "grooming_needs": "High (Dense wiry black coat, weekly brushing, facial mustache/beard grooming)",
+    "diet_guide": "High-protein small-breed formula with Omega-3 and Omega-6 fatty acids for wiry coat health. Feed 2-3 portioned meals daily.",
+    "ideal_caretaker": "Attentive, patient caretakers who appreciate charming, spirited small dogs with big personalities.",
+    "care_tips": "Famous for their comical human-like bearded facial expression. Keep on a harness to protect delicate trachea and brush their mustache after meals."
+  },
+  "Labrador Retriever": {
+    "species": "Dog",
+    "group": "Sporting",
+    "origin": "Newfoundland, Canada",
+    "lifespan": "10 - 12 years",
+    "weight_range": "25 - 36 kg",
+    "temperament": [
+      "Friendly",
+      "Active",
+      "Outgoing",
+      "Gentle",
+      "Intelligent"
+    ],
+    "exercise_needs": "High (60-90 mins daily)",
+    "grooming_needs": "Moderate (Weekly brushing, double coat)",
+    "diet_guide": "High-protein formula with controlled calories to prevent obesity and joint strain.",
+    "ideal_caretaker": "Energetic caretakers who enjoy outdoor walking, fetch, and swimming.",
+    "care_tips": "Prone to hip dysplasia and overeating. Maintain structured exercise and strict portion control."
+  },
+  "Golden Retriever": {
+    "species": "Dog",
+    "group": "Sporting",
+    "origin": "Scotland, United Kingdom",
+    "lifespan": "10 - 12 years",
+    "weight_range": "25 - 34 kg",
+    "temperament": [
+      "Devoted",
+      "Patient",
+      "Eager to please",
+      "Affectionate",
+      "Playful"
+    ],
+    "exercise_needs": "High (60 mins daily)",
+    "grooming_needs": "High (Frequent brushing to prevent matting)",
+    "diet_guide": "Omega-3 rich diet for dense lustrous golden coat and cardiac support.",
+    "ideal_caretaker": "Loving families or attentive sitters who provide daily brushing and companionship.",
+    "care_tips": "Check ears regularly for moisture/infection after swimming. Provide daily mental stimulation."
+  },
+  "German Shepherd": {
+    "species": "Dog",
+    "group": "Herding",
+    "origin": "Germany",
+    "lifespan": "9 - 13 years",
+    "weight_range": "22 - 40 kg",
+    "temperament": [
+      "Loyal",
+      "Confident",
+      "Courageous",
+      "Alert",
+      "Curious"
+    ],
+    "exercise_needs": "Very High (90+ mins daily)",
+    "grooming_needs": "Moderate (Heavy seasonal shedding)",
+    "diet_guide": "Large-breed formula with glucosamine and easily digestible proteins.",
+    "ideal_caretaker": "Experienced caretakers comfortable with working breeds and structured routines.",
+    "care_tips": "Requires early socialization and agility/obedience work to channel protective instincts."
+  },
+  "Beagle": {
+    "species": "Dog",
+    "group": "Hound",
+    "origin": "Great Britain",
+    "lifespan": "12 - 15 years",
+    "weight_range": "9 - 15 kg",
+    "temperament": [
+      "Merry",
+      "Inquisitive",
+      "Friendly",
+      "Determined",
+      "Vocal"
+    ],
+    "exercise_needs": "Moderate to High (45-60 mins daily)",
+    "grooming_needs": "Low (Easy smooth coat care)",
+    "diet_guide": "Portion-controlled balanced food; hound scent drive makes them food scavengers.",
+    "ideal_caretaker": "Securely fenced yard sitters who keep leashes secure during scent walks.",
+    "care_tips": "Always walk on leash as their powerful sense of smell can lead them to wander."
+  },
+  "French Bulldog": {
+    "species": "Dog",
+    "group": "Non-Sporting",
+    "origin": "France / England",
+    "lifespan": "10 - 12 years",
+    "weight_range": "8 - 13 kg",
+    "temperament": [
+      "Adaptable",
+      "Playful",
+      "Quiet",
+      "Charming",
+      "Affectionate"
+    ],
+    "exercise_needs": "Low to Moderate (20-30 mins relaxed walking)",
+    "grooming_needs": "Low (Clean facial skin folds regularly)",
+    "diet_guide": "Hypoallergenic kibble with anti-flatulence prebiotic fiber.",
+    "ideal_caretaker": "Indoor apartment caretakers with air-conditioned spaces.",
+    "care_tips": "Brachycephalic breed: avoid excessive heat, humidity, and intense exercise."
+  },
+  "Pug": {
+    "species": "Dog",
+    "group": "Toy Group",
+    "origin": "Ancient China",
+    "lifespan": "12 - 15 years",
+    "weight_range": "6.0 - 9.0 kg",
+    "temperament": [
+      "Charming",
+      "Mischievous",
+      "Loving",
+      "Docile",
+      "Playful"
+    ],
+    "exercise_needs": "Low to Moderate (20-30 mins easy walking)",
+    "grooming_needs": "Moderate (Clean facial wrinkles daily, brush short shedding coat)",
+    "diet_guide": "Strict calorie control; high tendency for weight gain.",
+    "ideal_caretaker": "Gentle sitters who enjoy indoor cuddles and relaxed strolling.",
+    "care_tips": "Keep facial folds clean and dry to prevent skin fold dermatitis."
+  },
+  "Shih Tzu": {
+    "species": "Dog",
+    "group": "Toy Group",
+    "origin": "Tibet / China",
+    "lifespan": "10 - 16 years",
+    "weight_range": "4.0 - 7.5 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Outgoing",
+      "Gentle",
+      "Happy"
+    ],
+    "exercise_needs": "Low (20 mins daily)",
+    "grooming_needs": "Very High (Daily brushing for long flowing coat)",
+    "diet_guide": "Small-breed kibble with omega fatty acids for coat softness.",
+    "ideal_caretaker": "Caretakers experienced with toy breeds and daily coat maintenance.",
+    "care_tips": "Keep hair out of eyes with topknots or puppy cuts. Clean eye corners daily."
+  },
+  "Poodle": {
+    "species": "Dog",
+    "group": "Non-Sporting / Working",
+    "origin": "Germany / France",
+    "lifespan": "12 - 15 years",
+    "weight_range": "6 - 28 kg (Toy to Standard)",
+    "temperament": [
+      "Exceptionally Smart",
+      "Graceful",
+      "Alert",
+      "Active",
+      "Trainable"
+    ],
+    "exercise_needs": "Moderate to High (45-60 mins daily)",
+    "grooming_needs": "Very High (Professional clipping every 4-6 weeks, hypoallergenic)",
+    "diet_guide": "Nutrient-dense protein with specific kibble shapes for oral hygiene.",
+    "ideal_caretaker": "Caretakers experienced with mental puzzles and hypoallergenic grooming.",
+    "care_tips": "Daily brushing required to prevent curl matting. Highly responsive to positive reinforcement."
+  },
+  "Siberian Husky": {
+    "species": "Dog",
+    "group": "Working",
+    "origin": "Siberia, Russia",
+    "lifespan": "12 - 14 years",
+    "weight_range": "16 - 27 kg",
+    "temperament": [
+      "Outgoing",
+      "Mischievous",
+      "Loyal",
+      "Athletic",
+      "Independent"
+    ],
+    "exercise_needs": "Extremely High (90-120 mins vigorous exercise)",
+    "grooming_needs": "High (Double coat blowouts twice a year, never shave)",
+    "diet_guide": "High-fat, high-protein working dog food with high caloric density.",
+    "ideal_caretaker": "Active runners or hikers with escape-proof high fencing.",
+    "care_tips": "Escape artists! Ensure sturdy enclosures and avoid hot sun exposure."
+  },
+  "Boxer": {
+    "species": "Dog",
+    "group": "Working",
+    "origin": "Germany",
+    "lifespan": "10 - 12 years",
+    "weight_range": "25 - 32 kg",
+    "temperament": [
+      "Devoted",
+      "Energetic",
+      "Fearless",
+      "Friendly",
+      "Playful"
+    ],
+    "exercise_needs": "High (60-75 mins active play)",
+    "grooming_needs": "Low (Occasional wipe-down)",
+    "diet_guide": "High-protein formula with L-carnitine and taurine for cardiac muscle health.",
+    "ideal_caretaker": "Energetic caretakers who enjoy interactive play and strength games.",
+    "care_tips": "Deep-chested breed: prevent strenuous activity right after feeding to avoid bloat."
+  },
+  "Rottweiler": {
+    "species": "Dog",
+    "group": "Working",
+    "origin": "Germany",
+    "lifespan": "9 - 11 years",
+    "weight_range": "35 - 55 kg",
+    "temperament": [
+      "Loyal",
+      "Confident",
+      "Calm",
+      "Courageous",
+      "Protective"
+    ],
+    "exercise_needs": "High (60-90 mins daily)",
+    "grooming_needs": "Low to Moderate (Weekly brushing)",
+    "diet_guide": "Large-breed growth and maintenance formula with high calcium and phosphorus.",
+    "ideal_caretaker": "Experienced dog handlers who maintain firm, kind leadership.",
+    "care_tips": "Early positive socialization is vital. They are gentle guardians with their families."
+  },
+  "Doberman Pinscher": {
+    "species": "Dog",
+    "group": "Working",
+    "origin": "Germany",
+    "lifespan": "10 - 13 years",
+    "weight_range": "30 - 42 kg",
+    "temperament": [
+      "Alert",
+      "Loyal",
+      "Energetic",
+      "Intelligent",
+      "Fearless"
+    ],
+    "exercise_needs": "High (60-90 mins structured workouts)",
+    "grooming_needs": "Low (Smooth short coat, quick wipe)",
+    "diet_guide": "High-protein athletic food with joint and heart health supplements.",
+    "ideal_caretaker": "Active pet parents who provide consistent training and companionship.",
+    "care_tips": "Thrives on being part of the household; does not tolerate cold weather well."
+  },
+  "Scottish Terrier": {
+    "species": "Dog",
+    "group": "Terrier Group",
+    "origin": "Scotland",
+    "lifespan": "11 - 13 years",
+    "weight_range": "8.5 - 10.5 kg",
+    "temperament": [
+      "Independent",
+      "Confident",
+      "Alert",
+      "Feisty",
+      "Loyal"
+    ],
+    "exercise_needs": "Moderate (45 mins daily)",
+    "grooming_needs": "High (Wiry outer coat, dense undercoat, beard trimming)",
+    "diet_guide": "Balanced small-breed formula with zinc and biotin for wiry coat health.",
+    "ideal_caretaker": "Caretakers who appreciate feisty, dignified terrier spirit.",
+    "care_tips": "Strong prey drive for small rodents. Brush facial beard weekly."
+  },
+  "Miniature Schnauzer": {
+    "species": "Dog",
+    "group": "Terrier / Utility",
+    "origin": "Germany",
+    "lifespan": "12 - 15 years",
+    "weight_range": "5.0 - 9.0 kg",
+    "temperament": [
+      "Friendly",
+      "Intelligent",
+      "Eager to please",
+      "Alert",
+      "Spirited"
+    ],
+    "exercise_needs": "Moderate (45 mins daily)",
+    "grooming_needs": "High (Distinctive beard, bushy eyebrows, wiry coat)",
+    "diet_guide": "Low-fat, high-quality formula (prone to hyperlipidemia and pancreatitis).",
+    "ideal_caretaker": "Active families looking for a smart, low-shedding companion.",
+    "care_tips": "Avoid high-fat table treats to protect their pancreas. Wipe beard after wet meals."
+  },
+  "Persian Cat": {
+    "species": "Cat",
+    "group": "Longhair Group",
+    "origin": "Iran (Persia)",
+    "lifespan": "12 - 17 years",
+    "weight_range": "3.5 - 5.5 kg",
+    "temperament": [
+      "Gentle",
+      "Quiet",
+      "Sweet-tempered",
+      "Placid",
+      "Affectionate"
+    ],
+    "exercise_needs": "Low (Calm indoor play and relaxing in cozy sunspots)",
+    "grooming_needs": "High (Daily combing to prevent mats, eye corner cleaning)",
+    "diet_guide": "Hairball-control high-protein diet with omega oils for a plush luxurious coat.",
+    "ideal_caretaker": "Serene, calm indoor households looking for a gentle, affectionate lap companion.",
+    "care_tips": "Requires daily coat grooming and gentle face wiping around nasal folds."
+  },
+  "Siamese Cat": {
+    "species": "Cat",
+    "group": "Oriental Shorthair Group",
+    "origin": "Thailand (Siam)",
+    "lifespan": "14 - 20 years",
+    "weight_range": "3.5 - 5.5 kg",
+    "temperament": [
+      "Vocal",
+      "Deeply Affectionate",
+      "Extroverted",
+      "Social",
+      "Intelligent"
+    ],
+    "exercise_needs": "Moderate to High (Loves interactive games, fetch, and conversational bonding)",
+    "grooming_needs": "Low (Sleek short fine coat, weekly brushing)",
+    "diet_guide": "Lean protein feline diet supporting active metabolism and slender body condition.",
+    "ideal_caretaker": "Families who enjoy an outgoing, highly talkative, and loving feline partner.",
+    "care_tips": "Deeply social; best in pairs or with owners who spend plenty of time at home."
+  },
+  "Maine Coon": {
+    "species": "Cat",
+    "group": "Giant Longhair Group",
+    "origin": "Maine, United States",
+    "lifespan": "12 - 15 years",
+    "weight_range": "5.5 - 10.0 kg",
+    "temperament": [
+      "Gentle Giant",
+      "Friendly",
+      "Playful",
+      "Intelligent",
+      "Dog-like"
+    ],
+    "exercise_needs": "Moderate to High (Large climbing structures, fetch games)",
+    "grooming_needs": "Moderate (Water-resistant heavy coat, twice-weekly brushing)",
+    "diet_guide": "Large-breed feline diet supporting healthy joints and massive bone frame.",
+    "ideal_caretaker": "Families looking for a large, gregarious, and affectionate cat.",
+    "care_tips": "One of the largest domesticated cat breeds; distinctive lynx-tipped ears and bushy tail."
+  },
+  "Bengal Cat": {
+    "species": "Cat",
+    "group": "Exotic Spotted / Marbled Shorthair",
+    "origin": "United States",
+    "lifespan": "12 - 16 years",
+    "weight_range": "4.5 - 7.5 kg",
+    "temperament": [
+      "Athletic",
+      "Curious",
+      "High Energy",
+      "Confident",
+      "Playful"
+    ],
+    "exercise_needs": "Very High (Enjoys cat exercise wheels, water play, and harness walking)",
+    "grooming_needs": "Low (Glittered pelt-like coat, weekly brushing)",
+    "diet_guide": "Nutrient-rich, high-protein diet supporting powerful muscular physique.",
+    "ideal_caretaker": "Energetic households ready to provide high vertical spaces and puzzle games.",
+    "care_tips": "Often loves playing with running water; requires ample mental and physical engagement."
+  },
+  "British Shorthair": {
+    "species": "Cat",
+    "group": "Shorthair Group",
+    "origin": "Great Britain",
+    "lifespan": "14 - 17 years",
+    "weight_range": "4.0 - 7.5 kg",
+    "temperament": [
+      "Calm",
+      "Easygoing",
+      "Affectionate",
+      "Dignified",
+      "Patient"
+    ],
+    "exercise_needs": "Moderate (Enjoys feather chasing and short bursts of play)",
+    "grooming_needs": "Low (Plush dense coat, weekly brushing)",
+    "diet_guide": "Balanced indoor formula; monitor calories to maintain optimal body weight.",
+    "ideal_caretaker": "Families looking for a round-faced, placid, and undemanding companion.",
+    "care_tips": "The iconic teddy-bear cat with dense plush fur and copper eyes."
+  },
+  "Chihuahua": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Japanese Chin": {
+    "species": "Dog",
+    "group": "Toy Group",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Maltese": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Pekingese": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "King Charles Spaniel": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Papillon": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Toy Terrier": {
+    "species": "Dog",
+    "group": "Toy Group",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Rhodesian Ridgeback": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Afghan Hound": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Basset Hound": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Bloodhound": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Bluetick Coonhound": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Black And Tan Coonhound": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Treeing Walker Coonhound": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "English Foxhound": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Redbone Coonhound": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Borzoi": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Irish Wolfhound": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Italian Greyhound": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Whippet": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Ibizan Hound": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Norwegian Elkhound": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Otterhound": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Saluki": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Scottish Deerhound": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Weimaraner": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Staffordshire Bull Terrier": {
+    "species": "Dog",
+    "group": "Toy Group",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "American Staffordshire Terrier": {
+    "species": "Dog",
+    "group": "Toy Group",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Bedlington Terrier": {
+    "species": "Dog",
+    "group": "Toy Group",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Border Terrier": {
+    "species": "Dog",
+    "group": "Toy Group",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Kerry Blue Terrier": {
+    "species": "Dog",
+    "group": "Toy Group",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Irish Terrier": {
+    "species": "Dog",
+    "group": "Toy Group",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Norfolk Terrier": {
+    "species": "Dog",
+    "group": "Toy Group",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Norwich Terrier": {
+    "species": "Dog",
+    "group": "Toy Group",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Yorkshire Terrier": {
+    "species": "Dog",
+    "group": "Toy Group",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Wire Fox Terrier": {
+    "species": "Dog",
+    "group": "Toy Group",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Lakeland Terrier": {
+    "species": "Dog",
+    "group": "Toy Group",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Sealyham Terrier": {
+    "species": "Dog",
+    "group": "Toy Group",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Airedale Terrier": {
+    "species": "Dog",
+    "group": "Toy Group",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Cairn Terrier": {
+    "species": "Dog",
+    "group": "Toy Group",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Australian Terrier": {
+    "species": "Dog",
+    "group": "Toy Group",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Dandie Dinmont Terrier": {
+    "species": "Dog",
+    "group": "Toy Group",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Boston Terrier": {
+    "species": "Dog",
+    "group": "Toy Group",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Tibetan Terrier": {
+    "species": "Dog",
+    "group": "Toy Group",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Australian Silky Terrier": {
+    "species": "Dog",
+    "group": "Toy Group",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Soft-Coated Wheaten Terrier": {
+    "species": "Dog",
+    "group": "Toy Group",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "West Highland White Terrier": {
+    "species": "Dog",
+    "group": "Toy Group",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Lhasa Apso": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Flat-Coated Retriever": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Curly-Coated Retriever": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Chesapeake Bay Retriever": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "German Shorthaired Pointer": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Vizsla": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "English Setter": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Irish Setter": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Gordon Setter": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Brittany Spaniel": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Clumber Spaniel": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "English Springer Spaniel": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Welsh Springer Spaniel": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Cocker Spaniel": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Sussex Spaniel": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Irish Water Spaniel": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Kuvasz": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Schipperke": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Groenendael": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Malinois": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Briard": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Australian Kelpie": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Komondor": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Old English Sheepdog": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Shetland Sheepdog": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Collie": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Border Collie": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Bouvier Des Flandres": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Miniature Pinscher": {
+    "species": "Dog",
+    "group": "Toy Group",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Greater Swiss Mountain Dog": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Bernese Mountain Dog": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Appenzeller Sennenhund": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Entlebucher Sennenhund": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Bullmastiff": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Tibetan Mastiff": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Great Dane": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "St. Bernard": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Alaskan Malamute": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Dalmatian": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Basenji": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Leonberger": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Newfoundland": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Pyrenean Mountain Dog": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Samoyed": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Pomeranian": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Chow Chow": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Keeshond": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Griffon Bruxellois": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Pembroke Welsh Corgi": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Mexican Hairless Dog": {
+    "species": "Dog",
+    "group": "Sporting & Companion",
+    "origin": "Global / Historical",
+    "lifespan": "10 - 14 years",
+    "weight_range": "8.0 - 25.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "45-60 mins daily walks and exercise",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Tabby Cat": {
+    "species": "Cat",
+    "group": "Domestic Shorthair / Classic Tabby",
+    "origin": "Global / Domestic Feline",
+    "lifespan": "13 - 18 years",
+    "weight_range": "3.5 - 6.0 kg",
+    "temperament": [
+      "Friendly",
+      "Adaptable",
+      "Playful",
+      "Affectionate",
+      "Curious"
+    ],
+    "exercise_needs": "Moderate (Daily interactive play, laser pointer chase, scratching posts)",
+    "grooming_needs": "Low (Weekly brushing and nail trimming)",
+    "diet_guide": "Complete and balanced feline nutrition formulated for indoor life-stage health.",
+    "ideal_caretaker": "All loving pet households looking for a warm, cheerful, and adaptable companion.",
+    "care_tips": "Provide variety in toys, window perches for bird watching, and clean fresh water."
+  },
+  "Tiger Cat": {
+    "species": "Cat",
+    "group": "Feline / Shorthair",
+    "origin": "Global / Historical",
+    "lifespan": "12 - 16 years",
+    "weight_range": "3.5 - 6.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "Moderate daily play and activity",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Egyptian Mau": {
+    "species": "Cat",
+    "group": "Spotted Shorthair / Ancient Feline",
+    "origin": "Egypt",
+    "lifespan": "12 - 15 years",
+    "weight_range": "3.0 - 5.0 kg",
+    "temperament": [
+      "Fast & Athletic",
+      "Intelligent",
+      "Loyal",
+      "Playful",
+      "Affectionate"
+    ],
+    "exercise_needs": "High (Extremely fast runner; loves vertical climbs and interactive feather wands)",
+    "grooming_needs": "Low (Short spotted coat, weekly brushing)",
+    "diet_guide": "High-protein feline formula with taurine and omega fatty acids for a shimmering spotted coat.",
+    "ideal_caretaker": "Active owners who appreciate a lively, loyal, and fast-moving ancient feline companion.",
+    "care_tips": "The only naturally spotted breed of domesticated cat; can run up to 48 km/h."
+  },
+  "Cougar": {
+    "species": "Cat",
+    "group": "Feline / Shorthair",
+    "origin": "Global / Historical",
+    "lifespan": "12 - 16 years",
+    "weight_range": "3.5 - 6.0 kg",
+    "temperament": [
+      "Affectionate",
+      "Playful",
+      "Loyal",
+      "Intelligent",
+      "Friendly"
+    ],
+    "exercise_needs": "Moderate daily play and activity",
+    "grooming_needs": "Regular brushing and coat maintenance",
+    "diet_guide": "High-protein balanced formula supporting joint and coat health.",
+    "ideal_caretaker": "Loving pet parents who provide daily exercise and positive engagement.",
+    "care_tips": "Schedule regular veterinary wellness checkups and preventive vaccinations."
+  },
+  "Abyssinian": {
+    "species": "Cat",
+    "group": "Shorthair / Ancient Feline",
+    "origin": "Ethiopia / Egypt",
+    "lifespan": "13 - 16 years",
+    "weight_range": "3.0 - 5.0 kg",
+    "temperament": [
+      "Curious",
+      "Highly Intelligent",
+      "Agile",
+      "Playful",
+      "Affectionate"
+    ],
+    "exercise_needs": "High (Loves vertical perches, climbing trees, and puzzle games)",
+    "grooming_needs": "Low (Short ticked warm coat, weekly brushing)",
+    "diet_guide": "High-protein feline diet rich in taurine to support lean, muscular athleticism.",
+    "ideal_caretaker": "Active owners who appreciate an energetic, clownish, and inquisitive feline friend.",
+    "care_tips": "Needs mental stimulation. Provide multi-level cat trees and interactive wand toys."
+  },
+  "American Bulldog": {
+    "species": "Dog",
+    "group": "Working / Molosser Group",
+    "origin": "United States",
+    "lifespan": "10 - 12 years",
+    "weight_range": "30 - 50 kg",
+    "temperament": [
+      "Confident",
+      "Loyal",
+      "Energetic",
+      "Protective",
+      "Affectionate"
+    ],
+    "exercise_needs": "High (60 mins daily walks and strength games)",
+    "grooming_needs": "Low (Short smooth coat, weekly brushing)",
+    "diet_guide": "Large-breed muscular formula with joint-protecting glucosamine and chondroitin.",
+    "ideal_caretaker": "Confident, experienced dog owners who provide consistent positive training.",
+    "care_tips": "Requires early socialization. Clean skin folds and keep nails trimmed."
+  },
+  "American Pit Bull Terrier": {
+    "species": "Dog",
+    "group": "Terrier Group",
+    "origin": "United States",
+    "lifespan": "12 - 14 years",
+    "weight_range": "15 - 28 kg",
+    "temperament": [
+      "Deeply Loyal",
+      "Affectionate with Family",
+      "Courageous",
+      "Playful",
+      "Eager to please"
+    ],
+    "exercise_needs": "High (60-90 mins athletic workouts, agility, hiking)",
+    "grooming_needs": "Low (Short single coat, quick wipe-down)",
+    "diet_guide": "High-protein diet supporting lean muscle mass and healthy skin.",
+    "ideal_caretaker": "Dedicated pet owners who provide lots of love, structure, and athletic play.",
+    "care_tips": "Thrives on positive reinforcement training. Loves soft bedding and cuddle time."
+  },
+  "Birman": {
+    "species": "Cat",
+    "group": "Semi-Longhair (The Sacred Cat of Burma)",
+    "origin": "Burma / France",
+    "lifespan": "13 - 16 years",
+    "weight_range": "3.5 - 6.0 kg",
+    "temperament": [
+      "Gentle",
+      "Quiet",
+      "Loving",
+      "Docile",
+      "Companionable"
+    ],
+    "exercise_needs": "Low to Moderate (Gentle floor play and feather chase)",
+    "grooming_needs": "Moderate (Silky coat with little undercoat, does not mat easily)",
+    "diet_guide": "Balanced indoor feline diet with omega-3 fatty acids for lustrous coat.",
+    "ideal_caretaker": "Peaceful households looking for a sweet-natured lap cat with distinct white paws.",
+    "care_tips": "Famous for distinct sapphire blue eyes and pure white gloves on all four paws."
+  },
+  "Bombay": {
+    "species": "Cat",
+    "group": "Shorthair Group (The Mini Black Panther)",
+    "origin": "United States",
+    "lifespan": "14 - 18 years",
+    "weight_range": "3.5 - 5.5 kg",
+    "temperament": [
+      "Outgoing",
+      "Affectionate",
+      "Curious",
+      "Warm-seeking",
+      "Playful"
+    ],
+    "exercise_needs": "Moderate (Interactive chasing toys and warm lap snuggles)",
+    "grooming_needs": "Low (Sleek patent-leather black coat, weekly rubber brush)",
+    "diet_guide": "Premium protein wet and dry food; monitor portions as they love eating.",
+    "ideal_caretaker": "Owners who love an attentive, velvety black cat that follows them everywhere.",
+    "care_tips": "Loves seeking out warm sunbeams and cozy blankets. Very social."
+  },
+  "Great Pyrenees": {
+    "species": "Dog",
+    "group": "Livestock Guardian / Working",
+    "origin": "Pyrenees Mountains (France/Spain)",
+    "lifespan": "10 - 12 years",
+    "weight_range": "40 - 55 kg",
+    "temperament": [
+      "Calm",
+      "Patient",
+      "Fearless Guardian",
+      "Gentle Giant",
+      "Independent"
+    ],
+    "exercise_needs": "Moderate (30-45 mins calm walking and perimeter patrol)",
+    "grooming_needs": "High (Thick weather-resistant white double coat, regular brushing)",
+    "diet_guide": "Giant-breed growth formula with controlled calcium/phosphorus ratios.",
+    "ideal_caretaker": "Homes with spacious fenced yards; sitters experienced with gentle giant guardians.",
+    "care_tips": "Natural night guardians; ensure sturdy fencing as they love patrolling territory."
+  },
+  "Havanese": {
+    "species": "Dog",
+    "group": "Toy Group / National Dog of Cuba",
+    "origin": "Cuba",
+    "lifespan": "14 - 16 years",
+    "weight_range": "3.5 - 6.0 kg",
+    "temperament": [
+      "Playful",
+      "Affectionate",
+      "Gentle",
+      "Charming",
+      "Social"
+    ],
+    "exercise_needs": "Moderate (30 mins daily walking and indoor games)",
+    "grooming_needs": "High (Long silky coat, daily brushing or puppy cut clipping)",
+    "diet_guide": "Small-breed nutrient-dense kibble designed for toy jaws.",
+    "ideal_caretaker": "Families and seniors looking for a Velcro companion dog.",
+    "care_tips": "Prone to separation anxiety; thrives when included in daily household activities."
+  },
+  "Ragdoll": {
+    "species": "Cat",
+    "group": "Semi-Longhair Group",
+    "origin": "California, United States",
+    "lifespan": "13 - 17 years",
+    "weight_range": "4.5 - 9.0 kg",
+    "temperament": [
+      "Placid",
+      "Sweet",
+      "Affectionate",
+      "Puppy-like",
+      "Docile"
+    ],
+    "exercise_needs": "Low (Gentle indoor interactive play)",
+    "grooming_needs": "Moderate (Plush rabbit-soft coat, twice-weekly combing)",
+    "diet_guide": "Large-breed feline diet supporting slow muscular growth and coat luster.",
+    "ideal_caretaker": "Loving indoor households who want a super cuddly, relaxed lap feline.",
+    "care_tips": "Named for going limp like a ragdoll when held. Strictly indoor cat."
+  },
+  "Russian Blue": {
+    "species": "Cat",
+    "group": "Shorthair Group",
+    "origin": "Arkhangelsk, Russia",
+    "lifespan": "15 - 20 years",
+    "weight_range": "3.5 - 5.5 kg",
+    "temperament": [
+      "Reserved",
+      "Intelligent",
+      "Gentle",
+      "Quiet",
+      "Deeply Loyal to family"
+    ],
+    "exercise_needs": "Moderate (Loves laser pointer chase and vertical wall climbs)",
+    "grooming_needs": "Low (Dense shimmering silver-tipped blue coat, weekly brushing)",
+    "diet_guide": "High-protein diet; monitor portions to prevent weight gain.",
+    "ideal_caretaker": "Calm, quiet homes who appreciate an elegant, low-allergen companion.",
+    "care_tips": "Famous for vivid emerald green eyes and plush double coat."
+  },
+  "Saint Bernard": {
+    "species": "Dog",
+    "group": "Giant Working Group / Alpine Rescue",
+    "origin": "Swiss Alps (Switzerland/Italy)",
+    "lifespan": "8 - 10 years",
+    "weight_range": "60 - 85 kg",
+    "temperament": [
+      "Gentle",
+      "Friendly",
+      "Patient",
+      "Calm",
+      "Devoted"
+    ],
+    "exercise_needs": "Moderate (30-45 mins relaxed cool-weather walks)",
+    "grooming_needs": "Moderate to High (Heavy seasonal shedding, drool wiping)",
+    "diet_guide": "Giant-breed joint-support formula with controlled caloric intake.",
+    "ideal_caretaker": "Families with spacious ground-floor homes capable of handling giant breeds.",
+    "care_tips": "Sensitive to hot weather; ensure air-conditioning and plenty of fresh cool water."
+  },
+  "Shiba Inu": {
+    "species": "Dog",
+    "group": "Spitz Group / National Dog of Japan",
+    "origin": "Japan",
+    "lifespan": "13 - 16 years",
+    "weight_range": "8.0 - 11.5 kg",
+    "temperament": [
+      "Alert",
+      "Independent",
+      "Confident",
+      "Fastidious",
+      "Loyal"
+    ],
+    "exercise_needs": "Moderate to High (45-60 mins daily walks and agility)",
+    "grooming_needs": "Moderate (Clean cat-like self-groomers, seasonal coat blowouts)",
+    "diet_guide": "High-protein balanced kibble with omega-3 for thick double coat.",
+    "ideal_caretaker": "Experienced owners who appreciate an independent, dignified spitz breed.",
+    "care_tips": "Always walk on leash as they have strong prey drive. Famous for the Shiba scream."
+  },
+  "Sphynx": {
+    "species": "Cat",
+    "group": "Hairless Group",
+    "origin": "Toronto, Canada",
+    "lifespan": "12 - 15 years",
+    "weight_range": "3.0 - 5.5 kg",
+    "temperament": [
+      "Extroverted",
+      "Warm-seeking",
+      "Cuddly",
+      "Playful",
+      "Curious"
+    ],
+    "exercise_needs": "Moderate to High (Very active, loves climbing and puzzle toys)",
+    "grooming_needs": "Specialized (Weekly gentle sponge baths to remove natural skin oils)",
+    "diet_guide": "High-calorie diet as hairless metabolism burns more energy staying warm.",
+    "ideal_caretaker": "Attentive owners who can provide weekly skin care and warm winter sweaters.",
+    "care_tips": "Must be protected from direct sunburn and winter drafts."
+  },
+  "Egyptian Mau Cat": {
+    "species": "Cat",
+    "group": "Spotted Shorthair / Ancient Feline",
+    "origin": "Egypt",
+    "lifespan": "12 - 15 years",
+    "weight_range": "3.0 - 5.0 kg",
+    "temperament": [
+      "Fast & Athletic",
+      "Intelligent",
+      "Loyal",
+      "Playful",
+      "Affectionate"
+    ],
+    "exercise_needs": "High (Extremely fast runner; loves vertical climbs and interactive feather wands)",
+    "grooming_needs": "Low (Short spotted coat, weekly brushing)",
+    "diet_guide": "High-protein feline formula with taurine and omega fatty acids for a shimmering spotted coat.",
+    "ideal_caretaker": "Active owners who appreciate a lively, loyal, and fast-moving ancient feline companion.",
+    "care_tips": "The only naturally spotted breed of domesticated cat; can run up to 48 km/h."
+  },
+  "Persian": {
+    "species": "Cat",
+    "group": "Longhair Group",
+    "origin": "Iran (Persia)",
+    "lifespan": "12 - 17 years",
+    "weight_range": "3.5 - 5.5 kg",
+    "temperament": [
+      "Gentle",
+      "Quiet",
+      "Sweet-tempered",
+      "Placid",
+      "Affectionate"
+    ],
+    "exercise_needs": "Low (Calm indoor play and relaxing in cozy sunspots)",
+    "grooming_needs": "High (Daily combing to prevent mats, eye corner cleaning)",
+    "diet_guide": "Hairball-control high-protein diet with omega oils for a plush luxurious coat.",
+    "ideal_caretaker": "Serene, calm indoor households looking for a gentle, affectionate lap companion.",
+    "care_tips": "Requires daily coat grooming and gentle face wiping around nasal folds."
+  },
+  "Siamese": {
+    "species": "Cat",
+    "group": "Oriental Shorthair Group",
+    "origin": "Thailand (Siam)",
+    "lifespan": "14 - 20 years",
+    "weight_range": "3.5 - 5.5 kg",
+    "temperament": [
+      "Vocal",
+      "Deeply Affectionate",
+      "Extroverted",
+      "Social",
+      "Intelligent"
+    ],
+    "exercise_needs": "Moderate to High (Loves interactive games, fetch, and conversational bonding)",
+    "grooming_needs": "Low (Sleek short fine coat, weekly brushing)",
+    "diet_guide": "Lean protein feline diet supporting active metabolism and slender body condition.",
+    "ideal_caretaker": "Families who enjoy an outgoing, highly talkative, and loving feline partner.",
+    "care_tips": "Deeply social; best in pairs or with owners who spend plenty of time at home."
+  },
+  "Bengal": {
+    "species": "Cat",
+    "group": "Exotic Spotted / Marbled Shorthair",
+    "origin": "United States",
+    "lifespan": "12 - 16 years",
+    "weight_range": "4.5 - 7.5 kg",
+    "temperament": [
+      "Athletic",
+      "Curious",
+      "High Energy",
+      "Confident",
+      "Playful"
+    ],
+    "exercise_needs": "Very High (Enjoys cat exercise wheels, water play, and harness walking)",
+    "grooming_needs": "Low (Glittered pelt-like coat, weekly brushing)",
+    "diet_guide": "Nutrient-rich, high-protein diet supporting powerful muscular physique.",
+    "ideal_caretaker": "Energetic households ready to provide high vertical spaces and puzzle games.",
+    "care_tips": "Often loves playing with running water; requires ample mental and physical engagement."
+  },
+  "Tabby": {
+    "species": "Cat",
+    "group": "Domestic Shorthair / Classic Tabby",
+    "origin": "Global / Domestic Feline",
+    "lifespan": "13 - 18 years",
+    "weight_range": "3.5 - 6.0 kg",
+    "temperament": [
+      "Friendly",
+      "Adaptable",
+      "Playful",
+      "Affectionate",
+      "Curious"
+    ],
+    "exercise_needs": "Moderate (Daily interactive play, laser pointer chase, scratching posts)",
+    "grooming_needs": "Low (Weekly brushing and nail trimming)",
+    "diet_guide": "Complete and balanced feline nutrition formulated for indoor life-stage health.",
+    "ideal_caretaker": "All loving pet households looking for a warm, cheerful, and adaptable companion.",
+    "care_tips": "Provide variety in toys, window perches for bird watching, and clean fresh water."
+  },
+  "Abyssinian Cat": {
+    "species": "Cat",
+    "group": "Shorthair / Ancient Feline",
+    "origin": "Ethiopia / Egypt",
+    "lifespan": "13 - 16 years",
+    "weight_range": "3.0 - 5.0 kg",
+    "temperament": [
+      "Curious",
+      "Highly Intelligent",
+      "Agile",
+      "Playful",
+      "Affectionate"
+    ],
+    "exercise_needs": "High (Loves vertical perches, climbing trees, and puzzle games)",
+    "grooming_needs": "Low (Short ticked warm coat, weekly brushing)",
+    "diet_guide": "High-protein feline diet rich in taurine to support lean, muscular athleticism.",
+    "ideal_caretaker": "Active owners who appreciate an energetic, clownish, and inquisitive feline friend.",
+    "care_tips": "Needs mental stimulation. Provide multi-level cat trees and interactive wand toys."
+  },
+  "Birman Cat": {
+    "species": "Cat",
+    "group": "Semi-Longhair (The Sacred Cat of Burma)",
+    "origin": "Burma / France",
+    "lifespan": "13 - 16 years",
+    "weight_range": "3.5 - 6.0 kg",
+    "temperament": [
+      "Gentle",
+      "Quiet",
+      "Loving",
+      "Docile",
+      "Companionable"
+    ],
+    "exercise_needs": "Low to Moderate (Gentle floor play and feather chase)",
+    "grooming_needs": "Moderate (Silky coat with little undercoat, does not mat easily)",
+    "diet_guide": "Balanced indoor feline diet with omega-3 fatty acids for lustrous coat.",
+    "ideal_caretaker": "Peaceful households looking for a sweet-natured lap cat with distinct white paws.",
+    "care_tips": "Famous for distinct sapphire blue eyes and pure white gloves on all four paws."
+  },
+  "Bombay Cat": {
+    "species": "Cat",
+    "group": "Shorthair Group (The Mini Black Panther)",
+    "origin": "United States",
+    "lifespan": "14 - 18 years",
+    "weight_range": "3.5 - 5.5 kg",
+    "temperament": [
+      "Outgoing",
+      "Affectionate",
+      "Curious",
+      "Warm-seeking",
+      "Playful"
+    ],
+    "exercise_needs": "Moderate (Interactive chasing toys and warm lap snuggles)",
+    "grooming_needs": "Low (Sleek patent-leather black coat, weekly rubber brush)",
+    "diet_guide": "Premium protein wet and dry food; monitor portions as they love eating.",
+    "ideal_caretaker": "Owners who love an attentive, velvety black cat that follows them everywhere.",
+    "care_tips": "Loves seeking out warm sunbeams and cozy blankets. Very social."
+  },
+  "British Shorthair Cat": {
+    "species": "Cat",
+    "group": "Shorthair Group",
+    "origin": "Great Britain",
+    "lifespan": "14 - 17 years",
+    "weight_range": "4.0 - 7.5 kg",
+    "temperament": [
+      "Calm",
+      "Easygoing",
+      "Affectionate",
+      "Dignified",
+      "Patient"
+    ],
+    "exercise_needs": "Moderate (Enjoys feather chasing and short bursts of play)",
+    "grooming_needs": "Low (Plush dense coat, weekly brushing)",
+    "diet_guide": "Balanced indoor formula; monitor calories to maintain optimal body weight.",
+    "ideal_caretaker": "Families looking for a round-faced, placid, and undemanding companion.",
+    "care_tips": "The iconic teddy-bear cat with dense plush fur and copper eyes."
+  },
+  "Maine Coon Cat": {
+    "species": "Cat",
+    "group": "Giant Longhair Group",
+    "origin": "Maine, United States",
+    "lifespan": "12 - 15 years",
+    "weight_range": "5.5 - 10.0 kg",
+    "temperament": [
+      "Gentle Giant",
+      "Friendly",
+      "Playful",
+      "Intelligent",
+      "Dog-like"
+    ],
+    "exercise_needs": "Moderate to High (Large climbing structures, fetch games)",
+    "grooming_needs": "Moderate (Water-resistant heavy coat, twice-weekly brushing)",
+    "diet_guide": "Large-breed feline diet supporting healthy joints and massive bone frame.",
+    "ideal_caretaker": "Families looking for a large, gregarious, and affectionate cat.",
+    "care_tips": "One of the largest domesticated cat breeds; distinctive lynx-tipped ears and bushy tail."
+  },
+  "Ragdoll Cat": {
+    "species": "Cat",
+    "group": "Semi-Longhair Group",
+    "origin": "California, United States",
+    "lifespan": "13 - 17 years",
+    "weight_range": "4.5 - 9.0 kg",
+    "temperament": [
+      "Placid",
+      "Sweet",
+      "Affectionate",
+      "Puppy-like",
+      "Docile"
+    ],
+    "exercise_needs": "Low (Gentle indoor interactive play)",
+    "grooming_needs": "Moderate (Plush rabbit-soft coat, twice-weekly combing)",
+    "diet_guide": "Large-breed feline diet supporting slow muscular growth and coat luster.",
+    "ideal_caretaker": "Loving indoor households who want a super cuddly, relaxed lap feline.",
+    "care_tips": "Named for going limp like a ragdoll when held. Strictly indoor cat."
+  },
+  "Russian Blue Cat": {
+    "species": "Cat",
+    "group": "Shorthair Group",
+    "origin": "Arkhangelsk, Russia",
+    "lifespan": "15 - 20 years",
+    "weight_range": "3.5 - 5.5 kg",
+    "temperament": [
+      "Reserved",
+      "Intelligent",
+      "Gentle",
+      "Quiet",
+      "Deeply Loyal to family"
+    ],
+    "exercise_needs": "Moderate (Loves laser pointer chase and vertical wall climbs)",
+    "grooming_needs": "Low (Dense shimmering silver-tipped blue coat, weekly brushing)",
+    "diet_guide": "High-protein diet; monitor portions to prevent weight gain.",
+    "ideal_caretaker": "Calm, quiet homes who appreciate an elegant, low-allergen companion.",
+    "care_tips": "Famous for vivid emerald green eyes and plush double coat."
+  },
+  "Sphynx Cat": {
+    "species": "Cat",
+    "group": "Hairless Group",
+    "origin": "Toronto, Canada",
+    "lifespan": "12 - 15 years",
+    "weight_range": "3.0 - 5.5 kg",
+    "temperament": [
+      "Extroverted",
+      "Warm-seeking",
+      "Cuddly",
+      "Playful",
+      "Curious"
+    ],
+    "exercise_needs": "Moderate to High (Very active, loves climbing and puzzle toys)",
+    "grooming_needs": "Specialized (Weekly gentle sponge baths to remove natural skin oils)",
+    "diet_guide": "High-calorie diet as hairless metabolism burns more energy staying warm.",
+    "ideal_caretaker": "Attentive owners who can provide weekly skin care and warm winter sweaters.",
+    "care_tips": "Must be protected from direct sunburn and winter drafts."
+  },
+  "Giant Schnauzer": {
+    "species": "Dog",
+    "group": "Working Group",
+    "origin": "Germany",
+    "lifespan": "10 - 12 years",
+    "weight_range": "30 - 45 kg",
+    "temperament": [
+      "Alert",
+      "Commanding",
+      "Loyal",
+      "Intelligent",
+      "Powerful"
+    ],
+    "exercise_needs": "High (60-90 mins daily strenuous exercise and mental training)",
+    "grooming_needs": "High (Dense wiry coat, regular hand-stripping or clipping)",
+    "diet_guide": "High-protein large-breed formula for muscular endurance and coat health.",
+    "ideal_caretaker": "Experienced owners who provide firm positive leadership and active agility.",
+    "care_tips": "Strong guarding instinct; requires early socialization and obedience training."
+  },
+  "Standard Schnauzer": {
+    "species": "Dog",
+    "group": "Working / Terrier Group",
+    "origin": "Germany",
+    "lifespan": "13 - 16 years",
+    "weight_range": "14 - 23 kg",
+    "temperament": [
+      "Clever",
+      "Fearless",
+      "Affectionate",
+      "Spirited",
+      "Vigilant"
+    ],
+    "exercise_needs": "Moderate to High (45-60 mins daily walks, games, and agility)",
+    "grooming_needs": "Moderate to High (Signature beard and eyebrows, regular brushing)",
+    "diet_guide": "Balanced medium-breed formula with joint and skin support.",
+    "ideal_caretaker": "Active families who appreciate an intelligent, spirited watchdog.",
+    "care_tips": "Wipe beard after meals to prevent food staining and matting."
+  },
+  "Husky": {
+    "species": "Dog",
+    "group": "Working / Spitz Group",
+    "origin": "Siberia, Russia",
+    "lifespan": "12 - 15 years",
+    "weight_range": "16 - 27 kg",
+    "temperament": [
+      "Outgoing",
+      "Gentle",
+      "Mischievous",
+      "Loyal",
+      "High Energy"
+    ],
+    "exercise_needs": "Very High (60-90 mins daily running, hiking, pulling sports)",
+    "grooming_needs": "Moderate (Dense double coat, weekly brushing, heavy seasonal blowouts)",
+    "diet_guide": "High-protein working dog diet rich in healthy fats and omega oils.",
+    "ideal_caretaker": "Athletic owners with secure fenced yards who love outdoor running.",
+    "care_tips": "Famous escape artists; ensure high fencing and never walk off-leash."
+  },
+  "Cardigan Welsh Corgi": {
+    "species": "Dog",
+    "group": "Herding Group",
+    "origin": "Wales, Great Britain",
+    "lifespan": "12 - 15 years",
+    "weight_range": "11 - 17 kg",
+    "temperament": [
+      "Affectionate",
+      "Loyal",
+      "Alert",
+      "Intelligent",
+      "Adaptable"
+    ],
+    "exercise_needs": "Moderate (45 mins daily walking and herding ball games)",
+    "grooming_needs": "Moderate (Double coat, weekly brushing)",
+    "diet_guide": "Controlled caloric diet with joint support to maintain healthy spine weight.",
+    "ideal_caretaker": "Active families who want a loyal, sturdy, low-rider companion.",
+    "care_tips": "Distinct from Pembroke by having a long fox-like tail and larger rounded ears."
+  }
+}

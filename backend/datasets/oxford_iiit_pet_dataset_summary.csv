@@ -1,0 +1,38 @@
+class_id,breed_name,species,group,origin,avg_lifespan_years,avg_weight_kg,head_roi_available,trimap_segmentation_available
+1,Abyssinian,Cat,Shorthair,Ethiopia / Egypt,14.5,4.0,TRUE,TRUE
+2,American Bulldog,Dog,Working / Molosser,United States,11.0,38.0,TRUE,TRUE
+3,American Pit Bull Terrier,Dog,Terrier,United States,13.0,22.0,TRUE,TRUE
+4,Basset Hound,Dog,Hound,France / Great Britain,12.0,27.0,TRUE,TRUE
+5,Beagle,Dog,Hound,Great Britain,13.5,12.0,TRUE,TRUE
+6,Bengal,Cat,Exotic Shorthair,United States,14.0,5.5,TRUE,TRUE
+7,Birman,Cat,Semi-Longhair,Burma / France,14.0,4.5,TRUE,TRUE
+8,Bombay,Cat,Shorthair,United States,15.0,4.0,TRUE,TRUE
+9,Boxer,Dog,Working,Germany,11.0,28.0,TRUE,TRUE
+10,British Shorthair,Cat,Shorthair,Great Britain,15.0,6.0,TRUE,TRUE
+11,Chihuahua,Dog,Toy,Mexico,16.0,2.5,TRUE,TRUE
+12,Egyptian Mau,Cat,Spotted Shorthair,Egypt,14.0,4.0,TRUE,TRUE
+13,English Cocker Spaniel,Dog,Sporting / Gundog,England,13.0,13.5,TRUE,TRUE
+14,English Setter,Dog,Sporting / Setter,England,11.5,29.0,TRUE,TRUE
+15,German Shorthaired Pointer,Dog,Sporting / Pointer,Germany,12.5,28.0,TRUE,TRUE
+16,Great Pyrenees,Dog,Guardian / Working,Pyrenees Mountains,11.0,48.0,TRUE,TRUE
+17,Havanese,Dog,Toy / Bichon,Cuba,14.5,5.5,TRUE,TRUE
+18,Japanese Chin,Dog,Toy,Japan,12.5,3.5,TRUE,TRUE
+19,Keeshond,Dog,Spitz,Netherlands,13.5,18.0,TRUE,TRUE
+20,Leonberger,Dog,Giant Working,Germany,8.5,55.0,TRUE,TRUE
+21,Maine Coon,Cat,Longhair,United States,13.5,7.5,TRUE,TRUE
+22,Miniature Pinscher,Dog,Toy,Germany,14.0,4.5,TRUE,TRUE
+23,Newfoundland,Dog,Giant Working,Canada,9.5,60.0,TRUE,TRUE
+24,Persian,Cat,Longhair,Iran (Persia),14.5,4.5,TRUE,TRUE
+25,Pomeranian,Dog,Toy / Spitz,Pomerania (Germany/Poland),14.0,2.5,TRUE,TRUE
+26,Pug,Dog,Toy,China,13.5,7.5,TRUE,TRUE
+27,Ragdoll,Cat,Semi-Longhair,United States,15.0,6.5,TRUE,TRUE
+28,Russian Blue,Cat,Shorthair,Russia,16.0,4.5,TRUE,TRUE
+29,Saint Bernard,Dog,Giant Working,Swiss Alps,9.0,68.0,TRUE,TRUE
+30,Samoyed,Dog,Spitz / Working,Siberia,13.0,24.0,TRUE,TRUE
+31,Scottish Terrier,Dog,Terrier,Scotland,12.0,9.5,TRUE,TRUE
+32,Shiba Inu,Dog,Spitz,Japan,14.5,10.0,TRUE,TRUE
+33,Siamese,Cat,Oriental Shorthair,Thailand (Siam),15.0,4.5,TRUE,TRUE
+34,Sphynx,Cat,Hairless,Canada,13.5,4.0,TRUE,TRUE
+35,Staffordshire Bull Terrier,Dog,Terrier,England,13.0,15.0,TRUE,TRUE
+36,Wheaten Terrier,Dog,Terrier,Ireland,13.5,16.0,TRUE,TRUE
+37,Yorkshire Terrier,Dog,Toy Terrier,England,14.5,3.0,TRUE,TRUE

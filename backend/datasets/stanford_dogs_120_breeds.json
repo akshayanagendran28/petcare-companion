@@ -1,0 +1,23 @@
+{
+  "dataset_name": "The Stanford Dogs Dataset",
+  "citation": "Aditya Khosla, Nityananda Jayadevaprakash, Bangpeng Yao and Li Fei-Fei. Novel dataset for Fine-Grained Image Categorization. CVPR FGVC Workshop, 2011.",
+  "institution": "Stanford Vision Lab, Stanford University",
+  "url": "http://vision.stanford.edu/aditya86/ImageNetDogs/",
+  "total_categories": 120,
+  "total_images": 20580,
+  "annotations": ["Class labels (120 dog breeds)", "Bounding boxes", "Train/Test feature matrices"],
+  "breeds": [
+    "Chihuahua", "Japanese Chin", "Maltese", "Pekingese", "Shih Tzu", "Blenheim Spaniel", "Papillon", "Toy Terrier", "Rhodesian Ridgeback", "Afghan Hound",
+    "Basset Hound", "Beagle", "Bloodhound", "Bluetick Coonhound", "Black and Tan Coonhound", "Treeing Walker Coonhound", "English Foxhound", "Redbone Coonhound", "Borzoi", "Irish Wolfhound",
+    "Italian Greyhound", "Whippet", "Ibizan Hound", "Norwegian Elkhound", "Otterhound", "Saluki", "Scottish Deerhound", "Weimaraner", "Staffordshire Bull Terrier", "American Staffordshire Terrier",
+    "Bedlington Terrier", "Border Terrier", "Kerry Blue Terrier", "Irish Terrier", "Norfolk Terrier", "Norwich Terrier", "Yorkshire Terrier", "Wire-haired Fox Terrier", "Lakeland Terrier", "Sealyham Terrier",
+    "Airedale Terrier", "Cairn Terrier", "Australian Terrier", "Dandie Dinmont Terrier", "Boston Terrier", "Miniature Schnauzer", "Giant Schnauzer", "Standard Schnauzer", "Scottish Terrier", "Tibetan Terrier",
+    "Australian Silky Terrier", "Soft-coated Wheaten Terrier", "West Highland White Terrier", "Lhasa Apso", "Flat-coated Retriever", "Curly-coated Retriever", "Golden Retriever", "Labrador Retriever", "Chesapeake Bay Retriever", "German Shorthaired Pointer",
+    "Vizsla", "English Setter", "Irish Setter", "Gordon Setter", "Brittany Spaniel", "Clumber Spaniel", "English Springer Spaniel", "Welsh Springer Spaniel", "Cocker Spaniel", "Sussex Spaniel",
+    "Irish Water Spaniel", "Kuvasz", "Schipperke", "Groenendael", "Malinois", "Briard", "Australian Kelpie", "Komondor", "Old English Sheepdog", "Shetland Sheepdog",
+    "Collie", "Border Collie", "Bouvier des Flandres", "Rottweiler", "German Shepherd", "Doberman Pinscher", "Miniature Pinscher", "Greater Swiss Mountain Dog", "Bernese Mountain Dog", "Appenzeller",
+    "Entlebucher", "Boxer", "Bullmastiff", "Tibetan Mastiff", "French Bulldog", "Great Dane", "Saint Bernard", "Siberian Husky", "Alaskan Malamute", "Samoyed",
+    "Pug", "Affenpinscher", "Basenji", "Pomeranian", "Chow Chow", "Keeshond", "Brabancon Griffon", "Pembroke Welsh Corgi", "Cardigan Welsh Corgi", "Toy Poodle",
+    "Miniature Poodle", "Standard Poodle", "Mexican Hairless", "Dingo", "Dhole", "African Hunting Dog"
+  ]
+}

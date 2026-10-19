@@ -8,6 +8,4 @@ venv/
 .env
 .env.*
 media/
-ml_models/
-datasets/
 staticfiles/
