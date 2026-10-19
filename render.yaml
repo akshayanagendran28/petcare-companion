@@ -9,12 +9,10 @@ services:
     name: petcare-backend
     env: python
     plan: free
-    buildCommand: "./build.sh"
-    startCommand: "gunicorn config.wsgi:application"
+    buildCommand: "bash ./build.sh"
+    startCommand: "python manage.py migrate --no-input && gunicorn config.wsgi:application"
     healthCheckPath: /api/health-check/
     envVars:
-      - key: PYTHON_VERSION
-        value: 3.12.0
       - key: DEBUG
         value: "True"
       - key: DJANGO_SECRET_KEY
