@@ -35,57 +35,62 @@
 
 ## 📁 Project Structure
 
+The project is organized into three clean, dedicated tiers: **Frontend**, **Backend**, and **Database**:
+
 ```
 pet_care_companion/
 │
-├── manage.py
-├── requirements.txt
-├── README.md
+├── frontend/                  # Presentation Tier
+│   ├── templates/             # Server-rendered HTML5 Django templates
+│   │   ├── base.html          # Global layout, navbar, footer & chatbot widget
+│   │   ├── home.html          # Landing page
+│   │   ├── bookings/          # Multi-pet booking, availability ribbon & UPI checkout
+│   │   ├── marketplace/       # Caretaker discovery & verified profiles
+│   │   ├── pets/              # Pet registration, QR codes & health cards
+│   │   ├── adoption/          # Pet adoption listings & applications
+│   │   ├── health/            # Medical records, weight charts & reminders
+│   │   ├── lostfound/         # Missing pet reports & community sightings
+│   │   └── ...                # App-specific templates
+│   ├── static/                # Static assets (CSS, JS, images, avatars)
+│   │   ├── css/
+│   │   ├── js/
+│   │   └── images/
+│   └── README.md              # Frontend architecture documentation
 │
-├── config/                  # Django project settings & root URLs
-│   ├── settings.py
-│   ├── urls.py
-│   ├── wsgi.py
-│   └── asgi.py
+├── backend/                   # Business Logic & API Tier
+│   ├── config/                # Django core settings, routing & WSGI/ASGI
+│   ├── users/                 # RBAC authentication & dashboards
+│   ├── pets/                  # Pet entity management & QR generation
+│   ├── bookings/              # 1-booking/day capacity & emergency booking flow
+│   ├── marketplace/           # Caretaker profiles & pricing
+│   ├── adoption/              # Adoption pipeline & requests
+│   ├── health/                # Vaccination tracking & health logs
+│   ├── lostfound/             # Lost & found pet geo-reporting
+│   ├── matchhub/              # Playdate matchmaking
+│   ├── chatbot/               # Conversational AI assistant
+│   ├── breed_detection/       # MobileNetV2 ONNX breed classification
+│   ├── recommendations/       # Machine learning recommendation engine
+│   ├── reviews/               # Verified caretaker star ratings
+│   ├── notifications/         # Real-time event notifications
+│   ├── ml/                    # ML training pipelines
+│   ├── ml_models/             # ONNX weights & serialized models
+│   ├── datasets/              # Pet datasets (Oxford-IIIT Pet & care CSVs)
+│   ├── manage.py              # Backend utility runner
+│   ├── requirements.txt       # Backend dependencies
+│   └── README.md              # Backend architecture documentation
 │
-├── users/                   # Role-based Auth & Dashboards (Owner/Caretaker)
-├── pets/                    # Pet profiles, QR generation & ID cards
-├── marketplace/             # Caretaker directory & search filters
-├── bookings/                # Booking engine & price calculator
-├── reviews/                 # Caretaker ratings (1-5★) & feedback
-├── adoption/                # Pet adoption & sale listings
-├── matchhub/                # Pet playmate & companion matchmaking
-├── health/                  # Health records, Chart.js weights & reminders
-├── lostfound/               # Lost pet alerts & community sightings
-├── notifications/           # In-app notifications & navbar badge
-├── chatbot/                 # Ollama Qwen3 4B integration & history
-├── recommendations/         # ML Recommendation pipeline & model
-├── breed_detection/         # ML Image breed classifier & encyclopedia
+├── database/                  # Data Persistence Tier
+│   ├── db.sqlite3             # Active SQLite database with pre-seeded data
+│   ├── schema.sql             # SQL schema DDL definitions
+│   ├── schema_dump.sql        # Full database dump with tables & seed rows
+│   ├── oracle/                # Oracle Database DDL scripts & setup guide
+│   └── README.md              # Database setup & migration documentation
 │
-├── templates/               # Django HTML templates
-│   ├── base.html            # Global template with 3D canvas & floating chatbot
-│   ├── home.html            # Landing page
-│   └── ...                  # App-specific view templates
-│
-├── static/                  # Static assets (CSS, JS, SVGs)
-│   ├── css/custom.css
-│   ├── js/three_bg.js
-│   ├── js/chatbot.js
-│   ├── js/charts.js
-│   └── images/
-│
-├── ml_models/               # Serialized ML models (.joblib) & metadata
-│   ├── pet_recommendation_model.joblib
-│   ├── breed_classifier.joblib
-│   └── breed_metadata.json
-│
-├── datasets/                # Generated training datasets (.csv)
-│   ├── pet_care_dataset.csv
-│   └── breed_training_data.csv
-│
-└── oracle_sql/              # Oracle DDL schema & configuration guide
-    ├── schema_ddl.sql
-    └── oracle_setup_guide.md
+├── media/                     # User uploads (pet photos, documents, receipts)
+├── manage.py                  # Root management utility
+├── requirements.txt           # Project dependencies
+├── tests_system.py            # Comprehensive system test suite
+└── README.md                  # Project overview
 ```
 
 ---
@@ -144,6 +149,16 @@ To connect directly to an active Oracle Database instance (Oracle XE / Free / 23
    ```
 3. Run `python manage.py migrate` and `python manage.py seed_data`.
 4. Pure Oracle DDL script is available at [`oracle_sql/schema_ddl.sql`](oracle_sql/schema_ddl.sql).
+
+---
+
+## 🚀 Cloud Deployment: Render (Backend & DB) + Vercel (Frontend)
+
+Pet Care Companion is configured for seamless split cloud deployment:
+- **Render (`petcare-backend` + `petcare-db`)**: Hosts the Python/Django application, REST APIs, ML inference models, and managed Render PostgreSQL database via `render.yaml` Blueprint.
+- **Vercel (`frontend/`)**: Hosts the responsive templates, Three.js 3D assets, custom CSS/JS, and edge rewrites via `frontend/vercel.json`.
+
+👉 **For comprehensive step-by-step instructions, see [`DEPLOYMENT_RENDER_VERCEL.md`](DEPLOYMENT_RENDER_VERCEL.md).**
 
 ---
 

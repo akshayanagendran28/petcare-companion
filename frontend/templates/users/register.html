@@ -1,0 +1,247 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Account – Pet Care Companion{% endblock %}
+
+{% block extra_css %}
+<style>
+  .role-toggle-pill {
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid var(--glass-border);
+    padding: 6px;
+    border-radius: 50px;
+  }
+  .role-toggle-pill .nav-link {
+    color: #94a3b8 !important;
+    border-radius: 50px !important;
+    padding: 0.65rem 1.25rem !important;
+    font-weight: 700 !important;
+    transition: all 0.25s ease !important;
+  }
+  .role-toggle-pill .nav-link:hover {
+    color: #f8fafc !important;
+  }
+  .role-toggle-pill .nav-link.active {
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.45) !important;
+  }
+  .role-toggle-pill #caretaker-tab.active {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4) !important;
+  }
+  .field-error-msg {
+    font-size: 0.82rem;
+    color: #fb7185;
+    margin-top: 4px;
+    font-weight: 600;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="glass-card p-4 p-md-5">
+        <div class="text-center mb-4">
+          <img src="/static/images/paw_logo.svg" alt="Logo" width="52" height="52" class="mb-2">
+          <h3 class="fw-bold mb-1">Join Pet Care Companion</h3>
+          <p class="text-muted small">Select your role below to create your free account</p>
+
+          <!-- Role Toggle Tabs -->
+          <ul class="nav nav-pills nav-fill role-toggle-pill my-3" id="roleTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link {% if active_role != 'caretaker' %}active{% endif %}" id="owner-tab" data-bs-toggle="pill" data-bs-target="#owner-form-pane" type="button" role="tab" aria-controls="owner-form-pane" aria-selected="{% if active_role != 'caretaker' %}true{% else %}false{% endif %}">
+                <i class="fa-solid fa-paw me-2"></i> I am a Pet Owner
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link {% if active_role == 'caretaker' %}active{% endif %}" id="caretaker-tab" data-bs-toggle="pill" data-bs-target="#caretaker-form-pane" type="button" role="tab" aria-controls="caretaker-form-pane" aria-selected="{% if active_role == 'caretaker' %}true{% else %}false{% endif %}">
+                <i class="fa-solid fa-user-doctor me-2"></i> I am a Caretaker
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <div class="tab-content" id="roleTabContent">
+          <!-- PET OWNER REGISTRATION FORM -->
+          <div class="tab-pane fade {% if active_role != 'caretaker' %}show active{% endif %}" id="owner-form-pane" role="tabpanel" aria-labelledby="owner-tab">
+            <form method="post" enctype="multipart/form-data" novalidate>
+              {% csrf_token %}
+              <input type="hidden" name="form_role" value="owner">
+
+              {% if owner_form.non_field_errors %}
+                <div class="alert alert-danger py-2 small mb-3">
+                  {% for error in owner_form.non_field_errors %}
+                    <div><i class="fa-solid fa-triangle-exclamation me-1"></i> {{ error }}</div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Username <span class="text-danger">*</span></label>
+                  {{ owner_form.username }}
+                  {% if owner_form.username.errors %}<div class="field-error-msg"><i class="fa-solid fa-circle-exclamation me-1"></i> {{ owner_form.username.errors.0 }}</div>{% endif %}
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Email Address <span class="text-danger">*</span></label>
+                  {{ owner_form.email }}
+                  {% if owner_form.email.errors %}<div class="field-error-msg"><i class="fa-solid fa-circle-exclamation me-1"></i> {{ owner_form.email.errors.0 }}</div>{% endif %}
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">First Name</label>
+                  {{ owner_form.first_name }}
+                  {% if owner_form.first_name.errors %}<div class="field-error-msg"><i class="fa-solid fa-circle-exclamation me-1"></i> {{ owner_form.first_name.errors.0 }}</div>{% endif %}
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Last Name</label>
+                  {{ owner_form.last_name }}
+                  {% if owner_form.last_name.errors %}<div class="field-error-msg"><i class="fa-solid fa-circle-exclamation me-1"></i> {{ owner_form.last_name.errors.0 }}</div>{% endif %}
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Phone Number</label>
+                  {{ owner_form.phone }}
+                  {% if owner_form.phone.errors %}<div class="field-error-msg"><i class="fa-solid fa-circle-exclamation me-1"></i> {{ owner_form.phone.errors.0 }}</div>{% endif %}
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">City, State / Address</label>
+                  {{ owner_form.address }}
+                  {% if owner_form.address.errors %}<div class="field-error-msg"><i class="fa-solid fa-circle-exclamation me-1"></i> {{ owner_form.address.errors.0 }}</div>{% endif %}
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Password <span class="text-danger">*</span></label>
+                  {{ owner_form.password }}
+                  {% if owner_form.password.errors %}<div class="field-error-msg"><i class="fa-solid fa-circle-exclamation me-1"></i> {{ owner_form.password.errors.0 }}</div>{% endif %}
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Confirm Password <span class="text-danger">*</span></label>
+                  {{ owner_form.confirm_password }}
+                  {% if owner_form.confirm_password.errors %}<div class="field-error-msg"><i class="fa-solid fa-circle-exclamation me-1"></i> {{ owner_form.confirm_password.errors.0 }}</div>{% endif %}
+                </div>
+                <div class="col-12">
+                  <label class="form-label fw-semibold">Profile Photo (Optional)</label>
+                  {{ owner_form.profile_photo }}
+                  {% if owner_form.profile_photo.errors %}<div class="field-error-msg"><i class="fa-solid fa-circle-exclamation me-1"></i> {{ owner_form.profile_photo.errors.0 }}</div>{% endif %}
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary-custom w-100 py-3 mt-4 fs-6">
+                <i class="fa-solid fa-user-plus me-2"></i> Register as Pet Owner
+              </button>
+            </form>
+          </div>
+
+          <!-- CARETAKER REGISTRATION FORM -->
+          <div class="tab-pane fade {% if active_role == 'caretaker' %}show active{% endif %}" id="caretaker-form-pane" role="tabpanel" aria-labelledby="caretaker-tab">
+            <form method="post" enctype="multipart/form-data" novalidate>
+              {% csrf_token %}
+              <input type="hidden" name="form_role" value="caretaker">
+
+              {% if caretaker_form.non_field_errors %}
+                <div class="alert alert-danger py-2 small mb-3">
+                  {% for error in caretaker_form.non_field_errors %}
+                    <div><i class="fa-solid fa-triangle-exclamation me-1"></i> {{ error }}</div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Username <span class="text-danger">*</span></label>
+                  {{ caretaker_form.username }}
+                  {% if caretaker_form.username.errors %}<div class="field-error-msg"><i class="fa-solid fa-circle-exclamation me-1"></i> {{ caretaker_form.username.errors.0 }}</div>{% endif %}
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Email Address <span class="text-danger">*</span></label>
+                  {{ caretaker_form.email }}
+                  {% if caretaker_form.email.errors %}<div class="field-error-msg"><i class="fa-solid fa-circle-exclamation me-1"></i> {{ caretaker_form.email.errors.0 }}</div>{% endif %}
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">First Name</label>
+                  {{ caretaker_form.first_name }}
+                  {% if caretaker_form.first_name.errors %}<div class="field-error-msg"><i class="fa-solid fa-circle-exclamation me-1"></i> {{ caretaker_form.first_name.errors.0 }}</div>{% endif %}
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Last Name</label>
+                  {{ caretaker_form.last_name }}
+                  {% if caretaker_form.last_name.errors %}<div class="field-error-msg"><i class="fa-solid fa-circle-exclamation me-1"></i> {{ caretaker_form.last_name.errors.0 }}</div>{% endif %}
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Phone Number</label>
+                  {{ caretaker_form.phone }}
+                  {% if caretaker_form.phone.errors %}<div class="field-error-msg"><i class="fa-solid fa-circle-exclamation me-1"></i> {{ caretaker_form.phone.errors.0 }}</div>{% endif %}
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Location / Service Area</label>
+                  {{ caretaker_form.address }}
+                  {% if caretaker_form.address.errors %}<div class="field-error-msg"><i class="fa-solid fa-circle-exclamation me-1"></i> {{ caretaker_form.address.errors.0 }}</div>{% endif %}
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Experience (Years) <span class="text-danger">*</span></label>
+                  {{ caretaker_form.experience_years }}
+                  {% if caretaker_form.experience_years.errors %}<div class="field-error-msg"><i class="fa-solid fa-circle-exclamation me-1"></i> {{ caretaker_form.experience_years.errors.0 }}</div>{% endif %}
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Hourly Rate (₹/hr) <span class="text-danger">*</span></label>
+                  {{ caretaker_form.hourly_rate }}
+                  {% if caretaker_form.hourly_rate.errors %}<div class="field-error-msg"><i class="fa-solid fa-circle-exclamation me-1"></i> {{ caretaker_form.hourly_rate.errors.0 }}</div>{% endif %}
+                </div>
+                <div class="col-12">
+                  <label class="form-label fw-semibold">Offered Services (Comma separated) <span class="text-danger">*</span></label>
+                  {{ caretaker_form.services_offered }}
+                  <div class="form-text small text-muted">e.g. Pet Sitting, Dog Walking, Overnight Boarding, Daycare, Grooming</div>
+                  {% if caretaker_form.services_offered.errors %}<div class="field-error-msg"><i class="fa-solid fa-circle-exclamation me-1"></i> {{ caretaker_form.services_offered.errors.0 }}</div>{% endif %}
+                </div>
+                <div class="col-12">
+                  <label class="form-label fw-semibold">Caretaker Bio & Experience Summary</label>
+                  {{ caretaker_form.bio }}
+                  {% if caretaker_form.bio.errors %}<div class="field-error-msg"><i class="fa-solid fa-circle-exclamation me-1"></i> {{ caretaker_form.bio.errors.0 }}</div>{% endif %}
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Password <span class="text-danger">*</span></label>
+                  {{ caretaker_form.password }}
+                  {% if caretaker_form.password.errors %}<div class="field-error-msg"><i class="fa-solid fa-circle-exclamation me-1"></i> {{ caretaker_form.password.errors.0 }}</div>{% endif %}
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Confirm Password <span class="text-danger">*</span></label>
+                  {{ caretaker_form.confirm_password }}
+                  {% if caretaker_form.confirm_password.errors %}<div class="field-error-msg"><i class="fa-solid fa-circle-exclamation me-1"></i> {{ caretaker_form.confirm_password.errors.0 }}</div>{% endif %}
+                </div>
+                <div class="col-12">
+                  <label class="form-label fw-semibold">Profile Photo (Optional)</label>
+                  {{ caretaker_form.profile_photo }}
+                  {% if caretaker_form.profile_photo.errors %}<div class="field-error-msg"><i class="fa-solid fa-circle-exclamation me-1"></i> {{ caretaker_form.profile_photo.errors.0 }}</div>{% endif %}
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-success-custom w-100 py-3 mt-4 fs-6">
+                <i class="fa-solid fa-id-card me-2"></i> Register as Caretaker
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <div class="text-center pt-4 border-top mt-4">
+          <p class="small text-muted mb-0">Already registered? <a href="{% url 'users:login' %}" class="fw-bold text-primary text-decoration-none">Sign In Here</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const roleTabs = document.querySelectorAll('#roleTabs button[data-bs-toggle="pill"]');
+    roleTabs.forEach(function(tab) {
+      tab.addEventListener('shown.bs.tab', function(e) {
+        const target = e.target.id === 'caretaker-tab' ? 'caretaker' : 'owner';
+        const url = new URL(window.location);
+        url.searchParams.set('role', target);
+        window.history.replaceState({}, '', url);
+      });
+    });
+  });
+</script>
+{% endblock %}

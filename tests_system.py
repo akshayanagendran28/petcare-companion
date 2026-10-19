@@ -3,6 +3,16 @@ End-to-End System Test Suite for Pet Care Companion
 Tests Views, Authentication, Bookings, ML Inference, Breed Classifier, QR codes, and APIs.
 """
 
+import os
+import sys
+from pathlib import Path
+
+_ROOT = Path(__file__).resolve().parent
+_BACKEND = _ROOT / 'backend'
+for _p in [str(_BACKEND), str(_ROOT)]:
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
+
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth import get_user_model
@@ -339,7 +349,7 @@ class PetCareCompanionSystemTest(TestCase):
         }
         res = self.client.post(booking_url, data=post_data)
         self.assertEqual(res.status_code, 200) # Form re-renders with error
-        self.assertContains(res, "maximum daily limit of 2 pets reached")
+        self.assertContains(res, "maximum of 1 booking per day")
 
         # Availability API test
         api_url = reverse('bookings:availability_api', kwargs={'caretaker_id': self.caretaker_profile.pk})
@@ -583,6 +593,457 @@ class PetCareCompanionSystemTest(TestCase):
         self.assertIn('/users/dashboard/', data['redirect_url'])
         self.assertIn('Redirecting to Dashboard', data['response'])
         self.assertEqual(data['action'], 'navigate')
+
+    def test_caretaker_payment_workflow(self):
+        """Test full Razorpay order generation, checkout page, HMAC verification, and status updates."""
+        from bookings.models import Booking, Payment
+        from bookings.payment_service import compute_expected_signature
+
+        self.client.force_login(self.owner, backend='users.backends.EmailOrUsernameModelBackend')
+
+        # 1. Create a booking
+        booking = Booking.objects.create(
+            owner=self.owner,
+            caretaker=self.caretaker_profile,
+            pet=self.pet,
+            service_type='Pet Sitting',
+            start_date=timezone.now().date() + timedelta(days=5),
+            end_date=timezone.now().date() + timedelta(days=6),
+            start_time='09:00:00',
+            end_time='18:00:00',
+            total_price=500.00,
+            status='PENDING',
+            payment_status='UNPAID'
+        )
+        self.assertFalse(booking.is_paid)
+
+        # 2. View Payment Checkout Page when booking is PENDING -> Must be LOCKED
+        payment_url = reverse('bookings:booking_payment', kwargs={'booking_id': booking.id})
+        res_locked = self.client.get(payment_url)
+        self.assertEqual(res_locked.status_code, 200)
+        self.assertContains(res_locked, "Payment Locked")
+
+        # Caretaker accepts the booking request -> Unlocks payment
+        booking.status = 'ACCEPTED'
+        booking.save()
+
+        # View Payment Checkout Page now that booking is ACCEPTED -> UNLOCKED!
+        res_page = self.client.get(payment_url)
+        self.assertEqual(res_page.status_code, 200)
+        self.assertContains(res_page, "500.00")
+        self.assertContains(res_page, "Pay ₹500.00 Now")
+        self.assertContains(res_page, "Non-Refundable Policy")
+        self.assertContains(res_page, "Razorpay Test Mode")
+
+        # Confirm pending Payment entry created
+        payment = Payment.objects.get(booking=booking)
+        self.assertEqual(payment.status, 'PENDING')
+        self.assertTrue(payment.razorpay_order_id.startswith('order_'))
+
+        # 3. Test Invalid Signature Rejection
+        verify_url = reverse('bookings:verify_payment', kwargs={'booking_id': booking.id})
+        invalid_payload = {
+            'razorpay_order_id': payment.razorpay_order_id,
+            'razorpay_payment_id': 'pay_fake_99999',
+            'razorpay_signature': 'invalid_hmac_signature_hex_xyz'
+        }
+        res_invalid = self.client.post(verify_url, data=json.dumps(invalid_payload), content_type='application/json')
+        self.assertEqual(res_invalid.status_code, 400)
+        booking.refresh_from_db()
+        self.assertFalse(booking.is_paid)
+
+        # 4. Test Valid Payment Verification with HMAC-SHA256
+        test_payment_id = f"pay_realtime_{booking.id}_xyz123"
+        valid_signature = compute_expected_signature(payment.razorpay_order_id, test_payment_id)
+        valid_payload = {
+            'razorpay_order_id': payment.razorpay_order_id,
+            'razorpay_payment_id': test_payment_id,
+            'razorpay_signature': valid_signature,
+            'payment_method': 'UPI (Google Pay / PhonePe)'
+        }
+        res_valid = self.client.post(verify_url, data=json.dumps(valid_payload), content_type='application/json')
+        self.assertEqual(res_valid.status_code, 200)
+        data_valid = res_valid.json()
+        self.assertEqual(data_valid['status'], 'success')
+
+        # 5. Check Database Updates
+        booking.refresh_from_db()
+        payment.refresh_from_db()
+        self.assertTrue(booking.is_paid)
+        self.assertEqual(booking.payment_status, 'PAID')
+        self.assertEqual(payment.status, 'SUCCESS')
+        self.assertEqual(payment.razorpay_payment_id, test_payment_id)
+        self.assertIsNotNone(payment.paid_at)
+
+        # 6. Verify Checkout Page Now Displays Paid Receipt
+        res_receipt = self.client.get(payment_url)
+        self.assertContains(res_receipt, "Payment Completed")
+        self.assertContains(res_receipt, test_payment_id)
+
+    def test_caretaker_payment_failure_recording(self):
+        """Test recording of failed/cancelled payment attempts."""
+        from bookings.models import Booking, Payment
+
+        self.client.force_login(self.owner, backend='users.backends.EmailOrUsernameModelBackend')
+
+        booking = Booking.objects.create(
+            owner=self.owner,
+            caretaker=self.caretaker_profile,
+            pet=self.pet,
+            service_type='Dog Walking',
+            start_date=timezone.now().date() + timedelta(days=7),
+            end_date=timezone.now().date() + timedelta(days=7),
+            start_time='10:00:00',
+            end_time='11:00:00',
+            total_price=250.00,
+            status='PENDING',
+            payment_status='UNPAID'
+        )
+
+        failed_url = reverse('bookings:payment_failed', kwargs={'booking_id': booking.id})
+        fail_payload = {
+            'razorpay_order_id': 'order_failed_test_1',
+            'error_code': 'BAD_REQUEST_ERROR',
+            'error_description': 'Payment cancelled by user in UPI screen',
+            'error_source': 'customer'
+        }
+        res = self.client.post(failed_url, data=json.dumps(fail_payload), content_type='application/json')
+        self.assertEqual(res.status_code, 200)
+
+        booking.refresh_from_db()
+        self.assertEqual(booking.payment_status, 'FAILED')
+        self.assertFalse(booking.is_paid)
+
+        payment = Payment.objects.get(booking=booking)
+        self.assertEqual(payment.status, 'FAILED')
+        self.assertEqual(payment.error_code, 'BAD_REQUEST_ERROR')
+        self.assertIn('cancelled by user', payment.error_description)
+
+    def test_pet_owner_registration_flow(self):
+        """Test pet owner registration, backend assignment, and auto-login to dashboard."""
+        reg_url = reverse('users:register')
+        post_data = {
+            'form_role': 'owner',
+            'username': 'autotest_owner_1',
+            'email': 'autotest_owner_1@example.com',
+            'first_name': 'Alice',
+            'last_name': 'Owner',
+            'phone': '+91 98765 43210',
+            'address': 'Chennai, Tamil Nadu',
+            'password': 'StrongPassword123!',
+            'confirm_password': 'StrongPassword123!'
+        }
+        res = self.client.post(reg_url, data=post_data, follow=True)
+        self.assertEqual(res.status_code, 200)
+        self.assertTrue(User.objects.filter(username='autotest_owner_1').exists())
+        user = User.objects.get(username='autotest_owner_1')
+        self.assertEqual(user.role, 'PET_OWNER')
+        self.assertTrue(user.is_pet_owner)
+        self.assertIn('/users/dashboard/', [step[0] for step in res.redirect_chain])
+
+    def test_caretaker_registration_flow(self):
+        """Test caretaker registration, profile creation, and auto-login to caretaker dashboard."""
+        reg_url = reverse('users:register')
+        post_data = {
+            'form_role': 'caretaker',
+            'username': 'autotest_caretaker_1',
+            'email': 'autotest_ct_1@example.com',
+            'first_name': 'Bob',
+            'last_name': 'Care',
+            'phone': '+91 98765 43211',
+            'address': 'Bengaluru, Karnataka',
+            'experience_years': '4.5',
+            'hourly_rate': '650.00',
+            'services_offered': 'Pet Sitting, Dog Walking, Overnight Boarding',
+            'bio': 'Passionate animal lover with 4+ years of veterinary assistance.',
+            'password': 'StrongPassword123!',
+            'confirm_password': 'StrongPassword123!'
+        }
+        res = self.client.post(reg_url, data=post_data, follow=True)
+        self.assertEqual(res.status_code, 200)
+        self.assertTrue(User.objects.filter(username='autotest_caretaker_1').exists())
+        user = User.objects.get(username='autotest_caretaker_1')
+        self.assertEqual(user.role, 'CARETAKER')
+        self.assertTrue(user.is_caretaker_user)
+        self.assertTrue(hasattr(user, 'caretaker_profile'))
+        self.assertEqual(float(user.caretaker_profile.hourly_rate), 650.00)
+        self.assertEqual(float(user.caretaker_profile.experience_years), 4.5)
+        self.assertIn('/users/dashboard/', [step[0] for step in res.redirect_chain])
+
+    def test_registration_validation_errors(self):
+        """Test validation error handling on registration form."""
+        reg_url = reverse('users:register')
+        # Mismatched passwords
+        post_data = {
+            'form_role': 'owner',
+            'username': 'mismatch_user',
+            'email': 'mismatch@example.com',
+            'password': 'Password123!',
+            'confirm_password': 'DifferentPassword456!'
+        }
+        res = self.client.post(reg_url, data=post_data)
+        self.assertEqual(res.status_code, 200)
+        self.assertFalse(User.objects.filter(username='mismatch_user').exists())
+        self.assertContains(res, "Passwords do not match")
+
+    def test_adoption_catalog_and_inquiry_flow(self):
+        """Test dynamic pet adoption catalog, filters, my-listings, and application inquiry."""
+        from adoption.models import AdoptionListing
+        from notifications.models import Notification
+
+        self.client.force_login(self.owner, backend='users.backends.EmailOrUsernameModelBackend')
+
+        # 1. Create a dynamic test adoption listing
+        listing = AdoptionListing.objects.create(
+            owner=self.caretaker_user,
+            pet_name='Buster',
+            species='Dog',
+            breed='Labrador Retriever',
+            age=1.5,
+            gender='Male',
+            listing_type='ADOPTION',
+            price=0.00,
+            location='Besant Nagar, Chennai',
+            vaccination_status='Fully Vaccinated & Dewormed',
+            description='Friendly energetic Lab looking for an active family!',
+            contact_phone='+91 99999 11111',
+            contact_email='caretaker@test.com',
+            status='ACTIVE'
+        )
+
+        # 2. Browse Catalog
+        catalog_url = reverse('adoption:listing_list')
+        res_cat = self.client.get(catalog_url)
+        self.assertEqual(res_cat.status_code, 200)
+        self.assertContains(res_cat, "Buster")
+        self.assertContains(res_cat, "Labrador Retriever")
+        self.assertContains(res_cat, "Besant Nagar, Chennai")
+
+        # 3. Filter by species
+        res_filter = self.client.get(f"{catalog_url}?species=Dog")
+        self.assertEqual(res_filter.status_code, 200)
+        self.assertContains(res_filter, "Buster")
+
+        # 4. View Detail Page
+        detail_url = reverse('adoption:listing_detail', kwargs={'pk': listing.pk})
+        res_detail = self.client.get(detail_url)
+        self.assertEqual(res_detail.status_code, 200)
+        self.assertContains(res_detail, "Buster")
+        self.assertContains(res_detail, "Apply to Adopt Buster")
+
+        # 5. Submit Adoption Application
+        inquire_url = reverse('adoption:submit_inquiry', kwargs={'pk': listing.pk})
+        inquiry_data = {
+            'applicant_name': 'Test Owner Alice',
+            'applicant_email': 'owner@test.com',
+            'applicant_phone': '+91 98765 00000',
+            'housing_type': 'Independent House with Fenced Yard',
+            'pet_experience': 'Experienced with pets',
+            'message': 'We have a huge fenced yard and would love to welcome Buster into our home!'
+        }
+        res_inquire = self.client.post(inquire_url, data=inquiry_data, follow=True)
+        self.assertEqual(res_inquire.status_code, 200)
+
+        # Confirm notification delivered to pet guardian
+        guardian_notif = Notification.objects.filter(
+            user=listing.owner,
+            notification_type='GENERAL'
+        ).first()
+        self.assertIsNotNone(guardian_notif)
+        self.assertIn('Buster', guardian_notif.title)
+        self.assertIn('Test Owner Alice', guardian_notif.message)
+        self.assertIn('fenced yard', guardian_notif.message)
+
+        # 6. Test My Listings view for guardian
+        self.client.force_login(self.caretaker_user, backend='users.backends.EmailOrUsernameModelBackend')
+        my_url = reverse('adoption:my_listings')
+        res_my = self.client.get(my_url)
+        self.assertEqual(res_my.status_code, 200)
+        self.assertContains(res_my, "Buster")
+        self.assertContains(res_my, "My Adoption &amp; Pet Listings")
+
+    def test_adoption_payment_workflow(self):
+        """Test full Razorpay payment workflow for pet adoption fee with HMAC-SHA256 verification."""
+        from adoption.models import AdoptionListing, AdoptionPayment
+        from bookings.payment_service import compute_expected_signature
+        from notifications.models import Notification
+
+        self.client.force_login(self.owner, backend='users.backends.EmailOrUsernameModelBackend')
+
+        # 1. Create a fee-based adoption listing
+        listing = AdoptionListing.objects.create(
+            owner=self.caretaker_user,
+            pet_name='Luna the Beagle',
+            species='Dog',
+            breed='Beagle',
+            age=2.0,
+            gender='Female',
+            listing_type='ADOPTION',
+            price=1500.00,
+            location='Indiranagar, Bengaluru',
+            vaccination_status='Fully Vaccinated & Microchipped',
+            description='Loving Beagle, vaccinated, adoption fee covers medical & shelter costs.',
+            contact_phone='+91 98888 22222',
+            contact_email='shelter@test.com',
+            status='ACTIVE',
+            payment_status='UNPAID'
+        )
+        self.assertTrue(listing.requires_payment)
+        self.assertFalse(listing.is_paid)
+
+        # 2. View Adoption Checkout Page before request acceptance -> Must be LOCKED
+        payment_url = reverse('adoption:payment', kwargs={'pk': listing.pk})
+        res_locked = self.client.get(payment_url)
+        self.assertEqual(res_locked.status_code, 200)
+        self.assertContains(res_locked, "Payment Locked")
+
+        # 3. Adopter submits adoption application
+        inquire_url = reverse('adoption:submit_inquiry', kwargs={'pk': listing.pk})
+        self.client.post(inquire_url, {
+            'applicant_name': 'Test Owner Alice',
+            'applicant_email': 'owner@test.com',
+            'applicant_phone': '+91 98888 77777',
+            'housing_type': 'Individual House',
+            'pet_experience': '5 years with dogs',
+            'message': 'We love Luna!'
+        })
+        adopt_req = listing.adoption_requests.get(applicant=self.owner)
+        self.assertEqual(adopt_req.status, 'PENDING')
+
+        # 4. Pet Owner logs in and accepts the request -> UNLOCKS payment
+        self.client.force_login(self.caretaker_user, backend='users.backends.EmailOrUsernameModelBackend')
+        accept_url = reverse('adoption:handle_request', kwargs={'request_id': adopt_req.id, 'action': 'accept'})
+        res_accept = self.client.get(accept_url, follow=True)
+        self.assertEqual(res_accept.status_code, 200)
+        adopt_req.refresh_from_db()
+        self.assertEqual(adopt_req.status, 'ACCEPTED')
+
+        # 5. Adopter logs back in and visits checkout -> Payment is now UNLOCKED!
+        self.client.force_login(self.owner, backend='users.backends.EmailOrUsernameModelBackend')
+        res_page = self.client.get(payment_url)
+        self.assertEqual(res_page.status_code, 200)
+        self.assertContains(res_page, "1500.00")
+        self.assertContains(res_page, "Pay Adoption Fee Now")
+        self.assertContains(res_page, "Non-Refundable Adoption Fee Policy")
+        self.assertContains(res_page, "Luna the Beagle")
+
+        # Verify pending AdoptionPayment record was created in the database
+        payment = AdoptionPayment.objects.get(listing=listing, adopter=self.owner)
+        self.assertEqual(payment.status, 'PENDING')
+        self.assertEqual(float(payment.amount), 1500.00)
+        self.assertTrue(payment.razorpay_order_id.startswith('order_adopt_') or payment.razorpay_order_id.startswith('order_'))
+
+        # 3. Test Invalid Signature Rejection
+        verify_url = reverse('adoption:verify_payment', kwargs={'pk': listing.pk})
+        invalid_payload = {
+            'razorpay_order_id': payment.razorpay_order_id,
+            'razorpay_payment_id': 'pay_adpt_fraud_001',
+            'razorpay_signature': 'invalid_tampered_signature_99999',
+            'payment_method': 'UPI'
+        }
+        res_invalid = self.client.post(verify_url, data=json.dumps(invalid_payload), content_type='application/json')
+        self.assertEqual(res_invalid.status_code, 400)
+        data_invalid = res_invalid.json()
+        self.assertEqual(data_invalid['status'], 'error')
+
+        listing.refresh_from_db()
+        self.assertFalse(listing.is_paid)
+        self.assertEqual(listing.status, 'ACTIVE')
+
+        # 4. Test Valid Payment Verification with HMAC-SHA256
+        test_payment_id = f"pay_adpt_{listing.id}_verified789"
+        valid_signature = compute_expected_signature(payment.razorpay_order_id, test_payment_id)
+        valid_payload = {
+            'razorpay_order_id': payment.razorpay_order_id,
+            'razorpay_payment_id': test_payment_id,
+            'razorpay_signature': valid_signature,
+            'payment_method': 'Google Pay (UPI / Tez)'
+        }
+        res_valid = self.client.post(verify_url, data=json.dumps(valid_payload), content_type='application/json')
+        self.assertEqual(res_valid.status_code, 200)
+        data_valid = res_valid.json()
+        self.assertEqual(data_valid['status'], 'success')
+        self.assertIn('redirect_url', data_valid)
+
+        # 5. Check Database Updates
+        listing.refresh_from_db()
+        payment.refresh_from_db()
+        self.assertEqual(listing.status, 'ADOPTED')
+        self.assertEqual(listing.payment_status, 'PAID')
+        self.assertEqual(listing.adopter, self.owner)
+        self.assertTrue(listing.is_paid)
+        self.assertFalse(listing.requires_payment)
+
+        self.assertEqual(payment.status, 'SUCCESS')
+        self.assertEqual(payment.razorpay_payment_id, test_payment_id)
+        self.assertEqual(payment.payment_method, 'Google Pay (UPI / Tez)')
+        self.assertIsNotNone(payment.paid_at)
+
+        # 6. Verify Notifications Dispatched to Adopter & Guardian
+        adopter_notif = Notification.objects.filter(user=self.owner, notification_type='GENERAL').order_by('-created_at').first()
+        self.assertIsNotNone(adopter_notif)
+        self.assertIn("Adoption Confirmed", adopter_notif.title)
+        self.assertIn("Luna the Beagle", adopter_notif.message)
+
+        guardian_notif = Notification.objects.filter(user=self.caretaker_user, notification_type='GENERAL').order_by('-created_at').first()
+        self.assertIsNotNone(guardian_notif)
+        self.assertIn("Adoption Fee Received", guardian_notif.title)
+        self.assertIn("1500.00", guardian_notif.message)
+
+        # 7. Verify Checkout Page Now Displays Verified Receipt
+        res_receipt = self.client.get(payment_url)
+        self.assertEqual(res_receipt.status_code, 200)
+        self.assertContains(res_receipt, "Adoption Fee Paid &amp; Verified")
+        self.assertContains(res_receipt, "PAID &amp; CONFIRMED")
+        self.assertContains(res_receipt, test_payment_id)
+
+    def test_adoption_payment_failure_recording(self):
+        """Test recording of failed/cancelled adoption payment attempts."""
+        from adoption.models import AdoptionListing, AdoptionPayment
+
+        self.client.force_login(self.owner, backend='users.backends.EmailOrUsernameModelBackend')
+
+        listing = AdoptionListing.objects.create(
+            owner=self.caretaker_user,
+            pet_name='Milo the Kitten',
+            species='Cat',
+            breed='Persian',
+            age=0.5,
+            gender='Male',
+            listing_type='ADOPTION',
+            price=2000.00,
+            location='Koramangala, Bengaluru',
+            vaccination_status='First Dose Done',
+            description='Playful kitten.',
+            contact_phone='+91 97777 33333',
+            contact_email='shelter2@test.com',
+            status='ACTIVE',
+            payment_status='UNPAID'
+        )
+
+        failed_url = reverse('adoption:payment_failed', kwargs={'pk': listing.pk})
+        fail_payload = {
+            'razorpay_order_id': 'order_adpt_fail_test_1',
+            'error_code': 'PAYMENT_CANCELLED_BY_USER',
+            'error_description': 'Customer dismissed UPI authorization prompt',
+            'error_source': 'customer'
+        }
+        res = self.client.post(failed_url, data=json.dumps(fail_payload), content_type='application/json')
+        self.assertEqual(res.status_code, 200)
+        data = res.json()
+        self.assertEqual(data['status'], 'recorded')
+
+        listing.refresh_from_db()
+        self.assertEqual(listing.payment_status, 'UNPAID')
+        self.assertEqual(listing.status, 'ACTIVE')
+
+        payment = AdoptionPayment.objects.get(listing=listing)
+        self.assertEqual(payment.status, 'FAILED')
+        self.assertEqual(payment.error_code, 'PAYMENT_CANCELLED_BY_USER')
+        self.assertIn('dismissed UPI', payment.error_description)
+
+
+
 
 
 

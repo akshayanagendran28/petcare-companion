@@ -1,0 +1,299 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ listing.pet_name }} – {{ listing.get_listing_type_display }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <div class="glass-card p-4 p-md-5 mb-4">
+    <div class="row g-4 align-items-center">
+      <div class="col-md-5 text-center">
+        <img src="{{ listing.get_photo_url }}" class="rounded-4 border shadow img-fluid w-100" style="max-height: 380px; object-fit: cover;" alt="{{ listing.pet_name }}">
+      </div>
+
+      <div class="col-md-7">
+        <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+          <span class="badge {% if listing.listing_type == 'ADOPTION' %}bg-success{% else %}bg-primary{% endif %} px-3 py-2 fs-6">
+            {{ listing.get_listing_type_display }}
+          </span>
+          <span class="badge {% if listing.status == 'ACTIVE' %}bg-success-subtle text-success{% elif listing.status == 'PENDING' %}bg-warning-subtle text-dark{% elif listing.status == 'ADOPTED' %}bg-info-subtle text-info{% else %}bg-secondary-subtle text-secondary{% endif %} px-3 py-2">
+            Status: {{ listing.get_status_display }}
+          </span>
+          <span class="badge bg-dark border text-light px-3 py-2">
+            Guardian: {{ listing.owner.get_full_name|default:listing.owner.username }}
+          </span>
+        </div>
+
+        <h1 class="fw-extrabold text-white mb-1">{{ listing.pet_name }}</h1>
+        <h4 class="text-secondary fw-semibold mb-3">{{ listing.breed }} ({{ listing.species }})</h4>
+
+        <div class="row g-3 small mb-4">
+          <div class="col-6 col-sm-4">
+            <span class="text-muted d-block text-uppercase fw-bold text-xs">AGE &amp; GENDER</span>
+            <strong class="text-white">{{ listing.age }} yrs • {{ listing.gender }}</strong>
+          </div>
+          <div class="col-6 col-sm-4">
+            <span class="text-muted d-block text-uppercase fw-bold text-xs">PRICE / FEE</span>
+            <strong class="text-success fs-5">{% if listing.price == 0 %}100% Free Adoption{% else %}₹{{ listing.price }}{% endif %}</strong>
+          </div>
+          <div class="col-6 col-sm-4">
+            <span class="text-muted d-block text-uppercase fw-bold text-xs">VACCINES</span>
+            <strong class="text-white">{{ listing.vaccination_status }}</strong>
+          </div>
+          <div class="col-12">
+            <span class="text-muted d-block text-uppercase fw-bold text-xs">LOCATION</span>
+            <strong class="text-white"><i class="fa-solid fa-location-dot text-danger me-1"></i> {{ listing.location }}</strong>
+          </div>
+        </div>
+
+        <!-- Adoption Action Boxes -->
+        {% if listing.is_paid %}
+          <!-- Paid Confirmed Badge -->
+          <div class="alert alert-success border-0 rounded-4 p-3 mb-3 d-flex justify-content-between align-items-center">
+            <div>
+              <div class="fw-bold text-success mb-1"><i class="fa-solid fa-circle-check me-1"></i> Adopted &amp; Payment Verified</div>
+              <div class="text-xs text-dark">This pet has found a loving forever home!</div>
+            </div>
+            {% if user == listing.adopter or user == listing.owner %}
+              <a href="{% url 'adoption:payment' listing.pk %}" class="btn btn-sm btn-outline-dark fw-bold">
+                <i class="fa-solid fa-receipt me-1"></i> View Receipt
+              </a>
+            {% endif %}
+          </div>
+        {% elif user.is_authenticated and user != listing.owner and listing.requires_payment %}
+          {% if is_payment_unlocked %}
+            <!-- Unlocked State: Owner Accepted Application -->
+            <div class="p-3 rounded-4 bg-dark bg-opacity-75 border border-success mb-3 shadow">
+              <span class="badge bg-success-subtle text-success border border-success-subtle mb-1">
+                <i class="fa-solid fa-unlock me-1"></i> Request Accepted by Owner – Payment Unlocked!
+              </span>
+              <h6 class="fw-bold text-white mb-0">Adoption Fee: <strong class="text-success fs-5">₹{{ listing.price }}</strong></h6>
+              <div class="text-xs text-secondary my-1">
+                Your adoption application has been approved by {{ listing.owner.get_full_name|default:listing.owner.username }}. You can now complete checkout securely.
+              </div>
+              <a href="{% url 'adoption:payment' listing.pk %}" class="btn btn-success-custom w-100 py-2 fw-bold mt-2">
+                <i class="fa-solid fa-credit-card me-1"></i> Pay Adoption Fee Now (₹{{ listing.price }})
+              </a>
+            </div>
+          {% elif user_request and user_request.status == 'PENDING' %}
+            <!-- Locked State: Request Submitted but Pending Owner Review -->
+            <div class="alert alert-warning border-0 rounded-4 p-3 mb-3">
+              <div class="d-flex align-items-center gap-2 fw-bold text-warning-emphasis mb-1">
+                <i class="fa-solid fa-lock text-warning"></i> Payment Locked (Awaiting Owner Acceptance)
+              </div>
+              <div class="text-xs text-dark">
+                Your adoption application for <strong>{{ listing.pet_name }}</strong> has been sent to the guardian ({{ listing.owner.get_full_name|default:listing.owner.username }}). 
+                <strong>Payment of ₹{{ listing.price }} will unlock as soon as the owner reviews and accepts your request.</strong>
+              </div>
+            </div>
+          {% elif user_request and user_request.status == 'REJECTED' %}
+            <div class="alert alert-secondary border-0 rounded-4 p-3 mb-3">
+              <div class="fw-bold mb-1"><i class="fa-solid fa-circle-xmark me-1"></i> Application Declined</div>
+              <div class="text-xs text-muted">Your adoption application for {{ listing.pet_name }} was declined by the pet owner.</div>
+            </div>
+          {% else %}
+            <!-- Locked State: Must Submit Request First -->
+            <div class="p-3 rounded-4 bg-dark bg-opacity-50 border border-warning border-opacity-50 mb-3">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <span class="badge bg-secondary-subtle text-warning border border-warning-subtle">
+                  <i class="fa-solid fa-lock me-1"></i> Payment Locked
+                </span>
+                <span class="text-success fw-bold">₹{{ listing.price }}</span>
+              </div>
+              <div class="text-xs text-secondary mb-2">
+                To adopt {{ listing.pet_name }}, please submit an application. Payment is unlocked only after the pet owner accepts your request.
+              </div>
+              <button type="button" class="btn btn-danger btn-sm w-100 fw-bold" data-bs-toggle="modal" data-bs-target="#adoptionInquiryModal">
+                <i class="fa-solid fa-paper-plane me-1"></i> Submit Adoption Request to Unlock Payment
+              </button>
+            </div>
+          {% endif %}
+        {% endif %}
+
+        <!-- Adoption Application / Inquiry Secondary Action (For Free pets or if not applied yet) -->
+        {% if user.is_authenticated and user != listing.owner and listing.status == 'ACTIVE' and not user_request %}
+          <div class="p-3 rounded-4 bg-dark bg-opacity-50 border border-danger border-opacity-50 mb-3" id="apply">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+              <div>
+                <h6 class="fw-bold text-white mb-1"><i class="fa-solid fa-heart text-danger me-1"></i> Send Adoption Application</h6>
+                <p class="text-muted small mb-0">Inquire with the guardian, schedule meet &amp; greet, or discuss homecoming.</p>
+              </div>
+              <button type="button" class="btn btn-outline-danger px-4 fw-bold" data-bs-toggle="modal" data-bs-target="#adoptionInquiryModal">
+                <i class="fa-solid fa-paper-plane me-1"></i> Apply / Inquire
+              </button>
+            </div>
+          </div>
+        {% endif %}
+
+        <!-- Contact Owner Action Box -->
+        <div class="p-3 rounded-4 bg-dark bg-opacity-25 border border-secondary border-opacity-25 mb-3">
+          <h6 class="fw-bold text-white mb-2"><i class="fa-solid fa-address-book text-primary me-1"></i> Direct Guardian Contact:</h6>
+          <div class="d-flex flex-wrap gap-2">
+            <a href="tel:{{ listing.contact_phone }}" class="btn btn-success flex-grow-1 fw-bold">
+              <i class="fa-solid fa-phone me-1"></i> Call {{ listing.contact_phone }}
+            </a>
+            <a href="mailto:{{ listing.contact_email }}?subject=Adoption Inquiry regarding {{ listing.pet_name }}" class="btn btn-outline-light flex-grow-1">
+              <i class="fa-solid fa-envelope me-1"></i> Send Direct Email
+            </a>
+          </div>
+        </div>
+
+        {% if user == listing.owner %}
+          <!-- Owner Listing Management -->
+          <div class="p-3 rounded-4 bg-dark bg-opacity-50 border border-info border-opacity-50 mt-3">
+            <div class="small fw-bold text-info mb-2"><i class="fa-solid fa-gear me-1"></i> Manage Your Listing Status:</div>
+            <div class="d-flex flex-wrap gap-2">
+              <a href="{% url 'adoption:update_status' listing.pk 'ACTIVE' %}" class="btn btn-sm {% if listing.status == 'ACTIVE' %}btn-success{% else %}btn-outline-success{% endif %}">Active</a>
+              <a href="{% url 'adoption:update_status' listing.pk 'PENDING' %}" class="btn btn-sm {% if listing.status == 'PENDING' %}btn-warning text-dark{% else %}btn-outline-warning{% endif %}">Pending</a>
+              <a href="{% url 'adoption:update_status' listing.pk 'ADOPTED' %}" class="btn btn-sm {% if listing.status == 'ADOPTED' %}btn-primary{% else %}btn-outline-primary{% endif %}">Mark Adopted</a>
+              <a href="{% url 'adoption:update_status' listing.pk 'SOLD' %}" class="btn btn-sm {% if listing.status == 'SOLD' %}btn-secondary{% else %}btn-outline-secondary{% endif %}">Mark Sold</a>
+            </div>
+          </div>
+
+          <!-- Owner: Incoming Adoption Requests & Acceptance Section -->
+          <div class="p-3 rounded-4 bg-dark bg-opacity-50 border border-warning border-opacity-50 mt-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h6 class="fw-bold text-white mb-0">
+                <i class="fa-solid fa-inbox text-warning me-1"></i> Received Applications ({{ incoming_requests|length }})
+              </h6>
+            </div>
+            {% if incoming_requests %}
+              <div class="d-flex flex-column gap-2 mt-2">
+                {% for req in incoming_requests %}
+                  <div class="p-3 rounded-3 bg-dark bg-opacity-75 border border-secondary border-opacity-50 small">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                      <strong class="text-white fs-6">{{ req.applicant_name }}</strong>
+                      <span class="badge {% if req.status == 'ACCEPTED' %}bg-success{% elif req.status == 'PENDING' %}bg-warning text-dark{% elif req.status == 'COMPLETED' %}bg-info{% else %}bg-secondary{% endif %}">
+                        {{ req.get_status_display }}
+                      </span>
+                    </div>
+                    <div class="text-xs text-secondary mb-1">
+                      <i class="fa-solid fa-phone me-1 text-success"></i> {{ req.applicant_phone }} &nbsp;•&nbsp; 
+                      <i class="fa-solid fa-envelope me-1 text-info"></i> {{ req.applicant_email }}
+                    </div>
+                    <div class="text-xs text-muted mb-2">
+                      <strong>Housing:</strong> {{ req.housing_type }} &nbsp;|&nbsp; <strong>Experience:</strong> {{ req.pet_experience }}
+                      {% if req.message %}<div class="mt-1 fst-italic">"{{ req.message }}"</div>{% endif %}
+                    </div>
+                    
+                    {% if req.status == 'PENDING' %}
+                      <div class="d-flex gap-2 mt-2">
+                        <a href="{% url 'adoption:handle_request' req.id 'accept' %}" class="btn btn-sm btn-success fw-bold flex-grow-1">
+                          <i class="fa-solid fa-check me-1"></i> Accept Request (Unlock Payment)
+                        </a>
+                        <a href="{% url 'adoption:handle_request' req.id 'reject' %}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Decline this application?')">
+                          <i class="fa-solid fa-xmark me-1"></i> Decline
+                        </a>
+                      </div>
+                    {% elif req.status == 'ACCEPTED' %}
+                      <div class="text-xs text-success fw-bold mt-1">
+                        <i class="fa-solid fa-circle-check me-1"></i> You accepted this request! Payment of ₹{{ listing.price }} has been unlocked for {{ req.applicant_name }}.
+                      </div>
+                    {% elif req.status == 'COMPLETED' %}
+                      <div class="text-xs text-info fw-bold mt-1">
+                        <i class="fa-solid fa-heart me-1"></i> Completed &amp; Paid! {{ req.applicant_name }} is the official adopter.
+                      </div>
+                    {% endif %}
+                  </div>
+                {% endfor %}
+              </div>
+            {% else %}
+              <div class="text-xs text-muted mt-1">No adoption requests received yet. Applications submitted by adopters will appear here for your review and acceptance.</div>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="mt-4 pt-4 border-top border-secondary border-opacity-25">
+      <h5 class="fw-bold text-white mb-3">About {{ listing.pet_name }}</h5>
+      <p class="text-secondary leading-relaxed fs-6" style="white-space: pre-line;">{{ listing.description }}</p>
+    </div>
+  </div>
+
+  <!-- Related Listings -->
+  {% if related_listings %}
+    <h5 class="fw-bold text-white mb-3">Other Companions Available for Adoption</h5>
+    <div class="row g-3">
+      {% for rel in related_listings %}
+        <div class="col-md-4">
+          <div class="glass-card p-3 d-flex gap-3 align-items-center">
+            <img src="{{ rel.get_photo_url }}" class="rounded-3 border" width="70" height="70" style="object-fit: cover;" alt="{{ rel.pet_name }}">
+            <div>
+              <h6 class="fw-bold mb-0 text-white">{{ rel.pet_name }}</h6>
+              <div class="text-xs text-muted">{{ rel.breed }} • {{ rel.age }} yrs</div>
+              <div class="text-xs text-danger mb-1">{{ rel.location }}</div>
+              <a href="{% url 'adoption:listing_detail' rel.pk %}" class="small text-danger fw-bold text-decoration-none">View Details →</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+</div>
+
+<!-- Adoption Application Modal -->
+{% if user.is_authenticated %}
+  <div class="modal fade" id="adoptionInquiryModal" tabindex="-1" aria-labelledby="inquiryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content glass-card border-0 shadow-lg" style="background: rgba(15, 23, 42, 0.98);">
+        <form method="post" action="{% url 'adoption:submit_inquiry' listing.pk %}">
+          {% csrf_token %}
+          <div class="modal-header border-secondary border-opacity-25">
+            <h5 class="modal-title fw-bold text-white" id="inquiryModalLabel">
+              <i class="fa-solid fa-heart text-danger me-2"></i> Apply to Adopt {{ listing.pet_name }}
+            </h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body p-4">
+            <div class="mb-3">
+              <label class="form-label text-light small fw-bold">Your Name</label>
+              <input type="text" name="applicant_name" class="form-control" value="{{ user.get_full_name|default:user.username }}" required>
+            </div>
+            <div class="row g-2 mb-3">
+              <div class="col-sm-6">
+                <label class="form-label text-light small fw-bold">Contact Email</label>
+                <input type="email" name="applicant_email" class="form-control" value="{{ user.email }}" required>
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label text-light small fw-bold">Contact Phone</label>
+                <input type="text" name="applicant_phone" class="form-control" value="{{ user.phone|default:'' }}" placeholder="+91 98765 43210" required>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label text-light small fw-bold">Housing Environment</label>
+              <select name="housing_type" class="form-select">
+                <option value="Apartment with Balcony">Apartment with Balcony</option>
+                <option value="Independent House with Fenced Yard" selected>Independent House with Fenced Yard</option>
+                <option value="Villa / Farmhouse">Villa / Farmhouse</option>
+                <option value="Gated Community Flat">Gated Community Flat</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label text-light small fw-bold">Previous Pet Experience</label>
+              <select name="pet_experience" class="form-select">
+                <option value="Lifelong pet owner (Experienced)" selected>Lifelong pet owner (Experienced)</option>
+                <option value="Currently have pets at home">Currently have pets at home</option>
+                <option value="First-time pet parent (Ready to learn)">First-time pet parent (Ready to learn)</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label text-light small fw-bold">Message to Guardian</label>
+              <textarea name="message" class="form-control" rows="3" placeholder="Tell {{ listing.pet_name }}'s guardian why you would provide a loving forever home..." required>Hello, I fell in love with {{ listing.pet_name }}'s profile! I would love to meet {{ listing.pet_name }} and offer a compassionate, permanent home.</textarea>
+            </div>
+          </div>
+          <div class="modal-footer border-secondary border-opacity-25">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-danger px-4 fw-bold">
+              <i class="fa-solid fa-paper-plane me-1"></i> Send Adoption Application
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% endblock %}

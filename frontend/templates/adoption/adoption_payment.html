@@ -1,0 +1,788 @@
+{% extends 'base.html' %}
+
+{% block title %}Adoption Fee Checkout – {{ listing.pet_name }} – Pet Care Companion{% endblock %}
+
+{% block extra_css %}
+<style>
+  .payment-card-border {
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.7);
+  }
+  .pay-option-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    background: rgba(15, 23, 42, 0.65);
+    margin-bottom: 10px;
+  }
+  .pay-option-card:hover {
+    border-color: rgba(16, 185, 129, 0.6);
+    background: rgba(16, 185, 129, 0.08);
+  }
+  .pay-option-card.selected,
+  .pay-option-card:has(input[type="radio"]:checked) {
+    border-color: #10b981 !important;
+    background: rgba(16, 185, 129, 0.15) !important;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+  }
+  .pay-radio-input {
+    width: 22px;
+    height: 22px;
+    accent-color: #10b981;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .bank-pill {
+    cursor: pointer;
+    border: 1.5px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    padding: 8px 12px;
+    text-align: center;
+    font-size: 0.82rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    background: rgba(30, 41, 59, 0.7);
+    user-select: none;
+  }
+  .bank-pill:hover, .bank-pill.active {
+    border-color: #10b981 !important;
+    background: rgba(16, 185, 129, 0.22) !important;
+    color: #34d399 !important;
+  }
+  .qr-code-box {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 16px;
+    display: inline-block;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 3px solid #10b981;
+  }
+  .qr-pulse-badge {
+    animation: pulseGlow 2s infinite;
+  }
+  @keyframes pulseGlow {
+    0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); }
+    70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+  }
+  .card-input-box {
+    background: rgba(15, 23, 42, 0.75);
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    padding: 16px;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- Breadcrumb & Navigation -->
+  <div class="mb-4">
+    <a href="{% url 'adoption:listing_detail' listing.pk %}" class="btn btn-sm btn-outline-secondary mb-2">
+      <i class="fa-solid fa-arrow-left me-1"></i> Back to {{ listing.pet_name }}
+    </a>
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+      <div>
+        <h2 class="fw-bold text-white mb-1">
+          <i class="fa-solid fa-paw text-danger me-2"></i>Pet Adoption Fee Checkout
+        </h2>
+        <p class="text-secondary mb-0">Pet: <strong class="text-light">{{ listing.pet_name }}</strong> ({{ listing.breed }}) • Real-Time GPay QR &amp; Razorpay Gateway</p>
+      </div>
+      <div>
+        {% if is_paid %}
+          <span class="badge bg-success fs-6 px-3 py-2 shadow"><i class="fa-solid fa-check-circle me-1"></i> PAID &amp; CONFIRMED</span>
+        {% elif is_locked %}
+          <span class="badge bg-warning text-dark fs-6 px-3 py-2 shadow"><i class="fa-solid fa-lock me-1"></i> PAYMENT LOCKED</span>
+        {% else %}
+          <span class="badge bg-primary fs-6 px-3 py-2 shadow"><i class="fa-solid fa-hourglass-half me-1"></i> READY FOR PAYMENT</span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+
+    <!-- Left Column: Pet Summary -->
+    <div class="col-lg-6">
+      <div class="glass-card p-4 mb-4">
+        <h5 class="fw-bold text-white mb-3 d-flex align-items-center gap-2">
+          <i class="fa-solid fa-id-card text-danger"></i> Adoption Details
+        </h5>
+
+        <div class="d-flex align-items-center gap-3 p-3 rounded-4 bg-dark bg-opacity-50 border border-secondary border-opacity-25 mb-4">
+          <div class="rounded-circle bg-secondary bg-opacity-25 d-flex align-items-center justify-content-center text-white fw-bold fs-3 overflow-hidden" style="width: 70px; height: 70px;">
+            {% if listing.photo %}
+              <img src="{{ listing.photo.url }}" alt="{{ listing.pet_name }}" class="w-100 h-100 object-fit-cover">
+            {% else %}
+              <i class="fa-solid fa-shield-cat"></i>
+            {% endif %}
+          </div>
+          <div>
+            <h4 class="fw-bold text-white mb-1">{{ listing.pet_name }}</h4>
+            <div class="small text-secondary">
+              <span class="badge bg-danger-subtle text-danger fw-bold">{{ listing.breed|default:listing.species }}</span> • 
+              <span>Age: {{ listing.age }} Years</span> • 
+              <span><i class="fa-solid fa-location-dot me-1"></i>{{ listing.location }}</span>
+            </div>
+            <div class="small text-muted mt-1">
+              Owner/Guardian: <strong class="text-light">{{ listing.owner.get_full_name|default:listing.owner.username }}</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-sm-6">
+            <div class="p-3 rounded-3 bg-dark bg-opacity-50 border border-secondary border-opacity-25">
+              <span class="text-xs text-muted text-uppercase fw-bold d-block">Species</span>
+              <strong class="text-white">{{ listing.species }}</strong>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="p-3 rounded-3 bg-dark bg-opacity-50 border border-secondary border-opacity-25">
+              <span class="text-xs text-muted text-uppercase fw-bold d-block">Gender</span>
+              <strong class="text-white">{{ listing.get_gender_display|default:"Unknown" }}</strong>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="p-3 rounded-3 bg-dark bg-opacity-50 border border-secondary border-opacity-25">
+              <span class="text-xs text-muted text-uppercase fw-bold d-block">Vaccination Status</span>
+              <span class="badge bg-success-subtle text-success"><i class="fa-solid fa-check-circle me-1"></i> {{ listing.vaccination_status }}</span>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="p-3 rounded-3 bg-dark bg-opacity-50 border border-secondary border-opacity-25">
+              <span class="text-xs text-muted text-uppercase fw-bold d-block">Adoption Protection</span>
+              <span class="badge bg-info-subtle text-info"><i class="fa-solid fa-shield-heart me-1"></i> Certified Shelter/Home</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Non-Refundable Notice -->
+      <div class="alert alert-dark border border-secondary border-opacity-50 p-3 rounded-4">
+        <div class="d-flex align-items-start gap-3">
+          <div class="bg-danger bg-opacity-25 p-2 rounded-3 text-danger mt-1">
+            <i class="fa-solid fa-shield-halved fs-5"></i>
+          </div>
+          <div>
+            <h6 class="fw-bold text-white mb-1">Non-Refundable Adoption Fee Policy</h6>
+            <p class="small text-secondary mb-1">
+              Adoption contributions support pet medical checkups, vaccination records, and transition care. All adoption fee transactions are <strong class="text-light">final and non-refundable</strong> once confirmed.
+            </p>
+            <div class="small text-success fw-bold">
+              <i class="fa-solid fa-circle-check me-1"></i> Immediate ownership transfer protocol initiated upon payment.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Payment Details & Direct Selection & Dynamic Methods -->
+    <div class="col-lg-6">
+      <div class="glass-card p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="fw-bold text-white mb-0">Adoption Fee</h5>
+          <span class="badge bg-secondary-subtle text-secondary">INR (₹)</span>
+        </div>
+
+        <div class="d-flex justify-content-between py-2 border-bottom border-secondary border-opacity-25 small text-secondary">
+          <span>Standard Adoption Care Contribution:</span>
+          <span class="text-light fw-bold">₹{{ listing.price }}</span>
+        </div>
+        <div class="d-flex justify-content-between py-2 border-bottom border-secondary border-opacity-25 small text-secondary">
+          <span>Medical Documentation &amp; Transfer:</span>
+          <span class="text-success fw-bold">FREE (₹0.00)</span>
+        </div>
+        <div class="d-flex justify-content-between py-2 border-bottom border-secondary border-opacity-25 small text-secondary mb-3">
+          <span>Gateway Convenience Surcharge:</span>
+          <span class="text-success fw-bold">Included</span>
+        </div>
+
+        <!-- Grand Total Banner -->
+        <div class="p-3 rounded-4 bg-dark bg-opacity-75 border border-success border-opacity-50 mb-3">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <span class="text-xs text-muted text-uppercase fw-bold d-block">Total Contribution</span>
+              <span class="text-xs text-secondary">Non-refundable upon confirmation</span>
+            </div>
+            <div class="text-end">
+              <div class="fs-2 fw-extrabold text-success">₹{{ listing.price }}</div>
+            </div>
+          </div>
+        </div>
+
+        {% if is_paid %}
+          <!-- Receipt Box -->
+          <div class="alert alert-success border-0 rounded-4 p-3 mb-3">
+            <div class="d-flex align-items-center gap-2 fw-bold text-success mb-2">
+              <i class="fa-solid fa-circle-check fs-5"></i> Adoption Fee Paid &amp; Verified
+            </div>
+            <div class="small text-dark">
+              <div><strong>Payment ID:</strong> <code class="text-dark bg-light px-1 rounded">{{ adoption_payment.razorpay_payment_id|default:"pay_verified_online" }}</code></div>
+              {% if adoption_payment.razorpay_order_id %}
+                <div><strong>Order ID:</strong> <code class="text-dark bg-light px-1 rounded">{{ adoption_payment.razorpay_order_id }}</code></div>
+              {% endif %}
+              <div><strong>Method:</strong> {{ adoption_payment.payment_method|default:"Google Pay (UPI QR Scan)" }}</div>
+              <div><strong>Paid On:</strong> {{ adoption_payment.paid_at|date:"M d, Y, h:i A"|default:"Verified" }}</div>
+            </div>
+          </div>
+
+          <div class="d-flex flex-column gap-2">
+            <button type="button" class="btn btn-outline-light w-100 py-2 fw-bold" onclick="window.print()">
+              <i class="fa-solid fa-print me-1"></i> Print Adoption Receipt
+            </button>
+            <a href="{% url 'adoption:listing_detail' listing.pk %}" class="btn btn-primary-custom w-100 py-2 fw-bold text-center">
+              <i class="fa-solid fa-paw me-1"></i> View {{ listing.pet_name }}'s Page
+            </a>
+          </div>
+
+        {% elif is_locked %}
+          <!-- Locked State -->
+          <div class="glass-card p-4 border border-warning border-opacity-50 text-center mb-3">
+            <i class="fa-solid fa-lock text-warning fs-1 mb-3 d-block"></i>
+            <h5 class="fw-bold text-white mb-2">Payment Locked</h5>
+            <p class="small text-secondary mb-3">
+              Payment is unlocked only when the guardian has accepted your adoption application.
+            </p>
+            <a href="{% url 'adoption:listing_detail' listing.pk %}" class="btn btn-danger w-100 py-2 fw-bold">
+              <i class="fa-solid fa-arrow-left me-1"></i> Return to Pet Page
+            </a>
+          </div>
+
+        {% else %}
+          <!-- REAL-TIME PAYMENT SELECTION & DYNAMIC PANELS -->
+          <div class="mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="text-xs text-uppercase fw-bold text-muted">Select Payment Option</span>
+              <span class="badge bg-success-subtle text-success small" id="adoptMainActiveBadge">Google Pay / QR (Selected)</span>
+            </div>
+
+            <!-- Option 1: Google Pay / UPI (Shows QR Code) -->
+            <label class="pay-option-card selected w-100" id="adoptMainCardUPI" for="radioAdoptMainUPI" onclick="setAdoptMainMethod('upi')">
+              <input type="radio" name="adoptMainPayOption" id="radioAdoptMainUPI" value="upi" checked class="pay-radio-input">
+              <div class="d-flex align-items-center gap-2 flex-grow-1">
+                <i class="fa-brands fa-google-pay text-info fs-3"></i>
+                <div>
+                  <strong class="d-block text-white small">Google Pay / UPI (Scan QR Code)</strong>
+                  <span class="text-xs text-muted">Scan QR with phone &amp; click OK</span>
+                </div>
+              </div>
+              <span class="badge bg-success small">Real-Time QR</span>
+            </label>
+
+            <!-- Option 2: Card (Shows Card Inputs, Hides QR Code) -->
+            <label class="pay-option-card w-100" id="adoptMainCardCard" for="radioAdoptMainCard" onclick="setAdoptMainMethod('card')">
+              <input type="radio" name="adoptMainPayOption" id="radioAdoptMainCard" value="card" class="pay-radio-input">
+              <div class="d-flex align-items-center gap-2 flex-grow-1">
+                <i class="fa-regular fa-credit-card text-warning fs-4"></i>
+                <div>
+                  <strong class="d-block text-white small">Credit or Debit Card</strong>
+                  <span class="text-xs text-muted">Enter card details directly</span>
+                </div>
+              </div>
+            </label>
+
+            <!-- Option 3: Net Banking (Shows Bank Selection, Hides QR Code) -->
+            <label class="pay-option-card w-100" id="adoptMainCardNetBanking" for="radioAdoptMainNetBanking" onclick="setAdoptMainMethod('netbanking')">
+              <input type="radio" name="adoptMainPayOption" id="radioAdoptMainNetBanking" value="netbanking" class="pay-radio-input">
+              <div class="d-flex align-items-center gap-2 flex-grow-1">
+                <i class="fa-solid fa-building-columns text-success fs-4"></i>
+                <div>
+                  <strong class="d-block text-white small">Net Banking</strong>
+                  <span class="text-xs text-muted">SBI, HDFC, ICICI, Axis &amp; 50+ Banks</span>
+                </div>
+              </div>
+            </label>
+
+            <!-- 1. LIVE GOOGLE PAY QR CODE DISPLAY (VISIBLE ONLY WHEN UPI SELECTED) -->
+            <div id="adoptQrCodePanel" class="p-3 rounded-4 bg-dark bg-opacity-75 border border-success border-opacity-50 text-center my-3">
+              <div class="d-flex justify-content-between align-items-center mb-2 px-1">
+                <div class="d-flex align-items-center gap-2">
+                  <i class="fa-brands fa-google-pay text-info fs-3"></i>
+                  <strong class="text-white small">Scan to Pay via Google Pay</strong>
+                </div>
+                <span class="badge bg-success text-dark fw-bold small qr-pulse-badge">
+                  <i class="fa-solid fa-circle-dot text-danger me-1"></i> Live UPI Active
+                </span>
+              </div>
+
+              <!-- Base64 Generated QR Code Image (Guaranteed 100% visible) -->
+              <div class="qr-code-box my-2">
+                {% if upi_qr_data_url %}
+                  <img id="adoptGpayQrImage" src="{{ upi_qr_data_url }}" alt="Google Pay QR Code" style="width: 190px; height: 190px;" class="d-block mx-auto">
+                {% else %}
+                  <img id="adoptGpayQrImage" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&amp;data=upi%3A%2F%2Fpay%3Fpa%3D{{ upi_vpa|default:'petcare.companion@okaxis' }}%26pn%3DPetCareCompanion%26am%3D{{ listing.price }}%26cu%3DINR%26tn%3DAdopt_{{ listing.pk }}" alt="Google Pay QR Code" style="width: 190px; height: 190px;" class="d-block mx-auto">
+                {% endif %}
+                <div class="d-flex justify-content-center align-items-center gap-2 mt-2 pt-1 border-top text-dark fw-bold" style="font-size: 0.72rem;">
+                  <span class="text-primary"><i class="fa-brands fa-google-pay fs-6"></i> GPay</span> • 
+                  <span class="text-purple"><i class="fa-solid fa-mobile-screen"></i> PhonePe</span> • 
+                  <span class="text-info"><i class="fa-solid fa-wallet"></i> Paytm</span> • 
+                  <span class="text-success"><i class="fa-solid fa-bolt"></i> BHIM</span>
+                </div>
+              </div>
+
+              <div class="text-xs text-secondary mt-1 mb-2">
+                <span>Payee: <strong class="text-light">Pet Care Companion (Adoption)</strong></span> • 
+                <span>UPI ID: <code class="text-success bg-black px-1 rounded">{{ upi_vpa|default:'petcare.companion@okaxis' }}</code></span>
+              </div>
+
+              <div class="alert alert-dark border-secondary bg-opacity-50 py-2 px-3 small text-start mb-3">
+                <div class="d-flex align-items-center gap-2 text-warning fw-bold mb-1">
+                  <i class="fa-solid fa-qrcode"></i> How to Complete Payment on Phone:
+                </div>
+                <ol class="mb-0 ps-3 text-secondary text-xs">
+                  <li>Open <strong class="text-light">Google Pay</strong> (or PhonePe/Paytm) on your phone.</li>
+                  <li>Scan this QR code and approve <strong class="text-success">₹{{ listing.price }}</strong>.</li>
+                  <li>Once paid on phone, click <strong class="text-success">"✅ Click OK - I Have Paid"</strong> below.</li>
+                </ol>
+              </div>
+
+              <button type="button" id="adoptQrVerifyOkBtn" onclick="verifyAdoptQrScanPayment()" class="btn btn-success-custom w-100 py-3 fs-5 fw-bold shadow-lg d-flex align-items-center justify-content-center gap-2 mb-2">
+                <i class="fa-solid fa-circle-check fs-4"></i>
+                <span id="adoptQrBtnText">✅ Click OK – I Have Paid on Phone (₹{{ listing.price }})</span>
+              </button>
+
+              <button type="button" onclick="simulateAdoptPhoneScanApproval()" class="btn btn-sm btn-outline-info w-100 py-2 d-flex align-items-center justify-content-center gap-2" title="Simulates phone scanning QR and approving payment">
+                <i class="fa-solid fa-mobile-screen text-info"></i>
+                <span>⚡ Simulate Mobile GPay Scan &amp; Approve</span>
+              </button>
+            </div>
+
+            <!-- 2. REAL-TIME CREDIT CARD DETAILS (VISIBLE ONLY WHEN CARD SELECTED) -->
+            <div id="adoptCardDetailsPanel" class="card-input-box my-3 d-none">
+              <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-secondary border-opacity-25">
+                <div class="d-flex align-items-center gap-2">
+                  <i class="fa-regular fa-credit-card text-warning fs-4"></i>
+                  <strong class="text-white small">Enter Credit or Debit Card Details:</strong>
+                </div>
+                <div class="d-flex gap-2">
+                  <i class="fa-brands fa-cc-visa text-primary fs-5"></i>
+                  <i class="fa-brands fa-cc-mastercard text-warning fs-5"></i>
+                  <i class="fa-solid fa-credit-card text-success fs-5"></i>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label text-xs text-muted text-uppercase fw-bold mb-1">Card Number</label>
+                <input type="text" class="form-control bg-dark text-light border-secondary" id="adoptCardNumInput" placeholder="4111 2222 3333 4444" value="4111 2222 3333 4444" maxlength="19">
+              </div>
+
+              <div class="row g-2 mb-3">
+                <div class="col-6">
+                  <label class="form-label text-xs text-muted text-uppercase fw-bold mb-1">Expiry Date</label>
+                  <input type="text" class="form-control bg-dark text-light border-secondary" id="adoptCardExpInput" placeholder="MM / YY" value="12/28" maxlength="5">
+                </div>
+                <div class="col-6">
+                  <label class="form-label text-xs text-muted text-uppercase fw-bold mb-1">CVV</label>
+                  <input type="password" class="form-control bg-dark text-light border-secondary" id="adoptCardCvvInput" placeholder="123" value="123" maxlength="4">
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label text-xs text-muted text-uppercase fw-bold mb-1">Cardholder Name</label>
+                <input type="text" class="form-control bg-dark text-light border-secondary" id="adoptCardNameInput" placeholder="Name on Card" value="{{ request.user.get_full_name|default:request.user.username }}">
+              </div>
+
+              <button type="button" onclick="executeAdoptPayment('Credit/Debit Card')" class="btn btn-warning text-dark w-100 py-3 fs-5 fw-bold shadow-lg d-flex align-items-center justify-content-center gap-2">
+                <i class="fa-solid fa-lock"></i>
+                <span>Pay Adoption Fee Now (Proceed via Credit Card) →</span>
+              </button>
+            </div>
+
+            <!-- 3. REAL-TIME NET BANKING DETAILS (VISIBLE ONLY WHEN NETBANKING SELECTED) -->
+            <div id="adoptNetBankingPanel" class="card-input-box my-3 d-none">
+              <div class="d-flex align-items-center gap-2 mb-3 pb-2 border-bottom border-secondary border-opacity-25">
+                <i class="fa-solid fa-building-columns text-success fs-4"></i>
+                <strong class="text-white small">Select Your Bank:</strong>
+              </div>
+
+              <div class="row g-2 mb-3">
+                <div class="col-6">
+                  <div class="bank-pill active" data-bank="State Bank of India" onclick="selectAdoptBank('State Bank of India')">
+                    <i class="fa-solid fa-building-columns text-primary me-1"></i> SBI
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="bank-pill" data-bank="HDFC Bank" onclick="selectAdoptBank('HDFC Bank')">
+                    <i class="fa-solid fa-building-columns text-danger me-1"></i> HDFC
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="bank-pill" data-bank="ICICI Bank" onclick="selectAdoptBank('ICICI Bank')">
+                    <i class="fa-solid fa-building-columns text-warning me-1"></i> ICICI
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="bank-pill" data-bank="Axis Bank" onclick="selectAdoptBank('Axis Bank')">
+                    <i class="fa-solid fa-building-columns text-info me-1"></i> Axis Bank
+                  </div>
+                </div>
+              </div>
+
+              <select class="form-select form-select-sm bg-dark text-light border-secondary mb-3" id="adoptAllBanksSelect" onchange="selectAdoptBank(this.value)">
+                <option value="State Bank of India" selected>State Bank of India (SBI)</option>
+                <option value="HDFC Bank">HDFC Bank</option>
+                <option value="ICICI Bank">ICICI Bank</option>
+                <option value="Axis Bank">Axis Bank</option>
+                <option value="Kotak Mahindra Bank">Kotak Mahindra Bank</option>
+                <option value="Punjab National Bank">Punjab National Bank (PNB)</option>
+              </select>
+
+              <button type="button" onclick="executeAdoptPayment('Net Banking')" class="btn btn-info text-dark w-100 py-3 fs-5 fw-bold shadow-lg d-flex align-items-center justify-content-center gap-2">
+                <i class="fa-solid fa-lock"></i>
+                <span id="adoptNetBankBtnText">Pay Adoption Fee Now (via SBI Net Banking) →</span>
+              </button>
+            </div>
+
+            <!-- Fallback Proceed & Pay Button for Non-QR modes -->
+            <div id="adoptNonQrProceedBox" class="d-none">
+              <button type="button" id="adoptMainDirectProceedBtn" onclick="executeAdoptPayment()" class="btn btn-success-custom w-100 py-3 fs-5 fw-bold shadow-lg d-flex align-items-center justify-content-center gap-2 my-2">
+                <i class="fa-solid fa-lock"></i>
+                <span id="adoptMainDirectBtnText">Pay Adoption Fee Now →</span>
+              </button>
+            </div>
+
+            
+          </div>
+
+          <!-- Loading Indicator -->
+          <div id="paymentLoadingIndicator" class="d-none text-center py-3">
+            <div class="spinner-border text-danger mb-2" role="status"></div>
+            <div class="fw-bold text-light small">Verifying adoption payment with bank &amp; server...</div>
+            <div class="text-xs text-muted">Please wait. Updating adoption confirmation...</div>
+          </div>
+
+          <!-- Error Alert Box -->
+          <div id="paymentAlertBox" class="alert alert-danger d-none mt-3 small" role="alert">
+            <span id="paymentAlertMsg">An error occurred while processing the payment.</span>
+          </div>
+
+        {% endif %}
+
+        <div class="mt-4 pt-3 border-top border-secondary border-opacity-25 text-center text-xs text-muted">
+          <div class="d-flex justify-content-center align-items-center gap-3 mb-1">
+            <span><i class="fa-solid fa-shield-halved text-success"></i> 256-Bit SSL Secured</span>
+            <span>•</span>
+            <span><i class="fa-solid fa-bolt text-warning"></i> Instant Confirmation</span>
+          </div>
+          <div>Powered by Razorpay Payments Engine &amp; Oracle Architecture</div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+var _adoptMethod = 'upi';
+var _adoptBank = 'State Bank of India';
+var _adoptPrice = "{{ listing.price }}";
+var _listingId = {{ listing.pk }};
+var _adoptOrderId = "{{ razorpay_order_id }}";
+var _adoptPaymentId = "{{ simulated_payment_id }}";
+var _adoptSignature = "{{ simulated_signature }}";
+var _adoptPollTimer = null;
+
+function refreshAdoptUI() {
+  var rMainUpi = document.getElementById('radioAdoptMainUPI');
+  var rMainCard = document.getElementById('radioAdoptMainCard');
+  var rMainNet = document.getElementById('radioAdoptMainNetBanking');
+  var rModUpi = document.getElementById('radioAdoptModalUPI');
+  var rModCard = document.getElementById('radioAdoptModalCard');
+  var rModNet = document.getElementById('radioAdoptModalNetBanking');
+
+  if (rMainUpi) rMainUpi.checked = (_adoptMethod === 'upi');
+  if (rMainCard) rMainCard.checked = (_adoptMethod === 'card');
+  if (rMainNet) rMainNet.checked = (_adoptMethod === 'netbanking');
+  if (rModUpi) rModUpi.checked = (_adoptMethod === 'upi');
+  if (rModCard) rModCard.checked = (_adoptMethod === 'card');
+  if (rModNet) rModNet.checked = (_adoptMethod === 'netbanking');
+
+  ['adoptMainCardUPI','adoptMainCardCard','adoptMainCardNetBanking','adoptModalCardUPI','adoptModalCardCard','adoptModalCardNetBanking'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.classList.remove('selected');
+  });
+
+  if (_adoptMethod === 'upi') {
+    var c1 = document.getElementById('adoptMainCardUPI'); if (c1) c1.classList.add('selected');
+    var c2 = document.getElementById('adoptModalCardUPI'); if (c2) c2.classList.add('selected');
+  } else if (_adoptMethod === 'card') {
+    var c1 = document.getElementById('adoptMainCardCard'); if (c1) c1.classList.add('selected');
+    var c2 = document.getElementById('adoptModalCardCard'); if (c2) c2.classList.add('selected');
+  } else if (_adoptMethod === 'netbanking') {
+    var c1 = document.getElementById('adoptMainCardNetBanking'); if (c1) c1.classList.add('selected');
+    var c2 = document.getElementById('adoptModalCardNetBanking'); if (c2) c2.classList.add('selected');
+  }
+
+  // 1. QR CODE: Visible ONLY when UPI selected
+  var qrPanel = document.getElementById('adoptQrCodePanel');
+  if (qrPanel) {
+    if (_adoptMethod === 'upi') qrPanel.classList.remove('d-none');
+    else qrPanel.classList.add('d-none'); // Hidden when card selected!
+  }
+
+  // 2. CARD DETAILS: Visible ONLY when Card selected
+  var cardPanel = document.getElementById('adoptCardDetailsPanel');
+  if (cardPanel) {
+    if (_adoptMethod === 'card') cardPanel.classList.remove('d-none');
+    else cardPanel.classList.add('d-none');
+  }
+
+  // 3. NET BANKING: Visible ONLY when Net Banking selected
+  var netPanel = document.getElementById('adoptNetBankingPanel');
+  if (netPanel) {
+    if (_adoptMethod === 'netbanking') netPanel.classList.remove('d-none');
+    else netPanel.classList.add('d-none');
+  }
+
+  var pUpi = document.getElementById('adoptModalSubPanelUPI');
+  var pCard = document.getElementById('adoptModalSubPanelCard');
+  var pNet = document.getElementById('adoptModalSubPanelNetBanking');
+  if (pUpi) pUpi.classList.toggle('d-none', _adoptMethod !== 'upi');
+  if (pCard) pCard.classList.toggle('d-none', _adoptMethod !== 'card');
+  if (pNet) pNet.classList.toggle('d-none', _adoptMethod !== 'netbanking');
+
+  var mainBadge = document.getElementById('adoptMainActiveBadge');
+  var modBadge = document.getElementById('adoptModalActiveBadge');
+  var modBtnText = document.getElementById('adoptModalPayBtnText');
+
+  if (_adoptMethod === 'upi') {
+    if (mainBadge) mainBadge.textContent = 'Google Pay / QR (Selected)';
+    if (modBadge) modBadge.textContent = 'Google Pay (UPI QR)';
+  } else if (_adoptMethod === 'card') {
+    if (mainBadge) mainBadge.textContent = 'Credit / Debit Card (Selected)';
+    if (modBadge) modBadge.textContent = 'Credit / Debit Card';
+  } else if (_adoptMethod === 'netbanking') {
+    if (mainBadge) mainBadge.textContent = 'Net Banking: ' + _adoptBank;
+    if (modBadge) modBadge.textContent = 'Net Banking (' + _adoptBank + ')';
+  }
+
+  if (modBtnText) modBtnText.textContent = 'Pay ₹' + _adoptPrice + ' Now →';
+}
+
+function setAdoptMainMethod(m) {
+  _adoptMethod = m;
+  refreshAdoptUI();
+}
+
+function selectAdoptionMethod(m) {
+  setAdoptMainMethod(m);
+}
+
+function selectAdoptBank(bank) {
+  _adoptBank = bank;
+  _adoptMethod = 'netbanking';
+  document.querySelectorAll('.bank-pill').forEach(function(pill) {
+    pill.classList.toggle('active', pill.getAttribute('data-bank') === bank);
+  });
+  refreshAdoptUI();
+}
+
+function selectAdoptionBank(bank) {
+  selectAdoptBank(bank);
+}
+
+function verifyAdoptQrScanPayment() {
+  var qrBtn = document.getElementById('adoptQrVerifyOkBtn');
+  if (qrBtn) {
+    qrBtn.disabled = true;
+    qrBtn.innerHTML = '<div class="spinner-border spinner-border-sm me-2" role="status"></div> Verifying Google Pay Transaction...';
+  }
+  executeAdoptPayment('Google Pay (Real-Time QR Scan)');
+}
+
+function simulateAdoptPhoneScanApproval() {
+  _adoptMethod = 'upi';
+  refreshAdoptUI();
+  var sampleUtr = autoFillAdoptDemoUtr();
+  var qrBtn = document.getElementById('adoptQrVerifyOkBtn');
+  if (qrBtn) {
+    qrBtn.disabled = true;
+    qrBtn.innerHTML = '<i class="fa-solid fa-mobile-screen text-warning me-2"></i> Phone Scanned! Approving on GPay...';
+  }
+  setTimeout(function() {
+    if (qrBtn) qrBtn.innerHTML = '<i class="fa-solid fa-circle-check text-success me-2"></i> GPay Approved! Verifying on Website...';
+    executeAdoptPayment('Google Pay (Simulated Mobile QR Approval)');
+  }, 700);
+}
+
+function toggleAdoptQrCardView(mode) {
+  var qrImg = document.getElementById('adoptGpayQrImage');
+  var cardImg = document.getElementById('adoptGpayOriginalCardImage');
+  var btnQr = document.getElementById('btnAdoptViewQr');
+  var btnCard = document.getElementById('btnAdoptViewCard');
+  if (mode === 'card') {
+    if (qrImg) qrImg.classList.add('d-none');
+    if (cardImg) cardImg.classList.remove('d-none');
+    if (btnQr) { btnQr.classList.remove('active', 'btn-primary'); btnQr.classList.add('btn-outline-secondary'); }
+    if (btnCard) { btnCard.classList.add('active', 'btn-primary'); btnCard.classList.remove('btn-outline-secondary'); }
+  } else {
+    if (qrImg) qrImg.classList.remove('d-none');
+    if (cardImg) cardImg.classList.add('d-none');
+    if (btnQr) { btnQr.classList.add('active', 'btn-primary'); btnQr.classList.remove('btn-outline-secondary'); }
+    if (btnCard) { btnCard.classList.remove('active', 'btn-primary'); btnCard.classList.add('btn-outline-secondary'); }
+  }
+}
+
+function autoFillAdoptDemoUtr() {
+  var now = Date.now().toString();
+  var rand = Math.floor(Math.random() * 90 + 10).toString();
+  var sampleUtr = '429' + now.slice(-7) + rand;
+  var utrEl = document.getElementById('adoptUpiUtrInput');
+  if (utrEl) {
+    utrEl.value = sampleUtr;
+    utrEl.classList.add('border-success');
+  }
+  return sampleUtr;
+}
+
+function verifyAdoptUpiWithUtr() {
+  var utrEl = document.getElementById('adoptUpiUtrInput');
+  var val = utrEl ? utrEl.value.trim() : '';
+  if (!val) {
+    val = autoFillAdoptDemoUtr();
+  }
+  executeAdoptPayment('Google Pay UPI (' + val + ')');
+}
+
+function executeAdoptPayment(customMethodName) {
+  var methodLabel = customMethodName || 'Google Pay (UPI QR Scan)';
+  if (!customMethodName) {
+    if (_adoptMethod === 'upi') {
+      methodLabel = 'Google Pay (UPI QR Scan)';
+    } else if (_adoptMethod === 'card') {
+      var cardEl = document.getElementById('adoptCardNumInput') || document.getElementById('adoptCardNumberInput');
+      var last4 = cardEl ? cardEl.value.trim().slice(-4) : '4444';
+      methodLabel = 'Credit/Debit Card (ending in ' + last4 + ')';
+    } else if (_adoptMethod === 'netbanking') {
+      methodLabel = 'Net Banking (' + _adoptBank + ')';
+    }
+  }
+
+  var loader = document.getElementById('paymentLoadingIndicator');
+  var modalSpinner = document.getElementById('adoptModalLoadingSpinner');
+  var modBtn = document.getElementById('confirmAdoptModalPayBtn');
+  var qrBtn = document.getElementById('adoptQrVerifyOkBtn');
+  var alertBox = document.getElementById('paymentAlertBox');
+  var modAlertBox = document.getElementById('adoptModalAlertBox');
+
+  if (loader) loader.classList.remove('d-none');
+  if (modalSpinner) modalSpinner.classList.remove('d-none');
+  if (modBtn) modBtn.disabled = true;
+  if (qrBtn) qrBtn.disabled = true;
+  if (alertBox) alertBox.classList.add('d-none');
+  if (modAlertBox) modAlertBox.classList.add('d-none');
+
+  var csrf = (document.querySelector('[name=csrfmiddlewaretoken]') || {}).value;
+  if (!csrf) {
+    var m = document.cookie.match(/csrftoken=([^;]+)/);
+    csrf = m ? m[1] : '';
+  }
+
+  var utrEl = document.getElementById('adoptUpiUtrInput');
+  var enteredUtr = utrEl ? utrEl.value.trim() : '';
+  if (_adoptMethod === 'upi' && !enteredUtr) {
+    enteredUtr = autoFillAdoptDemoUtr();
+  }
+
+  var isSim = (customMethodName && (customMethodName.indexOf('Simulated') !== -1 || customMethodName.indexOf('Demo') !== -1)) || false;
+  var payload = {
+    razorpay_order_id: _adoptOrderId,
+    razorpay_payment_id: enteredUtr ? ('upi_gpay_' + enteredUtr) : _adoptPaymentId,
+    razorpay_signature: _adoptSignature,
+    payment_method: methodLabel,
+    upi_direct: (_adoptMethod === 'upi') || isSim,
+    utr_number: enteredUtr,
+    is_simulation: isSim
+  };
+
+  fetch('/adoption/' + _listingId + '/payment/verify/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': csrf
+    },
+    body: JSON.stringify(payload)
+  })
+  .then(function(res) { return res.json(); })
+  .then(function(data) {
+    if (loader) loader.classList.add('d-none');
+    if (modalSpinner) modalSpinner.classList.add('d-none');
+
+    if (data.status === 'success') {
+      var modalSuccess = document.getElementById('adoptModalSuccessBox');
+      if (modalSuccess) modalSuccess.classList.remove('d-none');
+      if (qrBtn) qrBtn.innerHTML = '<i class="fa-solid fa-circle-check fs-4 text-success"></i> Payment Verified! Loading Receipt...';
+      if (modBtn) modBtn.innerHTML = '<i class="fa-solid fa-circle-check"></i> Verified! Redirecting...';
+
+      setTimeout(function() {
+        window.location.href = data.redirect_url || ('/adoption/' + _listingId + '/payment/');
+      }, 500);
+    } else {
+      if (modBtn) modBtn.disabled = false;
+      if (qrBtn) {
+        qrBtn.disabled = false;
+        qrBtn.innerHTML = '<i class="fa-solid fa-circle-check fs-4"></i> ✅ Click OK – I Have Paid on Phone (₹' + _adoptPrice + ')';
+      }
+      var msg = data.message || 'Payment verification failed.';
+      if (alertBox) {
+        document.getElementById('paymentAlertMsg').innerText = msg;
+        alertBox.classList.remove('d-none');
+      }
+      if (modAlertBox) {
+        document.getElementById('adoptModalAlertMsg').innerText = msg;
+        modAlertBox.classList.remove('d-none');
+      }
+    }
+  })
+  .catch(function(err) {
+    if (loader) loader.classList.add('d-none');
+    if (modalSpinner) modalSpinner.classList.add('d-none');
+    if (modBtn) modBtn.disabled = false;
+    if (qrBtn) {
+      qrBtn.disabled = false;
+      qrBtn.innerHTML = '<i class="fa-solid fa-circle-check fs-4"></i> ✅ Click OK – I Have Paid on Phone (₹' + _adoptPrice + ')';
+    }
+    if (alertBox) {
+      document.getElementById('paymentAlertMsg').innerText = 'Network connection error. Please try again.';
+      alertBox.classList.remove('d-none');
+    }
+  });
+}
+
+function triggerConfirmAdoptionPayment() {
+  executeAdoptPayment();
+}
+
+function startRealtimeAdoptPolling() {
+  _adoptPollTimer = setInterval(function() {
+    fetch('/adoption/' + _listingId + '/payment/status/')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (data.is_paid) {
+          clearInterval(_adoptPollTimer);
+          var qrBtn = document.getElementById('adoptQrVerifyOkBtn');
+          if (qrBtn) qrBtn.innerHTML = '<i class="fa-solid fa-circle-check text-success fs-4"></i> Payment Confirmed on Mobile! Redirecting...';
+          setTimeout(function() {
+            window.location.href = data.redirect_url || ('/adoption/' + _listingId + '/payment/');
+          }, 400);
+        }
+      })
+      .catch(function() {});
+  }, 3000);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  refreshAdoptUI();
+  startRealtimeAdoptPolling();
+});
+</script>
+{% endblock %}

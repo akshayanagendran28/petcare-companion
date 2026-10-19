@@ -1,9 +1,17 @@
+databases:
+  - name: petcare-db
+    databaseName: petcare_db
+    user: petcare_user
+    plan: free
+
 services:
   - type: web
-    name: petcare-companion
+    name: petcare-backend
     env: python
+    plan: free
     buildCommand: "./build.sh"
     startCommand: "gunicorn config.wsgi:application"
+    healthCheckPath: /api/health-check/
     envVars:
       - key: PYTHON_VERSION
         value: 3.12.0
@@ -11,3 +19,11 @@ services:
         value: "True"
       - key: DJANGO_SECRET_KEY
         generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: petcare-db
+          property: connectionString
+      - key: CORS_ALLOW_ALL_ORIGINS
+        value: "True"
+      - key: ALLOWED_HOSTS
+        value: "*"

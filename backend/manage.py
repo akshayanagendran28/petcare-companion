@@ -3,9 +3,11 @@ import os
 import sys
 
 def main():
-    parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    if parent_dir not in sys.path:
-        sys.path.insert(0, parent_dir)
+    backend_dir = os.path.dirname(os.path.abspath(__file__))
+    parent_dir = os.path.dirname(backend_dir)
+    for p in [backend_dir, parent_dir]:
+        if p not in sys.path:
+            sys.path.insert(0, p)
         
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
     try:
