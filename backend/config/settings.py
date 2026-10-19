@@ -133,7 +133,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database Configuration
 # 1. Cloud PostgreSQL (when DATABASE_URL is set by Render)
 # 2. Oracle Database (when USE_ORACLE=True)
-# 3. Ephemeral / Runtime ORM Cache (database/app_cache.sqlite3) synchronized with MongoDB Atlas NoSQL
+# 3. Pure In-Memory Shared Runtime Cache (Zero SQLite files on disk) synced with MongoDB Atlas NoSQL
 DATABASE_URL = os.getenv('DATABASE_URL')
 USE_ORACLE = os.getenv('USE_ORACLE', 'False').lower() in ('true', '1', 't')
 
@@ -151,7 +151,8 @@ if DATABASE_URL:
         DATABASES = {
             'default': {
                 'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': PROJECT_ROOT / 'database' / 'app_cache.sqlite3',
+                'NAME': 'file:petcare_memdb?mode=memory&cache=shared',
+                'OPTIONS': {'uri': True},
             }
         }
 elif USE_ORACLE:
@@ -169,11 +170,12 @@ elif USE_ORACLE:
         }
     }
 else:
-    # Runtime ORM cache populated dynamically from MongoDB Atlas NoSQL cloud collections
+    # Pure in-memory runtime cache populated dynamically from MongoDB Atlas NoSQL collections
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': PROJECT_ROOT / 'database' / 'app_cache.sqlite3',
+            'NAME': 'file:petcare_memdb?mode=memory&cache=shared',
+            'OPTIONS': {'uri': True},
         }
     }
 

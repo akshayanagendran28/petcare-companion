@@ -80,7 +80,6 @@ pet_care_companion/
 │   └── README.md              # Backend architecture documentation
 │
 ├── database/                  # Data Persistence Tier
-│   ├── db.sqlite3             # Active SQLite database with pre-seeded data
 │   ├── schema.sql             # SQL schema DDL definitions
 │   ├── schema_dump.sql        # Full database dump with tables & seed rows
 │   ├── oracle/                # Oracle Database DDL scripts & setup guide

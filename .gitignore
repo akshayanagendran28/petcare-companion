@@ -3,6 +3,7 @@ __pycache__/
 *.sqlite3*
 database/*.sqlite3*
 app_cache.sqlite3*
+*.zip
 venv/
 .env
 .env.*

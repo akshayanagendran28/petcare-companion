@@ -156,7 +156,7 @@ This guarantees that login sessions, forms, and real-time payment verifications 
 
 Even with Render and Vercel configurations in place, local development remains 100% operational with zero setup:
 ```bash
-# Run local Django server (uses database/db.sqlite3 by default)
+# Run local Django server (connected live to MongoDB Atlas)
 python manage.py runserver
 
 # Run system verification tests
