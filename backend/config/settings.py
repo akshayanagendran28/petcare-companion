@@ -231,3 +231,8 @@ RAZORPAY_KEY_ID = os.getenv('RAZORPAY_KEY_ID', 'rzp_test_51PetCareCompanion2026'
 RAZORPAY_KEY_SECRET = os.getenv('RAZORPAY_KEY_SECRET', 'Secr3tPetCareCompanionKey2026')
 RAZORPAY_CURRENCY = 'INR'
 
+# MongoDB Atlas / NoSQL Document Database Configuration
+MONGODB_URI = os.getenv('MONGODB_URI', os.getenv('MONGO_URL', ''))
+MONGODB_NAME = os.getenv('MONGODB_NAME', 'petcare_companion_db')
+
+

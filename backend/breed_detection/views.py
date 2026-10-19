@@ -33,6 +33,19 @@ def detect_breed(request):
             )
             uploaded_image_url = scan_log.image.url
 
+            # Log to MongoDB NoSQL collection
+            try:
+                from config.mongodb import log_breed_detection_to_mongodb
+                log_breed_detection_to_mongodb(
+                    user_id=request.user.id if request.user.is_authenticated else None,
+                    username=request.user.username if request.user.is_authenticated else 'Guest',
+                    predicted_breed=result['predicted_breed'],
+                    confidence=result['confidence_score'],
+                    top_predictions=result.get('top_predictions', [])
+                )
+            except Exception:
+                pass
+
             messages.success(request, f"Identified as **{result['predicted_breed']}** with {result['confidence_score']}% confidence!")
         except Exception as e:
             messages.error(request, f"Error processing image: {e}")

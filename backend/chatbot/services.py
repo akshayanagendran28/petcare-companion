@@ -604,6 +604,14 @@ def get_ai_chat_response(query_text, user=None, session_id='guest'):
                 bot_response=nav_intent['response'],
                 model_used='PawPal Navigator'
             )
+            from config.mongodb import log_chat_to_mongodb
+            log_chat_to_mongodb(
+                user_id=user.id if (user and user.is_authenticated) else None,
+                username=user.username if (user and user.is_authenticated) else 'Guest',
+                query=query_text,
+                response=nav_intent['response'],
+                source='PawPal Navigator'
+            )
         except Exception:
             pass
         return {
@@ -641,6 +649,14 @@ def get_ai_chat_response(query_text, user=None, session_id='guest'):
                         bot_response=llm_text,
                         model_used=f"Ollama ({ollama_model})"
                     )
+                    from config.mongodb import log_chat_to_mongodb
+                    log_chat_to_mongodb(
+                        user_id=user.id if (user and user.is_authenticated) else None,
+                        username=user.username if (user and user.is_authenticated) else 'Guest',
+                        query=query_text,
+                        response=llm_text,
+                        source=f"Ollama ({ollama_model})"
+                    )
                 except Exception:
                     pass
                 return {
@@ -660,6 +676,14 @@ def get_ai_chat_response(query_text, user=None, session_id='guest'):
             user_query=query_text,
             bot_response=domain_response,
             model_used='PawPal Veterinary Intelligence'
+        )
+        from config.mongodb import log_chat_to_mongodb
+        log_chat_to_mongodb(
+            user_id=user.id if (user and user.is_authenticated) else None,
+            username=user.username if (user and user.is_authenticated) else 'Guest',
+            query=query_text,
+            response=domain_response,
+            source='PawPal Veterinary Intelligence'
         )
     except Exception:
         pass

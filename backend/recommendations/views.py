@@ -73,6 +73,21 @@ def recommendation_view(request):
                     care_tip=recommendations['care_tip'],
                 )
 
+                # Log to MongoDB NoSQL collection
+                try:
+                    from config.mongodb import log_recommendation_to_mongodb
+                    log_recommendation_to_mongodb(
+                        pet_id=selected_pet.id if selected_pet else None,
+                        pet_name=selected_pet.name if selected_pet else f"{breed} (Custom)",
+                        age=float(age),
+                        weight=float(weight),
+                        activity_level=activity_level,
+                        predicted_diet=recommendations.get('recommended_food', recommendations.get('diet_category', '')),
+                        predicted_tips=[recommendations.get('care_tip', ''), recommendations.get('recommended_service', '')]
+                    )
+                except Exception:
+                    pass
+
         except Exception as e:
             messages.error(request, f"Recommendation computation error: {e}")
 

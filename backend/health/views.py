@@ -167,6 +167,19 @@ def add_health_record(request, pet_id, record_type):
                 pet.weight = record.weight_kg
                 pet.save(update_fields=['weight'])
 
+            # Log to MongoDB NoSQL document collection
+            try:
+                from config.mongodb import log_vital_to_mongodb
+                log_vital_to_mongodb(
+                    pet_id=pet.id,
+                    pet_name=pet.name,
+                    weight_kg=getattr(record, 'weight_kg', None),
+                    notes=f"{title}: {getattr(record, 'notes', '') or getattr(record, 'diagnosis', '') or getattr(record, 'vaccine_name', '')}",
+                    recorded_by=request.user.username if request.user.is_authenticated else None
+                )
+            except Exception:
+                pass
+
             messages.success(request, f"{title} added successfully for {pet.name}!")
             return redirect('health:dashboard', pet_id=pet.pk)
     else:

@@ -1,0 +1,79 @@
+{
+  "chat_conversations": [
+    {
+      "user_id": 2,
+      "username": "sarah_jenkins",
+      "query": "What is the best feeding schedule for my 2-year old Golden Retriever Max?",
+      "response": "For an adult Golden Retriever like **Max** (approx 30kg), feed twice daily (morning and evening) with 3 to 3.5 cups of high-protein dry kibble containing Omega-3s for coat health and Glucosamine for joint support.",
+      "source": "PawPal Veterinary Intelligence",
+      "created_at": "2026-10-19T10:00:00Z"
+    },
+    {
+      "user_id": 3,
+      "username": "david_miller",
+      "query": "Can dogs eat strawberries?",
+      "response": "Yes! Strawberries are a healthy, sweet treat for dogs. They are full of fiber, vitamin C, and teeth-whitening enzymes. Serve 2-3 fresh washed strawberries with the green tops removed.",
+      "source": "PawPal Veterinary Intelligence",
+      "created_at": "2026-10-19T10:15:00Z"
+    }
+  ],
+  "pet_vital_logs": [
+    {
+      "pet_id": 1,
+      "pet_name": "Max",
+      "weight_kg": 30.5,
+      "notes": "Regular quarterly weigh-in. Body Condition Score: Ideal 5/9.",
+      "recorded_by": "sarah_jenkins",
+      "timestamp": "2026-10-19T09:30:00Z"
+    },
+    {
+      "pet_id": 2,
+      "pet_name": "Luna",
+      "weight_kg": 4.2,
+      "notes": "Persian cat weight check. Coat healthy, eyes clear.",
+      "recorded_by": "sarah_jenkins",
+      "timestamp": "2026-10-19T09:45:00Z"
+    }
+  ],
+  "breed_detection_logs": [
+    {
+      "user_id": 2,
+      "username": "sarah_jenkins",
+      "predicted_breed": "Golden Retriever",
+      "confidence": 97.4,
+      "top_predictions": [
+        { "breed": "Golden Retriever", "score": 97.4 },
+        { "breed": "Labrador Retriever", "score": 2.1 },
+        { "breed": "Cocker Spaniel", "score": 0.5 }
+      ],
+      "timestamp": "2026-10-19T11:00:00Z"
+    }
+  ],
+  "recommendation_logs": [
+    {
+      "pet_id": 1,
+      "pet_name": "Max",
+      "features": {
+        "age_years": 3.0,
+        "weight_kg": 30.0,
+        "activity_level": "High"
+      },
+      "predicted_diet": "Performance Active Adult Poultry & Brown Rice Formula",
+      "predicted_tips": [
+        "Include daily 45-60 min brisk exercise and fetch sessions.",
+        "Ensure fresh water is available before and after strenuous play."
+      ],
+      "timestamp": "2026-10-19T11:30:00Z"
+    }
+  ],
+  "reviews_feedback": [
+    {
+      "caretaker_name": "Alex Rivera",
+      "pet_owner_name": "Sarah Jenkins",
+      "rating": 5,
+      "comment": "Alex took extraordinary care of Max during our 3-day trip. Sent hourly photo updates and followed all feeding schedules!",
+      "verified_booking": true,
+      "timestamp": "2026-10-19T12:00:00Z"
+    }
+  ]
+}
