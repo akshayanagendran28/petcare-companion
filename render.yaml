@@ -25,3 +25,5 @@ services:
         value: "True"
       - key: ALLOWED_HOSTS
         value: "*"
+      - key: MONGODB_URI
+        value: "mongodb://akshayanagendran2005_db_user:oxMWH1iGaDTGc1nu@ac-7vgw2rk-shard-00-00.cgw10vq.mongodb.net:27017,ac-7vgw2rk-shard-00-01.cgw10vq.mongodb.net:27017,ac-7vgw2rk-shard-00-02.cgw10vq.mongodb.net:27017/petcare_companion_db?ssl=true&replicaSet=atlas-syqx38-shard-0&authSource=admin"

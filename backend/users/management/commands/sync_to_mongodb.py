@@ -126,8 +126,8 @@ class Command(BaseCommand):
                     "pet_name": rl.pet.name if rl.pet else "Custom",
                     "features": {
                         "breed": rl.input_breed,
-                        "age": rl.input_age,
-                        "weight": rl.input_weight,
+                        "age": float(rl.input_age) if rl.input_age is not None else 0.0,
+                        "weight": float(rl.input_weight) if rl.input_weight is not None else 0.0,
                         "health": rl.input_health,
                         "activity": rl.input_activity,
                     },
@@ -151,17 +151,19 @@ class Command(BaseCommand):
         reviews_count = 0
         if reviews_col is not None:
             from reviews.models import Review
-            for rv in Review.objects.select_related('caretaker', 'pet_owner'):
+            for rv in Review.objects.select_related('caretaker__user', 'reviewer'):
+                reviewer_name = rv.reviewer.get_full_name() or rv.reviewer.username if rv.reviewer else "Anonymous"
+                caretaker_name = (rv.caretaker.user.get_full_name() or rv.caretaker.user.username) if (rv.caretaker and rv.caretaker.user) else "Unknown"
                 doc = {
-                    "caretaker": rv.caretaker.get_full_name() or rv.caretaker.username,
-                    "pet_owner": rv.pet_owner.get_full_name() or rv.pet_owner.username,
+                    "caretaker": caretaker_name,
+                    "reviewer": reviewer_name,
                     "rating": rv.rating,
                     "comment": rv.comment,
                     "created_at": rv.created_at,
                     "synced_at": datetime.utcnow()
                 }
                 reviews_col.update_one(
-                    {"caretaker": doc["caretaker"], "pet_owner": doc["pet_owner"], "created_at": rv.created_at},
+                    {"caretaker": doc["caretaker"], "reviewer": doc["reviewer"], "created_at": rv.created_at},
                     {"$set": doc},
                     upsert=True
                 )

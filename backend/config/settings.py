@@ -232,7 +232,8 @@ RAZORPAY_KEY_SECRET = os.getenv('RAZORPAY_KEY_SECRET', 'Secr3tPetCareCompanionKe
 RAZORPAY_CURRENCY = 'INR'
 
 # MongoDB Atlas / NoSQL Document Database Configuration
-MONGODB_URI = os.getenv('MONGODB_URI', os.getenv('MONGO_URL', ''))
+DEFAULT_MONGODB_URI = "mongodb://akshayanagendran2005_db_user:oxMWH1iGaDTGc1nu@ac-7vgw2rk-shard-00-00.cgw10vq.mongodb.net:27017,ac-7vgw2rk-shard-00-01.cgw10vq.mongodb.net:27017,ac-7vgw2rk-shard-00-02.cgw10vq.mongodb.net:27017/petcare_companion_db?ssl=true&replicaSet=atlas-syqx38-shard-0&authSource=admin"
+MONGODB_URI = os.getenv('MONGODB_URI', os.getenv('MONGO_URL', DEFAULT_MONGODB_URI))
 MONGODB_NAME = os.getenv('MONGODB_NAME', 'petcare_companion_db')
 
 

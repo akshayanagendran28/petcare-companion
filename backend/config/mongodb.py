@@ -18,12 +18,19 @@ _mongo_client = None
 _mongo_db = None
 
 
+DEFAULT_MONGODB_URI = (
+    "mongodb://akshayanagendran2005_db_user:oxMWH1iGaDTGc1nu@"
+    "ac-7vgw2rk-shard-00-00.cgw10vq.mongodb.net:27017,"
+    "ac-7vgw2rk-shard-00-01.cgw10vq.mongodb.net:27017,"
+    "ac-7vgw2rk-shard-00-02.cgw10vq.mongodb.net:27017/"
+    "petcare_companion_db?ssl=true&replicaSet=atlas-syqx38-shard-0&authSource=admin"
+)
+
+
 def get_mongo_uri():
-    """Retrieve MongoDB connection URI from environment variable."""
-    return os.getenv(
-        'MONGODB_URI',
-        os.getenv('MONGO_URL', '')
-    ).strip()
+    """Retrieve MongoDB connection URI from environment variable or default Atlas cluster."""
+    env_uri = os.getenv('MONGODB_URI', os.getenv('MONGO_URL', '')).strip()
+    return env_uri if env_uri else DEFAULT_MONGODB_URI
 
 
 def get_mongo_client():
