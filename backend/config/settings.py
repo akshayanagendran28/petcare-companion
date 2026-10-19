@@ -131,9 +131,9 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database Configuration
-# 1. Render PostgreSQL Database (via DATABASE_URL injected by Render)
-# 2. Oracle Database (USE_ORACLE=True)
-# 3. SQLite Database (database/db.sqlite3 for local / persistent disk)
+# 1. Cloud PostgreSQL (when DATABASE_URL is set by Render)
+# 2. Oracle Database (when USE_ORACLE=True)
+# 3. Ephemeral / Runtime ORM Cache (database/app_cache.sqlite3) synchronized with MongoDB Atlas NoSQL
 DATABASE_URL = os.getenv('DATABASE_URL')
 USE_ORACLE = os.getenv('USE_ORACLE', 'False').lower() in ('true', '1', 't')
 
@@ -151,7 +151,7 @@ if DATABASE_URL:
         DATABASES = {
             'default': {
                 'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': PROJECT_ROOT / 'database' / 'db.sqlite3',
+                'NAME': PROJECT_ROOT / 'database' / 'app_cache.sqlite3',
             }
         }
 elif USE_ORACLE:
@@ -169,16 +169,11 @@ elif USE_ORACLE:
         }
     }
 else:
-    # Primary SQLite database located in database/ folder
-    DB_FILE = PROJECT_ROOT / 'database' / 'db.sqlite3'
-    if not DB_FILE.exists():
-        fallback_db = PROJECT_ROOT / 'db.sqlite3'
-        if fallback_db.exists():
-            DB_FILE = fallback_db
+    # Runtime ORM cache populated dynamically from MongoDB Atlas NoSQL cloud collections
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': DB_FILE,
+            'NAME': PROJECT_ROOT / 'database' / 'app_cache.sqlite3',
         }
     }
 

@@ -1,23 +1,24 @@
 """
-MongoDB Connection Manager for Pet Care Companion
-Handles connections to MongoDB Atlas / Local MongoDB for NoSQL Document Collections:
-- Chatbot Conversations & AI Interaction Telemetry
-- Pet Health Vital Logs & Timeseries Records
-- AI Breed Detection Logs & Confidence Distributions
-- ML Pet Care Recommendation History
-- Customer Reviews & Ratings Documents
+MongoDB Connection Manager & Real-Time Sync Engine for Pet Care Companion
+Handles connections to MongoDB Atlas for ALL 22 collections:
+- Users, Pets, Caretakers, Bookings, Payments, Reviews
+- Adoption Listings & Requests, MatchHub Profiles & Requests
+- Health Records, Vaccinations, Medicines, Weight History, Allergies
+- Notifications, Lost Pets & Sightings
+- Chatbot Conversations, Recommendations, Breed AI Telemetry
 """
 
 import os
 import logging
-from datetime import datetime
+from datetime import datetime, date
+from decimal import Decimal
 
 logger = logging.getLogger('mongodb')
 
 _mongo_client = None
 _mongo_db = None
 
-
+# Default Atlas Cluster provided by user
 DEFAULT_MONGODB_URI = (
     "mongodb://akshayanagendran2005_db_user:oxMWH1iGaDTGc1nu@"
     "ac-7vgw2rk-shard-00-00.cgw10vq.mongodb.net:27017,"
@@ -25,6 +26,32 @@ DEFAULT_MONGODB_URI = (
     "ac-7vgw2rk-shard-00-02.cgw10vq.mongodb.net:27017/"
     "petcare_companion_db?ssl=true&replicaSet=atlas-syqx38-shard-0&authSource=admin"
 )
+
+# Standard collections mapping for all 22 domain models
+COLLECTIONS_MAP = {
+    'users': 'users',
+    'pets': 'pets',
+    'caretakers': 'caretakers',
+    'bookings': 'bookings',
+    'payments': 'payments',
+    'reviews': 'reviews',
+    'adoption_listings': 'adoption_listings',
+    'adoption_requests': 'adoption_requests',
+    'adoption_payments': 'adoption_payments',
+    'match_profiles': 'match_profiles',
+    'match_requests': 'match_requests',
+    'health_records': 'health_records',
+    'vaccinations': 'vaccinations',
+    'medicines': 'medicines',
+    'weight_history': 'weight_history',
+    'allergies': 'allergies',
+    'notifications': 'notifications',
+    'lost_pets': 'lost_pets',
+    'lost_pet_sightings': 'lost_pet_sightings',
+    'chat_history': 'chat_conversations',
+    'recommendations': 'recommendations',
+    'breed_scans': 'breed_detection_logs',
+}
 
 
 def get_mongo_uri():
@@ -36,7 +63,7 @@ def get_mongo_uri():
 def get_mongo_client():
     """
     Returns a singleton PyMongo client instance.
-    Uses a 2-second timeout so application boots instantly even if Atlas is offline.
+    Uses certifi for valid TLS root certificates and fallback timeout.
     """
     global _mongo_client
     if _mongo_client is not None:
@@ -48,13 +75,22 @@ def get_mongo_client():
 
     try:
         from pymongo import MongoClient
-        _mongo_client = MongoClient(
-            mongo_uri,
-            serverSelectionTimeoutMS=2500,
-            connectTimeoutMS=2500,
-            socketTimeoutMS=3000,
-            retryWrites=True
-        )
+        try:
+            import certifi
+            ca_file = certifi.where()
+        except Exception:
+            ca_file = None
+
+        client_kwargs = {
+            'serverSelectionTimeoutMS': 3000,
+            'connectTimeoutMS': 3000,
+            'socketTimeoutMS': 4000,
+            'retryWrites': True,
+        }
+        if ca_file:
+            client_kwargs['tlsCAFile'] = ca_file
+
+        _mongo_client = MongoClient(mongo_uri, **client_kwargs)
         return _mongo_client
     except Exception as exc:
         logger.warning(f"Could not initialize PyMongo client: {exc}")
@@ -72,7 +108,6 @@ def get_mongo_db(db_name="petcare_companion_db"):
         return None
 
     try:
-        # If database name is specified in URI path, PyMongo uses it automatically
         _mongo_db = client.get_default_database()
         if _mongo_db is None:
             _mongo_db = client[db_name]
@@ -101,10 +136,13 @@ def check_mongo_connection():
     try:
         client.admin.command('ping')
         db = get_mongo_db()
+        col_names = db.list_collection_names() if db is not None else []
         return {
             "status": "connected",
-            "database": db.name if db is not None else "unknown",
-            "host": str(client.address) if client.address else "Atlas Cluster"
+            "database": db.name if db is not None else "petcare_companion_db",
+            "host": str(client.address) if client.address else "Atlas Cluster",
+            "total_collections": len(col_names),
+            "collections": col_names
         }
     except Exception as exc:
         return {
@@ -113,50 +151,103 @@ def check_mongo_connection():
         }
 
 
-# ==============================================================================
-# Collection Getters
-# ==============================================================================
 def get_collection(collection_name):
     """Retrieve a MongoDB collection safely."""
     db = get_mongo_db()
     if db is None:
         return None
     try:
-        return db[collection_name]
+        actual_name = COLLECTIONS_MAP.get(collection_name.lower(), collection_name)
+        return db[actual_name]
     except Exception:
         return None
 
 
+# Collection Getters for Telemetry & AI Features
 def get_chat_collection():
-    """Collection for AI conversational logs and context."""
     return get_collection('chat_conversations')
 
-
 def get_vitals_collection():
-    """Collection for pet vital time-series and health monitoring."""
-    return get_collection('pet_vital_logs')
-
+    return get_collection('weight_history')
 
 def get_breed_logs_collection():
-    """Collection for ONNX AI breed classifier inference logs."""
     return get_collection('breed_detection_logs')
 
-
 def get_recommendations_collection():
-    """Collection for ML recommendation matrices and diet formulations."""
-    return get_collection('recommendation_logs')
-
+    return get_collection('recommendations')
 
 def get_reviews_collection():
-    """Collection for customer reviews and ratings."""
-    return get_collection('reviews_feedback')
+    return get_collection('reviews')
 
 
 # ==============================================================================
-# Document Ingestion Helpers
+# Model Instance Serialization & Real-Time Sync
+# ==============================================================================
+def serialize_instance_to_doc(instance):
+    """
+    Serializes any Django model instance into a BSON/JSON-compliant MongoDB document.
+    Maps _id to primary key to maintain consistent indexing and relational lookups.
+    """
+    from django.db.models.fields.files import FieldFile
+
+    doc = {'_id': instance.pk, 'sql_id': instance.pk}
+    for f in instance._meta.fields:
+        val = getattr(instance, f.name)
+        if f.is_relation:
+            doc[f.name + '_id'] = val.pk if val is not None else None
+            if val is not None:
+                doc[f.name + '_str'] = str(val)
+        elif isinstance(val, FieldFile):
+            doc[f.name] = val.name if val else None
+        elif isinstance(val, Decimal):
+            doc[f.name] = float(val)
+        elif isinstance(val, (datetime, date)):
+            doc[f.name] = val.isoformat()
+        else:
+            doc[f.name] = val
+    doc['synced_to_mongo_at'] = datetime.utcnow().isoformat()
+    return doc
+
+
+def sync_instance_to_mongo(instance):
+    """
+    Saves or updates a Django model instance in MongoDB Atlas in real-time.
+    Called on post_save signals.
+    """
+    try:
+        table_name = instance._meta.db_table.lower()
+        col = get_collection(table_name)
+        if col is None:
+            return False
+        doc = serialize_instance_to_doc(instance)
+        col.replace_one({'_id': doc['_id']}, doc, upsert=True)
+        return True
+    except Exception as exc:
+        logger.debug(f"Live MongoDB sync failed for {instance}: {exc}")
+        return False
+
+
+def delete_instance_from_mongo(instance):
+    """
+    Removes a document from MongoDB Atlas when a model instance is deleted.
+    Called on post_delete signals.
+    """
+    try:
+        table_name = instance._meta.db_table.lower()
+        col = get_collection(table_name)
+        if col is None:
+            return False
+        col.delete_one({'_id': instance.pk})
+        return True
+    except Exception as exc:
+        logger.debug(f"Live MongoDB delete failed for {instance}: {exc}")
+        return False
+
+
+# ==============================================================================
+# AI & Telemetry Document Helpers (Maintained for Backward Compatibility)
 # ==============================================================================
 def log_chat_to_mongodb(user_id, username, query, response, source="web"):
-    """Stores chat query and AI response as a MongoDB document."""
     col = get_chat_collection()
     if col is None:
         return None
@@ -176,7 +267,6 @@ def log_chat_to_mongodb(user_id, username, query, response, source="web"):
 
 
 def log_vital_to_mongodb(pet_id, pet_name, weight_kg=None, notes="", recorded_by=None):
-    """Stores a pet vital telemetry log in MongoDB."""
     col = get_vitals_collection()
     if col is None:
         return None
@@ -196,7 +286,6 @@ def log_vital_to_mongodb(pet_id, pet_name, weight_kg=None, notes="", recorded_by
 
 
 def log_breed_detection_to_mongodb(user_id, username, predicted_breed, confidence, top_predictions=None):
-    """Stores deep-learning breed identification telemetry in MongoDB."""
     col = get_breed_logs_collection()
     if col is None:
         return None
@@ -216,7 +305,6 @@ def log_breed_detection_to_mongodb(user_id, username, predicted_breed, confidenc
 
 
 def log_recommendation_to_mongodb(pet_id, pet_name, age, weight, activity_level, predicted_diet, predicted_tips=None):
-    """Stores ML random forest recommendation run in MongoDB."""
     col = get_recommendations_collection()
     if col is None:
         return None

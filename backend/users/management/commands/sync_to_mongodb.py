@@ -1,175 +1,145 @@
 """
-Django Management Command to Sync Records from Relational DB to MongoDB Atlas NoSQL
+Django Management Command to Sync ALL 22 Relational Database Tables to MongoDB Atlas NoSQL
 Usage: python manage.py sync_to_mongodb
 """
 
+import os
+import json
+from datetime import datetime, date
+from decimal import Decimal
 from django.core.management.base import BaseCommand
-from datetime import datetime
+from django.apps import apps
+from django.db.models.fields.files import FieldFile
 
 try:
     from config.mongodb import (
         check_mongo_connection,
-        get_chat_collection,
-        get_vitals_collection,
-        get_breed_logs_collection,
-        get_recommendations_collection,
-        get_reviews_collection,
+        get_mongo_db,
+        get_collection,
+        serialize_instance_to_doc,
+        COLLECTIONS_MAP
     )
 except ImportError:
     from backend.config.mongodb import (
         check_mongo_connection,
-        get_chat_collection,
-        get_vitals_collection,
-        get_breed_logs_collection,
-        get_recommendations_collection,
-        get_reviews_collection,
+        get_mongo_db,
+        get_collection,
+        serialize_instance_to_doc,
+        COLLECTIONS_MAP
     )
 
 
+# Ordered list of models to sync across the 22 domain tables
+MODELS_TO_SYNC = [
+    ('users', 'User', 'users'),
+    ('pets', 'Pet', 'pets'),
+    ('marketplace', 'CaretakerProfile', 'caretakers'),
+    ('bookings', 'Booking', 'bookings'),
+    ('bookings', 'Payment', 'payments'),
+    ('reviews', 'Review', 'reviews'),
+    ('adoption', 'AdoptionListing', 'adoption_listings'),
+    ('adoption', 'AdoptionRequest', 'adoption_requests'),
+    ('adoption', 'AdoptionPayment', 'adoption_payments'),
+    ('matchhub', 'MatchProfile', 'match_profiles'),
+    ('matchhub', 'MatchRequest', 'match_requests'),
+    ('health', 'HealthRecord', 'health_records'),
+    ('health', 'VaccinationRecord', 'vaccinations'),
+    ('health', 'MedicineRecord', 'medicines'),
+    ('health', 'WeightRecord', 'weight_history'),
+    ('health', 'AllergyRecord', 'allergies'),
+    ('notifications', 'Notification', 'notifications'),
+    ('lostfound', 'LostPetReport', 'lost_pets'),
+    ('lostfound', 'LostPetSighting', 'lost_pet_sightings'),
+    ('chatbot', 'ChatHistory', 'chat_conversations'),
+    ('recommendations', 'RecommendationLog', 'recommendations'),
+    ('breed_detection', 'BreedScanLog', 'breed_detection_logs'),
+]
+
+
 class Command(BaseCommand):
-    help = 'Synchronizes existing relational database records into MongoDB Atlas NoSQL collections.'
+    help = 'Converts and synchronizes ALL 22 tables and data from SQL to MongoDB Atlas NoSQL collections.'
 
     def handle(self, *args, **options):
-        self.stdout.write(self.style.NOTICE("[INFO] Verifying MongoDB Connection..."))
+        self.stdout.write(self.style.NOTICE("=" * 65))
+        self.stdout.write(self.style.NOTICE("   PET CARE COMPANION - FULL MONGODB ATLAS SYNCHRONIZATION   "))
+        self.stdout.write(self.style.NOTICE("=" * 65))
+
+        # Always update local JSON snapshot of all 22 collections
+        all_exported = {}
+        total_records_found = 0
+
+        for app_label, model_name, col_name in MODELS_TO_SYNC:
+            try:
+                model = apps.get_model(app_label, model_name)
+                records = []
+                for obj in model.objects.all():
+                    doc = serialize_instance_to_doc(obj)
+                    records.append(doc)
+                all_exported[col_name] = records
+                total_records_found += len(records)
+            except Exception as e:
+                self.stdout.write(self.style.WARNING(f"  [-] Error reading {app_label}.{model_name}: {e}"))
+
+        export_path = os.path.join(os.getcwd(), 'mongodb_all_tables_export.json')
+        try:
+            with open(export_path, 'w', encoding='utf-8') as f:
+                json.dump(all_exported, f, indent=2, default=str)
+            self.stdout.write(self.style.SUCCESS(
+                f"[OK] Saved offline snapshot to mongodb_all_tables_export.json ({total_records_found} records across 22 tables)."
+            ))
+        except Exception as exc:
+            self.stdout.write(self.style.WARNING(f"[WARN] Could not write local JSON export: {exc}"))
+
+        # Verify MongoDB Atlas live connection
+        self.stdout.write(self.style.NOTICE("\n[INFO] Connecting to MongoDB Atlas cluster..."))
         conn_info = check_mongo_connection()
 
         if conn_info.get('status') != 'connected':
             self.stdout.write(self.style.WARNING(
-                f"[WARN] MongoDB is not connected: {conn_info.get('message') or conn_info.get('error')}\n"
-                "Please set the MONGODB_URI environment variable with your MongoDB Atlas connection string."
+                f"[WARN] MongoDB Atlas is currently not reachable:\n"
+                f"       {conn_info.get('error') or conn_info.get('message')}\n\n"
+                f"[ACTION REQUIRED] In MongoDB Atlas Web Console (cloud.mongodb.com):\n"
+                f"  1. Go to 'Network Access' tab\n"
+                f"  2. Click '+ ADD IP ADDRESS'\n"
+                f"  3. Select 'ALLOW ACCESS FROM ANYWHERE' (0.0.0.0/0)\n"
+                f"  4. Click 'Confirm' and re-run this command."
             ))
             return
 
+        db = get_mongo_db()
         self.stdout.write(self.style.SUCCESS(
-            f"[OK] Connected to MongoDB Database: {conn_info.get('database')} ({conn_info.get('host')})"
+            f"[OK] Live connection established to database: '{db.name}'\n"
         ))
 
-        # 1. Sync Chatbot Conversations
-        chat_col = get_chat_collection()
-        chat_count = 0
-        if chat_col is not None:
-            from chatbot.models import ChatHistory
-            for ch in ChatHistory.objects.all():
-                doc = {
-                    "user_id": ch.user_id,
-                    "username": ch.user.username if ch.user else "Guest",
-                    "query": ch.user_query,
-                    "response": ch.bot_response,
-                    "model_used": ch.model_used,
-                    "session_id": ch.session_id,
-                    "created_at": ch.created_at,
-                    "synced_at": datetime.utcnow()
-                }
-                chat_col.update_one(
-                    {"session_id": ch.session_id, "query": ch.user_query},
-                    {"$set": doc},
-                    upsert=True
-                )
-                chat_count += 1
-            self.stdout.write(self.style.SUCCESS(f"  [+] Synced {chat_count} chat conversations to 'chat_conversations'."))
+        grand_total = 0
+        synced_collections = 0
 
-        # 2. Sync Pet Vital & Weight Logs
-        vitals_col = get_vitals_collection()
-        vitals_count = 0
-        if vitals_col is not None:
-            from health.models import WeightRecord
-            for wr in WeightRecord.objects.select_related('pet'):
-                doc = {
-                    "pet_id": wr.pet_id,
-                    "pet_name": wr.pet.name if wr.pet else "Unknown",
-                    "species": wr.pet.species if wr.pet else None,
-                    "weight_kg": float(wr.weight_kg),
-                    "notes": wr.notes or "Weight Check",
-                    "recorded_date": wr.recorded_date.isoformat() if wr.recorded_date else None,
-                    "synced_at": datetime.utcnow()
-                }
-                vitals_col.update_one(
-                    {"pet_id": wr.pet_id, "recorded_date": wr.recorded_date.isoformat()},
-                    {"$set": doc},
-                    upsert=True
-                )
-                vitals_count += 1
-            self.stdout.write(self.style.SUCCESS(f"  [+] Synced {vitals_count} pet vital logs to 'pet_vital_logs'."))
+        for app_label, model_name, col_name in MODELS_TO_SYNC:
+            try:
+                model = apps.get_model(app_label, model_name)
+                col = get_collection(col_name)
+                if col is None:
+                    continue
 
-        # 3. Sync AI Breed Detection Logs
-        breed_col = get_breed_logs_collection()
-        breed_count = 0
-        if breed_col is not None:
-            from breed_detection.models import BreedScanLog
-            for bl in BreedScanLog.objects.select_related('user'):
-                doc = {
-                    "user_id": bl.user_id,
-                    "username": bl.user.username if bl.user else "Guest",
-                    "predicted_breed": bl.predicted_breed,
-                    "confidence_score": float(bl.confidence_score) if bl.confidence_score else 0.0,
-                    "created_at": bl.created_at,
-                    "synced_at": datetime.utcnow()
-                }
-                breed_col.update_one(
-                    {"predicted_breed": bl.predicted_breed, "created_at": bl.created_at},
-                    {"$set": doc},
-                    upsert=True
-                )
-                breed_count += 1
-            self.stdout.write(self.style.SUCCESS(f"  [+] Synced {breed_count} breed detections to 'breed_detection_logs'."))
+                count = 0
+                for obj in model.objects.all():
+                    doc = serialize_instance_to_doc(obj)
+                    col.replace_one({'_id': doc['_id']}, doc, upsert=True)
+                    count += 1
 
-        # 4. Sync ML Recommendation Logs
-        recom_col = get_recommendations_collection()
-        recom_count = 0
-        if recom_col is not None:
-            from recommendations.models import RecommendationLog
-            for rl in RecommendationLog.objects.select_related('user', 'pet'):
-                doc = {
-                    "user_id": rl.user_id,
-                    "username": rl.user.username if rl.user else "Guest",
-                    "pet_id": rl.pet_id,
-                    "pet_name": rl.pet.name if rl.pet else "Custom",
-                    "features": {
-                        "breed": rl.input_breed,
-                        "age": float(rl.input_age) if rl.input_age is not None else 0.0,
-                        "weight": float(rl.input_weight) if rl.input_weight is not None else 0.0,
-                        "health": rl.input_health,
-                        "activity": rl.input_activity,
-                    },
-                    "diet_category": rl.diet_category,
-                    "recommended_food": rl.recommended_food,
-                    "recommended_service": rl.recommended_service,
-                    "care_tip": rl.care_tip,
-                    "created_at": rl.created_at,
-                    "synced_at": datetime.utcnow()
-                }
-                recom_col.update_one(
-                    {"user_id": rl.user_id, "created_at": rl.created_at},
-                    {"$set": doc},
-                    upsert=True
-                )
-                recom_count += 1
-            self.stdout.write(self.style.SUCCESS(f"  [+] Synced {recom_count} ML recommendation runs to 'recommendation_logs'."))
+                self.stdout.write(self.style.SUCCESS(
+                    f"  [+] Synced collection '{col_name:<22}' : {count:>4} documents"
+                ))
+                grand_total += count
+                synced_collections += 1
+            except Exception as e:
+                self.stdout.write(self.style.ERROR(
+                    f"  [x] Failed syncing {col_name}: {e}"
+                ))
 
-        # 5. Sync Reviews & Feedback
-        reviews_col = get_reviews_collection()
-        reviews_count = 0
-        if reviews_col is not None:
-            from reviews.models import Review
-            for rv in Review.objects.select_related('caretaker__user', 'reviewer'):
-                reviewer_name = rv.reviewer.get_full_name() or rv.reviewer.username if rv.reviewer else "Anonymous"
-                caretaker_name = (rv.caretaker.user.get_full_name() or rv.caretaker.user.username) if (rv.caretaker and rv.caretaker.user) else "Unknown"
-                doc = {
-                    "caretaker": caretaker_name,
-                    "reviewer": reviewer_name,
-                    "rating": rv.rating,
-                    "comment": rv.comment,
-                    "created_at": rv.created_at,
-                    "synced_at": datetime.utcnow()
-                }
-                reviews_col.update_one(
-                    {"caretaker": doc["caretaker"], "reviewer": doc["reviewer"], "created_at": rv.created_at},
-                    {"$set": doc},
-                    upsert=True
-                )
-                reviews_count += 1
-            self.stdout.write(self.style.SUCCESS(f"  [+] Synced {reviews_count} reviews to 'reviews_feedback'."))
-
+        self.stdout.write(self.style.NOTICE("=" * 65))
         self.stdout.write(self.style.SUCCESS(
-            f"\n[DONE] MongoDB Atlas Sync Completed! Total {chat_count + vitals_count + breed_count + recom_count + reviews_count} documents synchronized."
+            f"[COMPLETED] Successfully synchronized {grand_total} documents across "
+            f"{synced_collections} collections to MongoDB Atlas!"
         ))
+        self.stdout.write(self.style.NOTICE("=" * 65))
