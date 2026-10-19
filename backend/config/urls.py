@@ -4,7 +4,14 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from users.views import home_view
-from config.health import health_check_view
+
+try:
+    from .health import health_check_view
+except Exception:
+    try:
+        from config.health import health_check_view
+    except Exception:
+        from backend.config.health import health_check_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
