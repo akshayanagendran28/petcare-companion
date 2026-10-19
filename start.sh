@@ -9,11 +9,9 @@ echo "=========================================================="
 echo "===> Applying Database Migrations..."
 python manage.py migrate --no-input
 
-echo "===> Restoring Data from MongoDB Atlas..."
-python manage.py restore_from_mongodb || echo "[WARN] restore_from_mongodb skipped or completed"
+# Restore data from MongoDB in background so Gunicorn opens the port immediately!
+echo "===> Triggering Background Data Sync from MongoDB Atlas..."
+python manage.py restore_from_mongodb > /dev/null 2>&1 &
 
-echo "===> Syncing Collections to MongoDB Atlas..."
-python manage.py sync_to_mongodb || echo "[WARN] sync_to_mongodb skipped or completed"
-
-echo "===> Starting Gunicorn Server bound to 0.0.0.0:${PORT}..."
-exec gunicorn --bind 0.0.0.0:${PORT} --workers 2 --timeout 120 --access-logfile - --error-logfile - config.wsgi:application
+echo "===> Starting Gunicorn Server immediately on 0.0.0.0:${PORT}..."
+exec gunicorn --bind 0.0.0.0:${PORT} --workers 2 --threads 4 --timeout 120 --access-logfile - --error-logfile - config.wsgi:application
