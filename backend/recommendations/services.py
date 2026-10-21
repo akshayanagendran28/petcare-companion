@@ -19,8 +19,18 @@ from marketplace.models import CaretakerProfile
 from bookings.models import Booking
 from bookings.utils import get_caretaker_capacity_summary
 
-_candidate_model = os.path.join(settings.BASE_DIR, 'backend', 'ml_models', 'pet_recommendation_model.joblib')
-MODEL_PATH = _candidate_model if os.path.exists(_candidate_model) else os.path.join(settings.BASE_DIR, 'ml_models', 'pet_recommendation_model.joblib')
+_this_dir = os.path.dirname(os.path.abspath(__file__))
+_backend_dir = os.path.dirname(_this_dir)
+_local_model = os.path.join(_backend_dir, 'ml_models', 'pet_recommendation_model.joblib')
+_candidate_model = os.path.join(getattr(settings, 'BASE_DIR', _backend_dir), 'backend', 'ml_models', 'pet_recommendation_model.joblib')
+_root_model = os.path.join(getattr(settings, 'BASE_DIR', _backend_dir), 'ml_models', 'pet_recommendation_model.joblib')
+
+if os.path.exists(_local_model):
+    MODEL_PATH = _local_model
+elif os.path.exists(_candidate_model):
+    MODEL_PATH = _candidate_model
+else:
+    MODEL_PATH = _root_model
 
 _cached_model = None
 

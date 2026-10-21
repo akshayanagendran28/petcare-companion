@@ -12,9 +12,19 @@ import numpy as np
 from PIL import Image
 from django.conf import settings
 
-BASE_DIR = getattr(settings, 'BASE_DIR', os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-_candidate_ml = os.path.join(BASE_DIR, 'backend', 'ml_models')
-ML_MODELS_DIR = _candidate_ml if os.path.exists(_candidate_ml) else os.path.join(BASE_DIR, 'ml_models')
+_this_dir = os.path.dirname(os.path.abspath(__file__))
+_backend_dir = os.path.dirname(_this_dir)
+_local_ml = os.path.join(_backend_dir, 'ml_models')
+_base_ml = os.path.join(getattr(settings, 'BASE_DIR', _backend_dir), 'backend', 'ml_models')
+_root_ml = os.path.join(getattr(settings, 'BASE_DIR', _backend_dir), 'ml_models')
+
+if os.path.exists(_local_ml):
+    ML_MODELS_DIR = _local_ml
+elif os.path.exists(_base_ml):
+    ML_MODELS_DIR = _base_ml
+else:
+    ML_MODELS_DIR = _root_ml
+
 MODEL_PATH = os.path.join(ML_MODELS_DIR, 'mobilenetv2-12.onnx')
 LABELS_PATH = os.path.join(ML_MODELS_DIR, 'imagenet_labels.json')
 METADATA_PATH = os.path.join(ML_MODELS_DIR, 'breed_metadata.json')

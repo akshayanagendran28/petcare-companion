@@ -82,9 +82,9 @@ def get_mongo_client():
             ca_file = None
 
         client_kwargs = {
-            'serverSelectionTimeoutMS': 3000,
-            'connectTimeoutMS': 3000,
-            'socketTimeoutMS': 4000,
+            'serverSelectionTimeoutMS': 5000,
+            'connectTimeoutMS': 5000,
+            'socketTimeoutMS': 15000,
             'retryWrites': True,
         }
         if ca_file:

@@ -17,4 +17,10 @@ fi
 echo "===> Collecting Static Assets..."
 python manage.py collectstatic --no-input
 
+echo "===> Applying Database Migrations & Initializing Schema..."
+python manage.py migrate --no-input
+
+echo "===> Restoring Collections from MongoDB Atlas..."
+python manage.py restore_from_mongodb || echo "[WARN] restore_from_mongodb completed with notice"
+
 echo "===> Build completed successfully!"
