@@ -33,6 +33,10 @@ def create_booking(request, caretaker_id):
     """Creates a booking with a selected caretaker, enforcing 1 booking/day limit, multi-pet, and emergency bookings."""
     caretaker = get_object_or_404(CaretakerProfile.objects.select_related('user'), pk=caretaker_id)
     
+    if not request.user.is_pet_owner:
+        messages.warning(request, "Only pet owners can book caretaker services.")
+        return redirect('users:caretaker_dashboard')
+
     if caretaker.user == request.user:
         messages.error(request, "You cannot book your own services.")
         return redirect('marketplace:caretaker_detail', pk=caretaker.pk)

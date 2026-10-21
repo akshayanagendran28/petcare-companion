@@ -150,7 +150,7 @@
                       {% else %}
                         <a href="{% url 'bookings:create_booking' ct.pk %}" class="btn btn-sm btn-success-custom flex-grow-1">Book Now</a>
                       {% endif %}
-                    {% else %}
+                    {% elif not user.is_authenticated %}
                       <a href="{% url 'marketplace:caretaker_detail' ct.pk %}" class="btn btn-sm btn-primary-custom flex-grow-1">Book</a>
                     {% endif %}
                   </div>
