@@ -2,151 +2,392 @@
 
 {% block title %}Book Caretaker – Pet Care Companion{% endblock %}
 
+{% block extra_css %}
+<!-- Flatpickr Datepicker CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<style>
+/* Custom styling for booked and emergency dates in Flatpickr */
+.flatpickr-day.booked-day {
+  background: #ef4444 !important;
+  border-color: #dc2626 !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  text-decoration: line-through;
+  position: relative;
+}
+.flatpickr-day.booked-day:hover {
+  background: #b91c1c !important;
+}
+.flatpickr-day.urgent-day {
+  background: rgba(245, 158, 11, 0.25) !important;
+  border-color: #f59e0b !important;
+  color: #d97706 !important;
+  font-weight: 600 !important;
+}
+
+/* Month Calendar Grid Styling */
+.calendar-container {
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+}
+.calendar-header {
+  padding: 1rem 1.25rem;
+  background: rgba(30, 41, 59, 0.85);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.calendar-grid-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #94a3b8;
+  padding: 0.6rem 0.5rem;
+  background: rgba(15, 23, 42, 0.4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.calendar-grid-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  padding: 0.75rem;
+}
+.cal-day-cell {
+  aspect-ratio: 1.1;
+  min-height: 64px;
+  border-radius: 12px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s ease;
+  user-select: none;
+  font-size: 0.85rem;
+  position: relative;
+}
+.cal-day-cell.empty {
+  opacity: 0.15;
+  background: transparent;
+  cursor: default;
+}
+.cal-day-cell.past {
+  opacity: 0.35;
+  background: rgba(255, 255, 255, 0.02);
+  color: #64748b;
+  cursor: not-allowed;
+}
+
+/* RED HIGHLIGHT: BOOKED BY OTHER OWNER */
+.cal-day-cell.booked {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid #b91c1c !important;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.35);
+  cursor: not-allowed !important;
+}
+.cal-day-cell.booked .badge-status {
+  background: rgba(0, 0, 0, 0.35);
+  color: #fee2e2;
+  font-size: 0.62rem;
+  font-weight: 800;
+  padding: 2px 4px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+/* AMBER HIGHLIGHT: EMERGENCY ONLY (<2 DAYS) */
+.cal-day-cell.urgent {
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px dashed #f59e0b;
+  color: #fbbf24;
+  cursor: pointer;
+}
+.cal-day-cell.urgent:hover {
+  background: rgba(245, 158, 11, 0.28);
+  transform: translateY(-2px);
+}
+.cal-day-cell.urgent .badge-status {
+  background: #f59e0b;
+  color: #000;
+  font-size: 0.62rem;
+  font-weight: 800;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+/* GREEN HIGHLIGHT: AVAILABLE OPEN DATE */
+.cal-day-cell.available {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.5);
+  color: #34d399;
+  cursor: pointer;
+}
+.cal-day-cell.available:hover {
+  background: rgba(16, 185, 129, 0.25);
+  border-color: #10b981;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25);
+}
+.cal-day-cell.available .badge-status {
+  background: #10b981;
+  color: #ffffff;
+  font-size: 0.62rem;
+  font-weight: 800;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+/* SELECTED DATE HIGHLIGHT */
+.cal-day-cell.selected {
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%) !important;
+  color: #ffffff !important;
+  border: 2px solid #a5b4fc !important;
+  box-shadow: 0 0 15px rgba(99, 102, 241, 0.6);
+  transform: scale(1.04);
+}
+.cal-day-cell.selected .badge-status {
+  background: #ffffff;
+  color: #4338ca;
+  font-size: 0.62rem;
+  font-weight: 800;
+}
+
+/* Pet Checkbox Cards */
+.pet-choice-card {
+  background: rgba(30, 41, 59, 0.65);
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: 0.85rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.pet-choice-card:hover {
+  border-color: #6366f1;
+  background: rgba(99, 102, 241, 0.08);
+}
+.pet-choice-card.is-checked {
+  border-color: #10b981 !important;
+  background: rgba(16, 185, 129, 0.15) !important;
+}
+.pet-checkbox {
+  width: 1.35rem;
+  height: 1.35rem;
+  cursor: pointer;
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container py-4">
   <div class="row justify-content-center">
-    <div class="col-lg-9">
+    <div class="col-lg-10">
       <div class="glass-card p-4 p-md-5">
-        
-        <!-- Caretaker Header & Availability -->
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4 pb-3 border-bottom">
+
+        <!-- Caretaker Header & Profile Summary -->
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4 pb-3 border-bottom border-secondary border-opacity-25">
           <div class="d-flex align-items-center gap-3">
-            <img src="{{ caretaker.user.get_photo_url }}" class="rounded-circle border shadow-sm" width="64" height="64" style="object-fit: cover;">
+            <img src="{{ caretaker.user.get_photo_url }}" class="rounded-circle border shadow-sm" width="68" height="68" style="object-fit: cover;">
             <div>
-              <h4 class="fw-bold mb-1">Book Care with {{ caretaker.user.get_full_name|default:caretaker.user.username }}</h4>
-              <div class="text-muted small">Standard Rate: <strong class="text-success" id="caretakerRateDisplay" data-rate="{{ caretaker.hourly_rate }}">₹{{ caretaker.hourly_rate }}/hr</strong> • Rating: <strong>★ {{ caretaker.rating }}</strong> • Experience: <strong>{{ caretaker.experience_years }} yrs</strong></div>
+              <h4 class="fw-bold mb-1 text-white">Book Care with {{ caretaker.user.get_full_name|default:caretaker.user.username }}</h4>
+              <div class="small text-secondary">
+                Standard Rate: <strong class="text-success fs-6" id="caretakerRateDisplay" data-rate="{{ caretaker.hourly_rate }}">₹{{ caretaker.hourly_rate }}/hr</strong>
+                • Rating: <strong class="text-warning">★ {{ caretaker.rating }}</strong>
+                • Experience: <strong>{{ caretaker.experience_years }} yrs</strong>
+              </div>
             </div>
           </div>
 
           <div>
             <span class="badge {{ capacity_summary.badge_class }} px-3 py-2 fs-6">
-              <i class="fa-solid fa-calendar-check me-1"></i> {{ capacity_summary.status_text }}
+              <i class="fa-solid fa-paw me-1"></i> {{ capacity_summary.status_text }}
             </span>
           </div>
         </div>
 
         <!-- Caretaker Policy Notice: Strictly 1 Booking Per Day -->
-        <div class="alert alert-info border-0 rounded-4 d-flex align-items-start gap-3 mb-4">
-          <i class="fa-solid fa-shield-halved fs-5 text-primary mt-1"></i>
+        <div class="alert alert-info border-0 rounded-4 d-flex align-items-start gap-3 mb-4 shadow-sm" style="background: rgba(14, 165, 233, 0.15); border: 1px solid rgba(14, 165, 233, 0.3) !important;">
+          <i class="fa-solid fa-shield-halved fs-4 text-info mt-1"></i>
           <div>
-            <strong class="d-block text-dark mb-1">Caretaker Policy: 1 Booking Per Day Limit</strong>
-            <div class="small text-secondary">
-              To guarantee 100% focused, personalized attention, this caretaker accepts <strong>only 1 booking per day</strong>.
-              Dates already reserved by other pet owners are highlighted in <strong class="text-danger">RED</strong> and locked.
+            <strong class="d-block text-white mb-1">
+              <i class="fa-solid fa-check-double me-1 text-info"></i> Caretaker Policy: Strictly 1 Booking Per Day
+            </strong>
+            <div class="small text-light text-opacity-75">
+              To guarantee 100% focused, personalized care, this caretaker accepts <strong>only 1 booking per day</strong> across all clients.
+              Dates already reserved by other pet owners are highlighted in <strong class="text-danger fw-bold">RED</strong> and strictly locked from new bookings.
             </div>
           </div>
         </div>
 
-        <!-- Caretaker Availability Visual Calendar -->
-        <div class="card border border-secondary border-opacity-25 rounded-4 p-3 mb-4 bg-dark bg-opacity-50 text-light">
-          <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-3">
-            <div>
-              <h6 class="fw-bold text-white mb-0">
-                <i class="fa-solid fa-calendar-days text-info me-2"></i>Caretaker Availability Schedule
-              </h6>
-              <span class="text-xs text-muted">Click any open date to set your start date</span>
-            </div>
-            
-            <!-- Calendar Legend -->
-            <div class="d-flex align-items-center gap-3 text-xs">
-              <span class="d-flex align-items-center gap-1"><span class="badge bg-danger rounded-circle p-1"> </span> <strong>Booked by Other (Locked)</strong></span>
-              <span class="d-flex align-items-center gap-1"><span class="badge bg-success rounded-circle p-1"> </span> <strong>Open (Standard 2+ Days)</strong></span>
-              <span class="d-flex align-items-center gap-1"><span class="badge bg-warning rounded-circle p-1"> </span> <strong>Emergency Slot (&lt; 2 Days)</strong></span>
-            </div>
-          </div>
-
-          <!-- Horizontal Scrollable Calendar Day Pills -->
-          <div class="d-flex gap-2 overflow-auto pb-2 calendar-ribbon" style="scrollbar-width: thin;">
-            {% for cday in calendar_days %}
-              <div class="calendar-day-pill text-center rounded-3 p-2 border {% if cday.is_booked %}bg-danger text-white border-danger booked-pill{% elif cday.is_emergency_window %}border-warning text-warning bg-black bg-opacity-50 emergency-pill{% else %}border-success text-success bg-black bg-opacity-50 open-pill{% endif %}" 
-                   style="min-width: 68px; cursor: pointer; transition: all 0.2s;"
-                   data-date="{{ cday.date_str }}"
-                   data-booked="{{ cday.is_booked|yesno:'true,false' }}"
-                   data-emergency="{{ cday.is_emergency_window|yesno:'true,false' }}"
-                   onclick="handleCalendarDayClick('{{ cday.date_str }}', {{ cday.is_booked|yesno:'true,false' }}, {{ cday.is_emergency_window|yesno:'true,false' }})">
-                <div class="text-xs fw-bold text-uppercase opacity-75">{{ cday.weekday }}</div>
-                <div class="fs-5 fw-extrabold my-0">{{ cday.day }}</div>
-                <div class="text-xs">{{ cday.month }}</div>
-                {% if cday.is_booked %}
-                  <span class="badge bg-white text-danger fw-bold" style="font-size: 0.65rem;">BOOKED</span>
-                {% elif cday.is_emergency_window %}
-                  <span class="badge bg-warning text-dark fw-bold" style="font-size: 0.65rem;">URGENT</span>
-                {% else %}
-                  <span class="badge bg-success text-white fw-bold" style="font-size: 0.65rem;">OPEN</span>
-                {% endif %}
+        <!-- ============================================================== -->
+        <!-- REAL INTERACTIVE MONTH CALENDAR GRID (RED FOR BOOKED DATES)    -->
+        <!-- ============================================================== -->
+        <div class="calendar-container mb-4">
+          <div class="calendar-header d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+            <div class="d-flex align-items-center gap-3">
+              <h5 class="fw-bold text-white mb-0" id="calMonthTitle">
+                <i class="fa-solid fa-calendar-days text-primary me-2"></i> Caretaker Availability Schedule
+              </h5>
+              <div class="btn-group btn-group-sm">
+                <button type="button" class="btn btn-outline-light" id="btnCalPrev" onclick="navigateCalendarMonth(-1)">
+                  <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <button type="button" class="btn btn-outline-light" id="btnCalNext" onclick="navigateCalendarMonth(1)">
+                  <i class="fa-solid fa-chevron-right"></i>
+                </button>
               </div>
-            {% endfor %}
+            </div>
+
+            <!-- Calendar Color Code Legend -->
+            <div class="d-flex flex-wrap align-items-center gap-3 small text-xs">
+              <span class="d-flex align-items-center gap-1 text-white">
+                <span class="badge bg-danger rounded-circle p-1"> </span>
+                <strong class="text-danger">RED: Booked by Other (Locked)</strong>
+              </span>
+              <span class="d-flex align-items-center gap-1 text-white">
+                <span class="badge bg-warning rounded-circle p-1"> </span>
+                <strong class="text-warning">AMBER: Emergency Only (&lt;2 Days)</strong>
+              </span>
+              <span class="d-flex align-items-center gap-1 text-white">
+                <span class="badge bg-success rounded-circle p-1"> </span>
+                <strong class="text-success">GREEN: Open (2+ Days Notice)</strong>
+              </span>
+            </div>
+          </div>
+
+          <!-- Weekday Headers -->
+          <div class="calendar-grid-weekdays">
+            <div>Sun</div>
+            <div>Mon</div>
+            <div>Tue</div>
+            <div>Wed</div>
+            <div>Thu</div>
+            <div>Fri</div>
+            <div>Sat</div>
+          </div>
+
+          <!-- Dynamic Monthly Grid Days -->
+          <div class="calendar-grid-days" id="calendarDaysGrid">
+            <!-- Rendered by JavaScript -->
+          </div>
+
+          <!-- Calendar Footer Status Bar -->
+          <div class="p-2 px-3 bg-dark bg-opacity-75 border-top border-secondary border-opacity-25 d-flex flex-column flex-sm-row justify-content-between align-items-sm-center text-xs text-muted gap-2">
+            <div>
+              <i class="fa-solid fa-hand-pointer text-info me-1"></i>
+              Click any green open date on the calendar to automatically select your booking start date.
+            </div>
+            {% if capacity_summary.next_available_date %}
+              <div>
+                <a href="javascript:void(0)" class="text-success fw-bold text-decoration-none" onclick="jumpToDate('{{ capacity_summary.next_available_date|date:'Y-m-d' }}')">
+                  <i class="fa-solid fa-forward me-1"></i> Jump to Next Open Slot: {{ capacity_summary.next_available_date|date:"M d, Y" }}
+                </a>
+              </div>
+            {% endif %}
           </div>
         </div>
 
-        <!-- Inline Validation Warning Box -->
-        <div id="dateConflictAlert" class="alert alert-danger border-0 rounded-4 d-none align-items-center gap-3 mb-4" role="alert">
-          <i class="fa-solid fa-triangle-exclamation fs-4 text-danger"></i>
-          <div>
-            <strong class="d-block text-dark mb-1">Selected Date Is Unavailable!</strong>
-            <span id="dateConflictMessage" class="small text-danger">This caretaker is already booked on this day.</span>
+        <!-- Inline Live Validation Alert Notification (Red / Warning) -->
+        <div id="dateConflictAlert" class="alert alert-danger border-0 rounded-4 d-none align-items-center gap-3 mb-4 shadow" role="alert" style="background: rgba(220, 38, 38, 0.2); border: 1px solid #ef4444 !important;">
+          <i class="fa-solid fa-triangle-exclamation fs-3 text-danger flex-shrink-0"></i>
+          <div class="flex-grow-1">
+            <strong class="d-block text-white mb-1" id="dateConflictHeading">⚠️ Caretaker Already Booked!</strong>
+            <span id="dateConflictMessage" class="small text-white text-opacity-90">
+              This caretaker is already booked on this date by another pet owner. Caretakers accept strictly 1 booking per day.
+            </span>
           </div>
+          {% if capacity_summary.next_available_date %}
+            <button type="button" class="btn btn-sm btn-outline-light flex-shrink-0" onclick="jumpToDate('{{ capacity_summary.next_available_date|date:'Y-m-d' }}')">
+              Select Next Open Date
+            </button>
+          {% endif %}
         </div>
 
-        <form method="post" id="bookingForm">
+        <!-- Booking Form -->
+        <form method="post" id="bookingForm" novalidate>
           {% csrf_token %}
 
-          <!-- STEP 1: SELECT ONE OR MORE PETS (CHECKBOXES) -->
-          <div class="mb-4">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-              <label class="form-label fw-bold text-dark fs-6 mb-0">
-                <i class="fa-solid fa-paw text-primary me-1"></i> Choose Your Pet(s) *
+          <!-- ============================================================== -->
+          <!-- STEP 1: CHOOSE ONE OR MORE PETS (CHECKBOXES)                   -->
+          <!-- ============================================================== -->
+          <div class="mb-4 p-3 p-md-4 rounded-4 bg-dark bg-opacity-50 border border-secondary border-opacity-25">
+            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2 mb-2">
+              <label class="form-label fw-bold text-white fs-6 mb-0">
+                <i class="fa-solid fa-paw text-primary me-2"></i> Choose Your Pet(s) *
               </label>
-              <span class="badge bg-primary-subtle text-primary small">Select one or more</span>
+              <div class="d-flex align-items-center gap-2">
+                <button type="button" class="btn btn-xs btn-outline-light py-0 px-2 small" style="font-size: 0.72rem;" onclick="toggleAllPets(true)">
+                  Select All
+                </button>
+                <button type="button" class="btn btn-xs btn-outline-secondary py-0 px-2 small" style="font-size: 0.72rem;" onclick="toggleAllPets(false)">
+                  Deselect All
+                </button>
+                <span class="badge bg-primary-subtle text-primary small px-2 py-1" id="petsSelectedBadge">1 Pet Selected</span>
+              </div>
             </div>
-            <p class="text-muted small mb-2">Select the pets you want this caretaker to look after:</p>
+            <p class="text-muted small mb-3">Select the pets you want this caretaker to care for during this booking:</p>
 
-            <div class="row g-2 mb-2">
+            <div class="row g-3">
               {% for pet in user_pets %}
                 <div class="col-sm-6">
-                  <label class="pet-choice-card p-3 rounded-4 border d-flex align-items-center gap-3 w-100 cursor-pointer shadow-sm" for="pet_check_{{ pet.id }}">
-                    <input type="checkbox" name="pets" value="{{ pet.id }}" id="pet_check_{{ pet.id }}" class="form-check-input pet-checkbox" checked onchange="updateEstimatedPrice()">
-                    <div class="rounded-circle bg-secondary bg-opacity-25 d-flex align-items-center justify-content-center text-primary" style="width: 48px; height: 48px; overflow: hidden; flex-shrink: 0;">
+                  <label class="pet-choice-card is-checked" for="pet_check_{{ pet.id }}" id="pet_card_{{ pet.id }}">
+                    <input type="checkbox" name="pets" value="{{ pet.id }}" id="pet_check_{{ pet.id }}" class="form-check-input pet-checkbox" checked onchange="handlePetCheckboxChange(this)">
+                    <div class="rounded-circle bg-secondary bg-opacity-25 d-flex align-items-center justify-content-center text-primary flex-shrink-0" style="width: 48px; height: 48px; overflow: hidden;">
                       {% if pet.photo %}
-                        <img src="{{ pet.photo.url }}" class="w-100 h-100 object-fit-cover">
+                        <img src="{{ pet.photo.url }}" class="w-100 h-100" style="object-fit: cover;">
                       {% else %}
-                        <i class="fa-solid fa-paw fs-4"></i>
+                        <i class="fa-solid fa-dog fs-4 text-info"></i>
                       {% endif %}
                     </div>
-                    <div class="flex-grow-1">
-                      <strong class="d-block text-dark fs-6">{{ pet.name }}</strong>
-                      <span class="text-muted small">{{ pet.species }} • {{ pet.breed|default:"Friendly" }}</span>
+                    <div class="flex-grow-1 overflow-hidden">
+                      <strong class="d-block text-white fs-6 text-truncate">{{ pet.name }}</strong>
+                      <span class="text-secondary small text-truncate d-block">{{ pet.species }} • {{ pet.breed|default:"Friendly" }}</span>
                     </div>
                   </label>
                 </div>
               {% empty %}
                 <div class="col-12 alert alert-warning rounded-4 mb-0">
-                  <i class="fa-solid fa-circle-exclamation me-1"></i> You haven't added any pets yet. Please <a href="{% url 'pets:create' %}" class="fw-bold">add a pet</a> first.
+                  <i class="fa-solid fa-circle-exclamation me-1"></i> You haven't added any pets yet. Please <a href="{% url 'pets:create' %}" class="fw-bold text-dark">Add a Pet</a> first to make a booking.
                 </div>
               {% endfor %}
             </div>
+
+            <div id="petsErrorAlert" class="text-danger small mt-2 d-none">
+              <i class="fa-solid fa-circle-exclamation me-1"></i> Please select at least one pet using the checkboxes.
+            </div>
             {% if form.pets.errors %}
-              <div class="text-danger small mt-1"><i class="fa-solid fa-circle-exclamation me-1"></i>{{ form.pets.errors.0 }}</div>
+              <div class="text-danger small mt-2"><i class="fa-solid fa-circle-exclamation me-1"></i>{{ form.pets.errors.0 }}</div>
             {% endif %}
           </div>
 
-          <!-- STEP 2: SERVICE & DATE DETAILS -->
+          <!-- ============================================================== -->
+          <!-- STEP 2: SERVICE & BOOKING DATES                                -->
+          <!-- ============================================================== -->
           <div class="row g-3 mb-4">
             <div class="col-md-6">
-              <label class="form-label fw-semibold">Service Requested *</label>
+              <label class="form-label fw-semibold text-white">Service Requested *</label>
               {{ form.service_type }}
             </div>
 
             <div class="col-md-6">
-              <label class="form-label fw-semibold">Standard Advance Notice</label>
-              <div class="form-control bg-light border text-muted small d-flex align-items-center gap-2">
+              <label class="form-label fw-semibold text-white">Standard Advance Notice Requirement</label>
+              <div class="form-control bg-dark bg-opacity-75 border text-secondary small d-flex align-items-center gap-2">
                 <i class="fa-solid fa-clock text-info"></i>
-                <span>Min 2 days in advance (from <strong>{{ standard_min_date_str }}</strong>)</span>
+                <span>Min 2 days advance notice (Earliest standard: <strong class="text-success">{{ standard_min_date_str }}</strong>)</span>
               </div>
             </div>
 
             <div class="col-md-6">
-              <label class="form-label fw-semibold">Start Date *</label>
+              <label class="form-label fw-semibold text-white">
+                Start Date * <span class="text-xs text-secondary">(Click date on calendar above or pick below)</span>
+              </label>
               {{ form.start_date }}
               {% if form.start_date.errors %}
                 <div class="text-danger small mt-1"><i class="fa-solid fa-circle-exclamation me-1"></i>{{ form.start_date.errors.0 }}</div>
@@ -154,7 +395,7 @@
             </div>
 
             <div class="col-md-6">
-              <label class="form-label fw-semibold">End Date *</label>
+              <label class="form-label fw-semibold text-white">End Date *</label>
               {{ form.end_date }}
               {% if form.end_date.errors %}
                 <div class="text-danger small mt-1"><i class="fa-solid fa-circle-exclamation me-1"></i>{{ form.end_date.errors.0 }}</div>
@@ -162,51 +403,56 @@
             </div>
 
             <div class="col-md-6">
-              <label class="form-label fw-semibold">Daily Start Time</label>
+              <label class="form-label fw-semibold text-white">Daily Start Time</label>
               {{ form.start_time }}
             </div>
 
             <div class="col-md-6">
-              <label class="form-label fw-semibold">Daily End Time</label>
+              <label class="form-label fw-semibold text-white">Daily End Time</label>
               {{ form.end_time }}
             </div>
           </div>
 
-          <!-- STEP 3: EMERGENCY BOOKING SECTION (SEPARATE CHARGE) -->
+          <!-- ============================================================== -->
+          <!-- STEP 3: EMERGENCY BOOKING (SEPARATE CHARGE & ESSENTIAL DETAILS) -->
+          <!-- ============================================================== -->
           <div class="p-3 p-md-4 rounded-4 bg-warning bg-opacity-10 border border-warning mb-4 shadow-sm">
             <div class="form-check form-switch d-flex align-items-center gap-2 mb-2">
               <input class="form-check-input fs-4 cursor-pointer" type="checkbox" role="switch" id="id_is_emergency" name="is_emergency" onchange="toggleEmergencyFields()">
-              <label class="form-check-label fw-bold text-dark fs-6 cursor-pointer" for="id_is_emergency">
+              <label class="form-check-label fw-bold text-white fs-6 cursor-pointer" for="id_is_emergency">
                 🚨 Emergency Booking (Urgent / Same-Day Care within 2 days)
               </label>
             </div>
-            <p class="text-muted small mb-0">
-              Need urgent care today or tomorrow? Emergency bookings allow short-notice care with at least <strong>1 hour notice</strong>.
-              A separate emergency rush surcharge of <strong class="text-danger">₹400.00</strong> will be applied.
+            <p class="text-light text-opacity-75 small mb-0">
+              Need urgent care today or tomorrow? Emergency care allows bookings with at least <strong>1 hour notice</strong>.
+              A separate emergency rush surcharge of <strong class="text-warning fs-6">+₹400.00</strong> will be applied.
             </p>
 
             <!-- Expanded Emergency Form Details -->
             <div id="emergencyFieldsPanel" class="d-none mt-3 pt-3 border-top border-warning border-opacity-50">
               <div class="row g-3">
                 <div class="col-md-6">
-                  <label class="form-label text-xs text-uppercase fw-bold text-danger">Emergency Contact Phone *</label>
+                  <label class="form-label text-xs text-uppercase fw-bold text-warning">Emergency Contact Phone *</label>
                   {{ form.emergency_phone }}
+                  <span class="text-xs text-muted">Direct phone number for instant live communication</span>
                   {% if form.emergency_phone.errors %}
                     <div class="text-danger small mt-1">{{ form.emergency_phone.errors.0 }}</div>
                   {% endif %}
                 </div>
 
                 <div class="col-md-6">
-                  <label class="form-label text-xs text-uppercase fw-bold text-danger">Preferred Arrival Time * (Min 1 hr notice)</label>
+                  <label class="form-label text-xs text-uppercase fw-bold text-warning">Preferred Arrival Time * (At least 1 hr notice)</label>
                   {{ form.arrival_time }}
+                  <span class="text-xs text-muted">e.g. 03:30 PM (must be &gt;= 1 hour from current time)</span>
                   {% if form.arrival_time.errors %}
                     <div class="text-danger small mt-1">{{ form.arrival_time.errors.0 }}</div>
                   {% endif %}
                 </div>
 
                 <div class="col-12">
-                  <label class="form-label text-xs text-uppercase fw-bold text-danger">Reason for Emergency Booking *</label>
+                  <label class="form-label text-xs text-uppercase fw-bold text-warning">Reason for Emergency Booking *</label>
                   {{ form.emergency_reason }}
+                  <span class="text-xs text-muted">e.g. Sudden travel, family emergency, unexpected overtime, urgent medical appointment</span>
                   {% if form.emergency_reason.errors %}
                     <div class="text-danger small mt-1">{{ form.emergency_reason.errors.0 }}</div>
                   {% endif %}
@@ -215,39 +461,42 @@
             </div>
           </div>
 
-          <!-- Special Notes -->
+          <!-- Special Notes & Instructions -->
           <div class="mb-4">
-            <label class="form-label fw-semibold">Special Notes / Feeding & Medication Instructions</label>
+            <label class="form-label fw-semibold text-white">Special Care Notes & Medication Instructions</label>
             {{ form.notes }}
+            <span class="text-xs text-muted">Dietary preferences, walking route, emergency vet clinic contact, favorite toys...</span>
           </div>
 
-          <!-- STEP 4: DYNAMIC LIVE ESTIMATED FEE BREAKDOWN -->
-          <div class="p-3 p-md-4 rounded-4 bg-light border mb-4">
-            <h6 class="fw-bold text-dark mb-3 d-flex align-items-center gap-2">
+          <!-- ============================================================== -->
+          <!-- STEP 4: DYNAMIC LIVE ESTIMATED FEE BREAKDOWN                   -->
+          <!-- ============================================================== -->
+          <div class="p-3 p-md-4 rounded-4 bg-dark bg-opacity-75 border border-secondary border-opacity-25 mb-4 shadow-sm">
+            <h6 class="fw-bold text-white mb-3 d-flex align-items-center gap-2">
               <i class="fa-solid fa-calculator text-success"></i> Transparent Fee Breakdown
             </h6>
-            
-            <div class="d-flex justify-content-between py-1 text-secondary small border-bottom">
-              <span>Selected Pets Count:</span>
-              <span class="fw-bold text-dark" id="calcPetCount">1 Pet</span>
+
+            <div class="d-flex justify-content-between py-2 text-secondary small border-bottom border-secondary border-opacity-25">
+              <span>Selected Pets:</span>
+              <span class="fw-bold text-white" id="calcPetCount">1 Pet</span>
             </div>
-            <div class="d-flex justify-content-between py-1 text-secondary small border-bottom">
+            <div class="d-flex justify-content-between py-2 text-secondary small border-bottom border-secondary border-opacity-25">
               <span>Service Duration:</span>
-              <span class="fw-bold text-dark" id="calcDuration">1 day (4 hrs/day)</span>
+              <span class="fw-bold text-white" id="calcDuration">1 day (4 hrs/day)</span>
             </div>
-            <div class="d-flex justify-content-between py-1 text-secondary small border-bottom">
+            <div class="d-flex justify-content-between py-2 text-secondary small border-bottom border-secondary border-opacity-25">
               <span>Base Caretaker Rate:</span>
-              <span class="fw-bold text-dark">₹{{ caretaker.hourly_rate }}/hr</span>
+              <span class="fw-bold text-white">₹{{ caretaker.hourly_rate }}/hr</span>
             </div>
-            <div class="d-flex justify-content-between py-1 text-secondary small border-bottom" id="emergencyFeeRow" style="display: none;">
-              <span class="text-danger fw-bold"><i class="fa-solid fa-bolt me-1"></i> Emergency Rush Surcharge:</span>
-              <span class="fw-bold text-danger">+₹400.00</span>
+            <div class="d-flex justify-content-between py-2 text-secondary small border-bottom border-secondary border-opacity-25" id="emergencyFeeRow" style="display: none;">
+              <span class="text-warning fw-bold"><i class="fa-solid fa-bolt me-1"></i> Emergency Rush Surcharge (Separate):</span>
+              <span class="fw-bold text-warning">+₹400.00</span>
             </div>
 
             <div class="d-flex justify-content-between align-items-center pt-3 mt-1">
               <div>
                 <span class="text-xs text-muted text-uppercase fw-bold d-block">Estimated Total Amount</span>
-                <span class="text-xs text-success">Payable upon booking acceptance</span>
+                <span class="text-xs text-success">Payable upon booking confirmation</span>
               </div>
               <div class="fs-2 fw-extrabold text-success" id="calcTotalAmount">₹{{ caretaker.hourly_rate|default:"500" }}</div>
             </div>
@@ -255,7 +504,9 @@
 
           <!-- Action Buttons -->
           <div class="d-flex justify-content-end gap-2">
-            <a href="{% url 'marketplace:caretaker_detail' caretaker.pk %}" class="btn btn-outline-secondary px-4 py-2">Cancel</a>
+            <a href="{% url 'marketplace:caretaker_detail' caretaker.pk %}" class="btn btn-outline-secondary px-4 py-2">
+              Cancel
+            </a>
             <button type="submit" id="submitBookingBtn" class="btn btn-success-custom px-4 py-2 fw-bold shadow">
               <i class="fa-solid fa-paper-plane me-1"></i> Send Booking Request
             </button>
@@ -267,22 +518,8 @@
   </div>
 </div>
 
-<style>
-.pet-choice-card {
-  background-color: #fff;
-  transition: all 0.2s ease-in-out;
-}
-.pet-choice-card:hover {
-  border-color: #198754 !important;
-  background-color: #f8fdf9;
-}
-.calendar-day-pill:hover {
-  transform: translateY(-2px);
-}
-.booked-pill {
-  opacity: 0.9;
-}
-</style>
+<!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -292,14 +529,163 @@ document.addEventListener('DOMContentLoaded', function() {
   const submitBtn = document.getElementById('submitBookingBtn');
   const conflictAlert = document.getElementById('dateConflictAlert');
   const conflictMsg = document.getElementById('dateConflictMessage');
+  const conflictHeading = document.getElementById('dateConflictHeading');
   const emergencyCheckbox = document.getElementById('id_is_emergency');
   const emergencyPanel = document.getElementById('emergencyFieldsPanel');
   const emergencyRow = document.getElementById('emergencyFeeRow');
+  const petsBadge = document.getElementById('petsSelectedBadge');
+  const petsError = document.getElementById('petsErrorAlert');
   const caretakerRate = parseFloat(document.getElementById('caretakerRateDisplay').getAttribute('data-rate')) || 100;
-  
+
   const todayStr = "{{ today_str }}";
   const standardMinStr = "{{ standard_min_date_str }}";
 
+  // State for Month Calendar View
+  let calCurrentDate = new Date();
+  if (standardMinStr) {
+    let parts = standardMinStr.split('-');
+    calCurrentDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+  }
+
+  // ==============================================================
+  // 1. MONTH CALENDAR GRID GENERATION & RENDERING
+  // ==============================================================
+  function renderMonthCalendar() {
+    const grid = document.getElementById('calendarDaysGrid');
+    const title = document.getElementById('calMonthTitle');
+    if (!grid || !title) return;
+
+    grid.innerHTML = '';
+    const year = calCurrentDate.getFullYear();
+    const month = calCurrentDate.getMonth();
+
+    const monthNames = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    title.innerHTML = `<i class="fa-solid fa-calendar-days text-primary me-2"></i> ${monthNames[month]} ${year}`;
+
+    const firstDayIndex = new Date(year, month, 1).getDay(); // 0 is Sunday
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Padding empty cells for days before the 1st
+    for (let i = 0; i < firstDayIndex; i++) {
+      const emptyCell = document.createElement('div');
+      emptyCell.className = 'cal-day-cell empty';
+      grid.appendChild(emptyCell);
+    }
+
+    const selectedStart = startDateInput.value;
+    const selectedEnd = endDateInput.value || selectedStart;
+
+    // Render each day of the month
+    for (let day = 1; day <= daysInMonth; day++) {
+      const cellDate = new Date(year, month, day);
+      cellDate.setHours(0, 0, 0, 0);
+
+      const mStr = String(month + 1).padStart(2, '0');
+      const dStr = String(day).padStart(2, '0');
+      const dateStr = `${year}-${mStr}-${dStr}`;
+
+      const cell = document.createElement('div');
+      cell.className = 'cal-day-cell';
+      cell.setAttribute('data-date', dateStr);
+
+      const isPast = (cellDate < today);
+      const isBooked = unavailableDates.includes(dateStr);
+      const isEmergencyWindow = (dateStr < standardMinStr && !isPast);
+      const isSelected = (selectedStart && dateStr >= selectedStart && dateStr <= selectedEnd);
+
+      let statusBadgeHtml = '';
+
+      if (isPast) {
+        cell.classList.add('past');
+        statusBadgeHtml = `<span class="badge-status text-muted">Past</span>`;
+      } else if (isBooked) {
+        // RED HIGHLIGHT: BOOKED BY OTHER OWNER (1 booking/day limit reached)
+        cell.classList.add('booked');
+        cell.title = `Booked on ${dateStr} by another pet owner. Caretaker accepts max 1 booking per day.`;
+        statusBadgeHtml = `<span class="badge-status"><i class="fa-solid fa-lock me-1"></i>BOOKED</span>`;
+      } else if (isSelected) {
+        cell.classList.add('selected');
+        statusBadgeHtml = `<span class="badge-status">SELECTED</span>`;
+      } else if (isEmergencyWindow) {
+        cell.classList.add('urgent');
+        cell.title = `Within 2-day advance notice. Switch to Emergency Booking (+₹400) to select.`;
+        statusBadgeHtml = `<span class="badge-status">URGENT</span>`;
+      } else {
+        // GREEN HIGHLIGHT: AVAILABLE FOR BOOKING
+        cell.classList.add('available');
+        cell.title = `Available for standard booking (2+ days in advance)`;
+        statusBadgeHtml = `<span class="badge-status">OPEN</span>`;
+      }
+
+      cell.innerHTML = `
+        <div class="fw-bold">${day}</div>
+        <div>${statusBadgeHtml}</div>
+      `;
+
+      // Click handling
+      cell.addEventListener('click', function() {
+        handleDateClick(dateStr, isPast, isBooked, isEmergencyWindow);
+      });
+
+      grid.appendChild(cell);
+    }
+  }
+
+  window.navigateCalendarMonth = function(offset) {
+    calCurrentDate.setMonth(calCurrentDate.getMonth() + offset);
+    renderMonthCalendar();
+  };
+
+  window.jumpToDate = function(dateStr) {
+    if (!dateStr) return;
+    let parts = dateStr.split('-');
+    calCurrentDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, 1);
+    startDateInput.value = dateStr;
+    endDateInput.value = dateStr;
+    renderMonthCalendar();
+    validateSelectedDates();
+    updateEstimatedPrice();
+  };
+
+  function handleDateClick(dateStr, isPast, isBooked, isEmergencyWindow) {
+    if (isPast) return;
+
+    if (isBooked) {
+      // NOTIFY OWNER IMMEDIATELY: Caretaker is booked by another person
+      conflictHeading.innerText = "🚫 Caretaker Already Booked on " + dateStr;
+      conflictMsg.innerHTML = `<strong>This caretaker is already booked on ${dateStr} by another pet owner.</strong><br>To guarantee 100% focused care, caretakers accept strictly <strong>1 booking per day</strong>. Please select an available green date or use the button to jump to the next open slot.`;
+      conflictAlert.classList.remove('d-none');
+      conflictAlert.classList.add('d-flex');
+      submitBtn.disabled = true;
+      return;
+    }
+
+    if (isEmergencyWindow && !emergencyCheckbox.checked) {
+      // Prompt owner to enable emergency booking
+      if (confirm(`The date ${dateStr} is within the 2-day advance window. Standard bookings require at least 2 days notice.\n\nWould you like to switch to Emergency Booking (+₹400.00 rush fee) to book this date?`)) {
+        emergencyCheckbox.checked = true;
+        toggleEmergencyFields();
+      } else {
+        return;
+      }
+    }
+
+    startDateInput.value = dateStr;
+    endDateInput.value = dateStr;
+    renderMonthCalendar();
+    validateSelectedDates();
+    updateEstimatedPrice();
+  }
+
+  // ==============================================================
+  // 2. EMERGENCY BOOKING TOGGLE
+  // ==============================================================
   window.toggleEmergencyFields = function() {
     const isEmerg = emergencyCheckbox.checked;
     if (isEmerg) {
@@ -313,33 +699,41 @@ document.addEventListener('DOMContentLoaded', function() {
       startDateInput.min = standardMinStr;
       endDateInput.min = standardMinStr;
     }
+    renderMonthCalendar();
     validateSelectedDates();
     updateEstimatedPrice();
   };
 
-  window.handleCalendarDayClick = function(dateStr, isBooked, isEmergency) {
-    if (isBooked) {
-      conflictMsg.innerText = "⚠️ This caretaker is already booked on " + dateStr + " by another pet owner. Caretakers accept a maximum of 1 booking per day. Please select another date.";
-      conflictAlert.classList.remove('d-none');
-      conflictAlert.classList.add('d-flex');
-      return;
+  // ==============================================================
+  // 3. MULTI-PET CHECKBOX SELECTION
+  // ==============================================================
+  window.handlePetCheckboxChange = function(checkbox) {
+    const card = document.getElementById('pet_card_' + checkbox.value);
+    if (checkbox.checked) {
+      if (card) card.classList.add('is-checked');
+    } else {
+      if (card) card.classList.remove('is-checked');
     }
+    updateEstimatedPrice();
+  };
 
-    if (isEmergency && !emergencyCheckbox.checked) {
-      if (confirm("This date (" + dateStr + ") is within the 2-day emergency window. Would you like to enable Emergency Booking (+₹400.00 rush fee)?")) {
-        emergencyCheckbox.checked = true;
-        toggleEmergencyFields();
+  window.toggleAllPets = function(selectAll) {
+    const checkboxes = document.querySelectorAll('.pet-checkbox');
+    checkboxes.forEach(cb => {
+      cb.checked = selectAll;
+      const card = document.getElementById('pet_card_' + cb.value);
+      if (selectAll) {
+        if (card) card.classList.add('is-checked');
       } else {
-        return;
+        if (card) card.classList.remove('is-checked');
       }
-    }
-
-    startDateInput.value = dateStr;
-    endDateInput.value = dateStr;
-    validateSelectedDates();
+    });
     updateEstimatedPrice();
   };
 
+  // ==============================================================
+  // 4. LIVE VALIDATION & DOUBLE-BOOKING PREVENTION
+  // ==============================================================
   function validateSelectedDates() {
     const startVal = startDateInput.value;
     const endVal = endDateInput.value;
@@ -351,16 +745,17 @@ document.addEventListener('DOMContentLoaded', function() {
       return true;
     }
 
-    // Check advance rule
+    // 1. Advance booking check (2 days before)
     if (!emergencyCheckbox.checked && startVal < standardMinStr) {
-      conflictMsg.innerText = "⚠️ Standard bookings require at least 2 days advance notice (earliest available: " + standardMinStr + "). Please check 'Emergency Booking' for urgent care.";
+      conflictHeading.innerText = "⚠️ Standard Booking Notice Required";
+      conflictMsg.innerHTML = `Standard bookings must be made at least <strong>2 days in advance</strong> (earliest standard date: <strong>${standardMinStr}</strong>). If you require immediate or next-day care, please check the <strong>Emergency Booking</strong> toggle below.`;
       conflictAlert.classList.remove('d-none');
       conflictAlert.classList.add('d-flex');
       submitBtn.disabled = true;
       return false;
     }
 
-    // Check if caretaker already booked by another person (1 booking/day limit)
+    // 2. Caretaker already booked check (1 booking per day limit across all logins)
     let s = new Date(startVal);
     let e = new Date(endVal || startVal);
     let hasConflict = false;
@@ -376,7 +771,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if (hasConflict) {
-      conflictMsg.innerText = "⚠️ Caretaker is already booked on " + conflictDate + " by another pet owner. Caretakers accept a maximum of 1 booking per day. Please choose another date.";
+      conflictHeading.innerText = "🚫 Caretaker Already Booked on " + conflictDate;
+      conflictMsg.innerHTML = `This caretaker is already booked on <strong>${conflictDate}</strong> by another pet owner. Caretakers strictly accept a maximum of <strong>1 booking per day</strong>. Please select another date.`;
       conflictAlert.classList.remove('d-none');
       conflictAlert.classList.add('d-flex');
       submitBtn.disabled = true;
@@ -389,10 +785,26 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
+  // ==============================================================
+  // 5. LIVE ESTIMATED FEE CALCULATION
+  // ==============================================================
   window.updateEstimatedPrice = function() {
     const checkedPets = document.querySelectorAll('.pet-checkbox:checked');
-    const petCount = Math.max(1, checkedPets.length);
-    document.getElementById('calcPetCount').innerText = petCount + (petCount > 1 ? " Pets" : " Pet");
+    const petCount = checkedPets.length;
+
+    // Pet badge & error
+    if (petCount === 0) {
+      petsBadge.innerText = "0 Pets Selected";
+      petsBadge.className = "badge bg-danger small px-2 py-1";
+      petsError.classList.remove('d-none');
+    } else {
+      petsBadge.innerText = `${petCount} Pet${petCount > 1 ? 's' : ''} Selected`;
+      petsBadge.className = "badge bg-success-subtle text-success small px-2 py-1";
+      petsError.classList.add('d-none');
+    }
+
+    const calcPets = Math.max(1, petCount);
+    document.getElementById('calcPetCount').innerText = `${calcPets} Pet${calcPets > 1 ? 's' : ''} (x${calcPets} coverage)`;
 
     const startVal = startDateInput.value;
     const endVal = endDateInput.value;
@@ -403,31 +815,108 @@ document.addEventListener('DOMContentLoaded', function() {
       const diffTime = Math.abs(e - s);
       days = Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1);
     }
-    document.getElementById('calcDuration').innerText = days + (days > 1 ? " days" : " day") + " (4 hrs/day)";
+    document.getElementById('calcDuration').innerText = `${days} day${days > 1 ? 's' : ''} (4 hrs/day)`;
 
     const hoursPerDay = 4;
-    let basePrice = days * hoursPerDay * caretakerRate * petCount;
+    let basePrice = days * hoursPerDay * caretakerRate * calcPets;
     let emergencySurcharge = emergencyCheckbox.checked ? 400.00 : 0.00;
     let totalPrice = basePrice + emergencySurcharge;
 
     document.getElementById('calcTotalAmount').innerText = "₹" + totalPrice.toFixed(2);
   };
 
+  // ==============================================================
+  // 6. FLATPICKR INITIALIZATION ON DATE INPUTS
+  // ==============================================================
+  if (typeof flatpickr !== 'undefined') {
+    flatpickr("#id_start_date", {
+      dateFormat: "Y-m-d",
+      minDate: standardMinStr,
+      onDayCreate: function(dObj, dStr, fp, dayElem) {
+        const d = dayElem.dateObj;
+        const formatted = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+        if (unavailableDates.includes(formatted)) {
+          dayElem.classList.add('booked-day');
+          dayElem.title = "Booked by another pet owner (1 booking/day limit)";
+        }
+      },
+      onChange: function(selectedDates, dateStr) {
+        if (!endDateInput.value || endDateInput.value < dateStr) {
+          endDateInput.value = dateStr;
+        }
+        renderMonthCalendar();
+        validateSelectedDates();
+        updateEstimatedPrice();
+      }
+    });
+
+    flatpickr("#id_end_date", {
+      dateFormat: "Y-m-d",
+      minDate: standardMinStr,
+      onDayCreate: function(dObj, dStr, fp, dayElem) {
+        const d = dayElem.dateObj;
+        const formatted = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+        if (unavailableDates.includes(formatted)) {
+          dayElem.classList.add('booked-day');
+          dayElem.title = "Booked by another pet owner";
+        }
+      },
+      onChange: function() {
+        renderMonthCalendar();
+        validateSelectedDates();
+        updateEstimatedPrice();
+      }
+    });
+  }
+
+  // Event Listeners
   startDateInput.addEventListener('change', function() {
     if (!endDateInput.value || endDateInput.value < startDateInput.value) {
       endDateInput.value = startDateInput.value;
     }
+    renderMonthCalendar();
     validateSelectedDates();
     updateEstimatedPrice();
   });
 
   endDateInput.addEventListener('change', function() {
+    renderMonthCalendar();
     validateSelectedDates();
     updateEstimatedPrice();
   });
 
-  // Initial check
+  // Client-side Form Submit Interception
+  document.getElementById('bookingForm').addEventListener('submit', function(e) {
+    const checkedPets = document.querySelectorAll('.pet-checkbox:checked');
+    if (checkedPets.length === 0) {
+      e.preventDefault();
+      petsError.classList.remove('d-none');
+      alert("⚠️ Please select at least one of your pets for this booking.");
+      return false;
+    }
+
+    if (!validateSelectedDates()) {
+      e.preventDefault();
+      alert("⚠️ Please select an available date. This caretaker is already booked on the selected date.");
+      return false;
+    }
+
+    if (emergencyCheckbox.checked) {
+      const phoneInput = document.getElementById('id_emergency_phone');
+      const arrivalInput = document.getElementById('id_arrival_time');
+      const reasonInput = document.getElementById('id_emergency_reason');
+
+      if (!phoneInput.value.trim() || !arrivalInput.value.trim() || !reasonInput.value.trim()) {
+        e.preventDefault();
+        alert("⚠️ Please fill in all required Emergency Details (Contact Phone, Preferred Arrival Time, and Urgency Reason).");
+        return false;
+      }
+    }
+  });
+
+  // Initialize
   toggleEmergencyFields();
+  renderMonthCalendar();
   updateEstimatedPrice();
 });
 </script>

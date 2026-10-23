@@ -179,11 +179,13 @@ class BookingCreateForm(forms.ModelForm):
                 if not is_valid:
                     conflict_str = conflict_date.strftime('%B %d, %Y')
                     next_str = next_avail.strftime('%B %d, %Y') if next_avail else 'a later date'
-                    self.add_error(
-                        'start_date',
+                    err_msg = (
                         f"This caretaker is already booked on {conflict_str} by another pet owner. "
-                        f"Caretakers accept a maximum of 1 booking per day. "
+                        f"Caretakers accept strictly 1 booking per day. "
                         f"Please choose another date or select the next open date on {next_str}."
                     )
+                    self.add_error('start_date', err_msg)
+                    if end_date and conflict_date != start_date:
+                        self.add_error('end_date', err_msg)
 
         return cleaned_data

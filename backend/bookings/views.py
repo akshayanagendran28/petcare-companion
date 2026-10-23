@@ -70,6 +70,9 @@ def create_booking(request, caretaker_id):
             if booking.is_emergency:
                 emergency_surcharge = 400.00
                 booking.emergency_fee = emergency_surcharge
+                booking.emergency_phone = form.cleaned_data.get('emergency_phone')
+                booking.emergency_reason = form.cleaned_data.get('emergency_reason')
+                booking.arrival_time = form.cleaned_data.get('arrival_time')
                 booking.total_price = round(base_price + emergency_surcharge, 2)
             else:
                 booking.emergency_fee = 0.00

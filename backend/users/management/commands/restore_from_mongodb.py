@@ -144,6 +144,12 @@ class Command(BaseCommand):
                                 instance.pk = pk_val
                             try:
                                 instance.save()
+                                if model_name == 'Booking':
+                                    pet_ids = doc.get('pet_ids') or []
+                                    if pet_ids:
+                                        instance.pets.set(pet_ids)
+                                    elif instance.pet_id:
+                                        instance.pets.set([instance.pet_id])
                                 count += 1
                             except Exception:
                                 pass

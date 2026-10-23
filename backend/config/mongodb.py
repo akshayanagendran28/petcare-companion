@@ -205,6 +205,14 @@ def serialize_instance_to_doc(instance):
             doc[f.name] = val.isoformat()
         else:
             doc[f.name] = val
+
+    # Serialize ManyToMany relations for multi-pet bookings
+    if hasattr(instance, 'pets') and hasattr(instance.pets, 'all'):
+        try:
+            doc['pet_ids'] = list(instance.pets.values_list('id', flat=True))
+        except Exception:
+            pass
+
     doc['synced_to_mongo_at'] = datetime.utcnow().isoformat()
     return doc
 
