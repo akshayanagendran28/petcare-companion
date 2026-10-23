@@ -9,6 +9,7 @@ urlpatterns = [
     path('my-bookings/', views.owner_booking_list, name='owner_list'),
     path('caretaker/requests/', views.caretaker_booking_requests, name='caretaker_requests'),
     path('<int:booking_id>/payment/', views.booking_payment_view, name='booking_payment'),
+    path('<int:booking_id>/receipt/', views.booking_receipt_view, name='booking_receipt'),
     path('<int:booking_id>/payment/checkout/', views.booking_payment_view, name='payment'),
     path('<int:booking_id>/payment/verify/', views.verify_payment_api, name='verify_payment'),
     path('<int:booking_id>/payment/status/', views.check_payment_status_api, name='payment_status'),

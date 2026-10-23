@@ -285,6 +285,11 @@ def booking_payment_view(request, booking_id):
     upi_intent_url = f"upi://pay?pa={caretaker_vpa}&pn=Akshaya%20nagendran&aid=uGICAgKDEwumiYA&am={booking.total_price:.2f}&cu=INR&tn=Booking_{booking.id}"
     qr_data_url = generate_upi_qr_base64(upi_intent_url)
 
+    # Static Rs 10 Trial Mode for Google Pay / UPI Testing
+    trial_amount = 10.00
+    trial_upi_intent_url = f"upi://pay?pa={caretaker_vpa}&pn=Akshaya%20nagendran&aid=uGICAgKDEwumiYA&am={trial_amount:.2f}&cu=INR&tn=PetCare_Trial_{booking.id}"
+    trial_qr_data_url = generate_upi_qr_base64(trial_upi_intent_url)
+
     context = {
         'booking': booking,
         'payment': payment,
@@ -302,6 +307,9 @@ def booking_payment_view(request, booking_id):
         'upi_vpa': caretaker_vpa,
         'upi_payee_name': payee_name,
         'upi_intent_url': upi_intent_url,
+        'trial_amount': trial_amount,
+        'trial_qr_data_url': trial_qr_data_url,
+        'trial_upi_intent_url': trial_upi_intent_url,
         'gpay_card_image': '/static/images/gpay_akshaya_qr.jpg',
     }
     return render(request, 'bookings/booking_payment.html', context)
@@ -354,14 +362,26 @@ def verify_payment_api(request, booking_id):
             else:
                 return JsonResponse({'status': 'error', 'message': f'This UPI Reference ID ({utr_number}) has already been used for another booking.'}, status=400)
 
+        is_trial = data.get('is_trial') or ('trial' in str(data.get('payment_method', '')).lower())
+        if is_trial:
+            final_amount = 10.00
+            payment_method_name = data.get('payment_method') or 'Google Pay (₹10.00 Trial Test Payment)'
+        else:
+            try:
+                final_amount = float(data.get('amount', booking.total_price))
+            except (ValueError, TypeError):
+                final_amount = float(booking.total_price)
+            payment_method_name = data.get('payment_method') or 'Google Pay (UPI QR Scan)'
+
         payment, _ = Payment.objects.get_or_create(
             booking=booking,
-            defaults={'amount': booking.total_price, 'currency': 'INR'}
+            defaults={'amount': final_amount, 'currency': 'INR'}
         )
         payment.status = 'SUCCESS'
+        payment.amount = final_amount
         payment.bank_transaction_id = utr_number
-        payment.razorpay_payment_id = f"gpay_upi_{utr_number}"
-        payment.payment_method = data.get('payment_method') or 'Google Pay (Simulated Mobile QR Approval)'
+        payment.razorpay_payment_id = f"gpay_trial_{utr_number}" if is_trial else f"gpay_upi_{utr_number}"
+        payment.payment_method = payment_method_name
         payment.paid_at = timezone.now()
         payment.save()
 
@@ -374,17 +394,17 @@ def verify_payment_api(request, booking_id):
             Notification.objects.create(
                 user=booking.caretaker.user,
                 title='Booking Payment Received via Google Pay',
-                message=f'Owner {booking.owner.username} paid ₹{booking.total_price:.2f} via Google Pay (UTR: {utr_number}).',
-                link=f'/bookings/{booking.id}/'
+                message=f'Owner {booking.owner.username} paid ₹{final_amount:.2f} via Google Pay (UTR: {utr_number}).',
+                link=f'/bookings/{booking.id}/receipt/'
             )
         except Exception:
             pass
 
-        messages.success(request, f"Google Pay payment of ₹{booking.total_price:.2f} verified! (UTR: {utr_number})")
+        messages.success(request, f"Google Pay payment of ₹{final_amount:.2f} verified! (UTR: {utr_number})")
         return JsonResponse({
             'status': 'success',
             'message': f'Payment verified in real time! UTR: {utr_number}',
-            'redirect_url': f'/bookings/{booking.id}/payment/'
+            'redirect_url': f'/bookings/{booking.id}/receipt/'
         })
 
     # 2. Standard Razorpay signature verification
@@ -412,7 +432,7 @@ def verify_payment_api(request, booking_id):
         return JsonResponse({
             'status': 'success',
             'message': message,
-            'redirect_url': f'/bookings/{booking.id}/payment/'
+            'redirect_url': f'/bookings/{booking.id}/receipt/'
         })
     else:
         return JsonResponse({
@@ -481,3 +501,33 @@ def check_payment_status_api(request, booking_id):
         'redirect_url': f'/bookings/{booking.id}/payment/'
     })
 
+
+
+@login_required
+def booking_receipt_view(request, booking_id):
+    """
+    Official recipient bill / tax invoice receipt page after payment completion.
+    Displays verified payment status, itemized billing breakdown, caretaker & pet info, and print/PDF action.
+    """
+    booking = get_object_or_404(
+        Booking.objects.select_related('owner', 'caretaker__user', 'pet'),
+        pk=booking_id
+    )
+
+    if booking.owner != request.user and booking.caretaker.user != request.user and not request.user.is_staff:
+        raise PermissionDenied
+
+    payment = getattr(booking, 'payment', None)
+    amount_paid = payment.amount if (payment and payment.amount) else booking.total_price
+    is_trial = (payment and payment.amount == 10) or (payment and 'trial' in str(payment.payment_method).lower())
+
+    context = {
+        'booking': booking,
+        'payment': payment,
+        'caretaker': booking.caretaker,
+        'owner': booking.owner,
+        'amount_paid': amount_paid,
+        'is_trial': is_trial,
+        'invoice_number': f"INV-2026-{booking.id:04d}",
+    }
+    return render(request, 'bookings/booking_receipt.html', context)

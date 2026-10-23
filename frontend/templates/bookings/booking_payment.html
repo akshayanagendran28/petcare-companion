@@ -233,29 +233,46 @@
         </div>
 
         {% if is_paid %}
-          <!-- Payment Success Receipt Box -->
-          <div class="alert alert-success border-0 rounded-4 p-3 mb-3">
-            <div class="d-flex align-items-center gap-2 fw-bold text-success mb-2">
-              <i class="fa-solid fa-circle-check fs-5"></i> Payment Completed &amp; Verified
+          <!-- Payment Success Receipt Box & Direct Bill Link -->
+          <div class="alert alert-success border-0 rounded-4 p-4 mb-4 text-center shadow">
+            <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3 shadow" style="width: 64px; height: 64px;">
+              <i class="fa-solid fa-check fs-2"></i>
             </div>
-            <div class="small text-dark">
-              <div><strong>Payment Status:</strong> <span class="fw-bold text-success">Verified &amp; Confirmed</span></div>
-              <div><strong>Transaction ID / UTR:</strong> <code class="text-dark bg-light px-1 rounded">{{ payment.bank_transaction_id|default:payment.razorpay_payment_id|default:"pay_verified_online" }}</code></div>
-              {% if payment.razorpay_order_id %}
-                <div><strong>Order ID:</strong> <code class="text-dark bg-light px-1 rounded">{{ payment.razorpay_order_id }}</code></div>
-              {% endif %}
-              <div><strong>Method:</strong> {{ payment.payment_method|default:"Google Pay (UPI QR Scan)" }}</div>
-              <div><strong>Paid On:</strong> {{ payment.paid_at|date:"M d, Y, h:i A"|default:"Verified" }}</div>
-            </div>
-          </div>
+            <h4 class="fw-bold text-dark mb-1">Payment Successfully Verified!</h4>
+            <p class="small text-secondary mb-3">Your booking <strong>#{{ booking.id }}</strong> is confirmed.</p>
 
-          <div class="d-flex flex-column gap-2">
-            <button type="button" class="btn btn-outline-light w-100 py-2 fw-bold" onclick="window.print()">
-              <i class="fa-solid fa-print me-1"></i> Print Payment Receipt
-            </button>
-            <a href="{% url 'bookings:owner_list' %}" class="btn btn-primary-custom w-100 py-2 fw-bold text-center">
-              <i class="fa-solid fa-calendar-check me-1"></i> View in My Bookings
+            <div class="p-3 rounded-3 bg-white border small text-start mb-3 text-dark">
+              <div class="d-flex justify-content-between mb-1">
+                <span>Amount Paid:</span>
+                <strong class="text-success fs-6">₹{{ payment.amount|default:booking.total_price }}</strong>
+              </div>
+              <div class="d-flex justify-content-between mb-1">
+                <span>Payment Mode:</span>
+                <strong>{{ payment.payment_method|default:"Google Pay" }}</strong>
+              </div>
+              <div class="d-flex justify-content-between">
+                <span>Reference / UTR:</span>
+                <code class="text-dark">{{ payment.bank_transaction_id|default:payment.razorpay_payment_id|default:"VERIFIED" }}</code>
+              </div>
+            </div>
+
+            <a href="{% url 'bookings:booking_receipt' booking.id %}" class="btn btn-success-custom w-100 py-3 fs-5 fw-bold shadow mb-2 d-flex align-items-center justify-content-center gap-2">
+              <i class="fa-solid fa-file-invoice-dollar fs-4"></i>
+              <span>View &amp; Print Official Bill Receipt →</span>
             </a>
+
+            <div class="row g-2 mt-1">
+              <div class="col-6">
+                <a href="{% url 'bookings:booking_receipt' booking.id %}" class="btn btn-outline-dark btn-sm w-100 py-2" onclick="setTimeout(function(){window.print();}, 500)">
+                  <i class="fa-solid fa-print me-1"></i> Print Receipt
+                </a>
+              </div>
+              <div class="col-6">
+                <a href="{% url 'bookings:owner_list' %}" class="btn btn-outline-secondary btn-sm w-100 py-2">
+                  <i class="fa-solid fa-calendar-check me-1"></i> My Bookings
+                </a>
+              </div>
+            </div>
           </div>
 
         {% elif is_locked %}
@@ -284,6 +301,39 @@
           </div>
 
         {% else %}
+          <!-- ======================================================= -->
+          <!-- PAYMENT AMOUNT SELECTOR: TRIAL RS 10 VS FULL AMOUNT     -->
+          <!-- ======================================================= -->
+          <div class="p-3 rounded-4 bg-dark bg-opacity-75 border border-primary border-opacity-50 mb-3 shadow-sm">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="text-xs text-uppercase fw-bold text-info"><i class="fa-solid fa-sliders me-1"></i> Payment Mode Selection</span>
+              <span class="badge bg-warning text-dark fw-bold px-2 py-1" id="payModeBadge">🧪 Rs 10 Trial Active</span>
+            </div>
+
+            <div class="row g-2 mb-2">
+              <!-- Static Rs 10 Trial Mode Button -->
+              <div class="col-6">
+                <button type="button" id="btnModeTrial" class="btn btn-sm btn-warning text-dark w-100 py-2 d-flex flex-column align-items-center rounded-3 shadow" onclick="setPaymentAmountMode('trial')">
+                  <span class="text-xs text-dark fw-bold"><i class="fa-brands fa-google-pay me-1"></i> Trial Mode</span>
+                  <span class="fs-6 fw-extrabold text-dark">₹10.00 (Static)</span>
+                </button>
+              </div>
+
+              <!-- Full Amount Mode Button -->
+              <div class="col-6">
+                <button type="button" id="btnModeFull" class="btn btn-sm btn-outline-light w-100 py-2 d-flex flex-column align-items-center rounded-3" onclick="setPaymentAmountMode('full')">
+                  <span class="text-xs text-muted fw-bold">Full Amount</span>
+                  <span class="fs-6 fw-extrabold text-success">₹{{ booking.total_price }}</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="text-xs text-light text-opacity-75" id="payModeExplanation">
+              <i class="fa-solid fa-flask-vial text-warning me-1"></i>
+              <strong>Trial Mode Active:</strong> A static trial payment of <strong>₹10.00</strong> will be initiated with Google Pay. Once verified, you will be directly redirected to the Bill Receipt.
+            </div>
+          </div>
+
           <!-- ======================================================= -->
           <!-- REAL-TIME PAYMENT METHOD SELECTION -->
           <!-- ======================================================= -->
@@ -556,6 +606,49 @@ var _simulatedPaymentId = "{{ simulated_payment_id }}";
 var _simulatedSignature = "{{ simulated_signature }}";
 var _pollTimer = null;
 
+// Trial Rs 10 Mode variables
+var _isTrialMode = true;
+var _fullAmount = parseFloat("{{ booking.total_price }}") || 500;
+var _trialAmount = 10.00;
+var _activeAmount = 10.00;
+var _fullQrUrl = "{{ upi_qr_data_url }}";
+var _trialQrUrl = "{{ trial_qr_data_url }}";
+
+function setPaymentAmountMode(mode) {
+  _isTrialMode = (mode === 'trial');
+  _activeAmount = _isTrialMode ? _trialAmount : _fullAmount;
+
+  var btnFull = document.getElementById('btnModeFull');
+  var btnTrial = document.getElementById('btnModeTrial');
+  var badge = document.getElementById('payModeBadge');
+  var notice = document.getElementById('payModeExplanation');
+  var qrImg = document.getElementById('gpayQrImage');
+  var dispAmount = document.getElementById('displayTotalAmount');
+  var qrBtnText = document.getElementById('qrBtnText');
+
+  if (_isTrialMode) {
+    if (btnTrial) btnTrial.className = "btn btn-sm btn-warning text-dark w-100 py-2 d-flex flex-column align-items-center rounded-3 shadow";
+    if (btnFull) btnFull.className = "btn btn-sm btn-outline-light w-100 py-2 d-flex flex-column align-items-center rounded-3";
+    if (badge) { badge.className = "badge bg-warning text-dark fw-bold px-2 py-1"; badge.innerText = "🧪 Rs 10 Trial Active"; }
+    if (notice) {
+      notice.innerHTML = '<i class="fa-solid fa-flask-vial text-warning me-1"></i> <strong>Trial Mode Active:</strong> A static trial payment of <strong>₹10.00</strong> will be initiated with Google Pay. Once verified, you will be directly redirected to the Bill Receipt.';
+    }
+    if (qrImg && _trialQrUrl) qrImg.src = _trialQrUrl;
+    if (dispAmount) dispAmount.innerText = "₹10.00 (Trial)";
+    if (qrBtnText) qrBtnText.innerText = "✅ Click OK – I Have Paid ₹10 (Trial Test Payment)";
+  } else {
+    if (btnFull) btnFull.className = "btn btn-sm btn-success text-white w-100 py-2 d-flex flex-column align-items-center rounded-3 shadow";
+    if (btnTrial) btnTrial.className = "btn btn-sm btn-outline-warning w-100 py-2 d-flex flex-column align-items-center rounded-3";
+    if (badge) { badge.className = "badge bg-success-subtle text-success fw-bold px-2 py-1"; badge.innerText = "Full Amount Active"; }
+    if (notice) {
+      notice.innerHTML = '<i class="fa-solid fa-shield-check text-success me-1"></i> <strong>Full Payment:</strong> Paying the full caretaker service total of <strong>₹' + _fullAmount.toFixed(2) + '</strong>.';
+    }
+    if (qrImg && _fullQrUrl) qrImg.src = _fullQrUrl;
+    if (dispAmount) dispAmount.innerText = "₹" + _fullAmount.toFixed(2);
+    if (qrBtnText) qrBtnText.innerText = "✅ Click OK – I Have Paid on Phone (₹" + _fullAmount.toFixed(2) + ")";
+  }
+}
+
 // Format card number with spaces (4 digits groups)
 function formatCardNumInput(el) {
   var v = el.value.replace(/\D/g, '').slice(0, 16);
@@ -721,13 +814,14 @@ function simulatePhoneScanApproval() {
   refreshUI();
   var sampleUtr = autoFillDemoUtr();
   var qrBtn = document.getElementById('qrVerifyOkBtn');
+  var amtLabel = _isTrialMode ? '₹10.00' : ('₹' + _activeAmount);
   if (qrBtn) {
     qrBtn.disabled = true;
-    qrBtn.innerHTML = '<i class="fa-solid fa-mobile-screen text-warning me-2"></i> Phone Scanned! Approving on GPay...';
+    qrBtn.innerHTML = '<i class="fa-solid fa-mobile-screen text-warning me-2"></i> GPay Phone Scanned (' + amtLabel + ')! Approving...';
   }
   setTimeout(function() {
-    if (qrBtn) qrBtn.innerHTML = '<i class="fa-solid fa-circle-check text-success me-2"></i> GPay Approved! Verifying on Website...';
-    executeCurrentPayment('Google Pay (Simulated Mobile QR Approval)');
+    if (qrBtn) qrBtn.innerHTML = '<i class="fa-solid fa-circle-check text-success me-2"></i> GPay ' + amtLabel + ' Approved! Loading Bill Receipt...';
+    executeCurrentPayment(_isTrialMode ? 'Google Pay (₹10.00 Trial Test Payment)' : 'Google Pay (Simulated Mobile QR Approval)');
   }, 700);
 }
 
@@ -773,14 +867,17 @@ function executeCurrentPayment(customMethodName) {
   }
 
   var isSim = (customMethodName && (customMethodName.indexOf('Simulated') !== -1 || customMethodName.indexOf('Demo') !== -1)) || false;
+  var finalMethod = _isTrialMode ? 'Google Pay (₹10.00 Trial Test Payment)' : methodLabel;
   var payload = {
     razorpay_order_id: _orderId,
     razorpay_payment_id: enteredUtr ? ('upi_gpay_' + enteredUtr) : _simulatedPaymentId,
     razorpay_signature: _simulatedSignature,
-    payment_method: methodLabel,
+    payment_method: finalMethod,
     upi_direct: (_activeMethod === 'upi') || isSim,
     utr_number: enteredUtr,
-    is_simulation: isSim
+    is_simulation: isSim,
+    is_trial: _isTrialMode,
+    amount: _activeAmount
   };
 
   fetch('/bookings/' + _bookingId + '/payment/verify/', {
