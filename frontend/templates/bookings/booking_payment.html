@@ -275,31 +275,6 @@
             </div>
           </div>
 
-        {% elif is_locked %}
-          <!-- Locked State -->
-          <div class="glass-card p-4 border border-warning border-opacity-50 text-center mb-3">
-            <i class="fa-solid fa-lock text-warning fs-1 mb-3 d-block"></i>
-            <h5 class="fw-bold text-white mb-2">Payment Locked</h5>
-            <p class="small text-secondary mb-3">
-              This payment is locked because your booking request is still 
-              <span class="badge bg-warning text-dark">{{ booking.get_status_display }}</span>.
-            </p>
-            <div class="alert alert-dark bg-opacity-75 border-secondary small text-start mb-3">
-              <i class="fa-solid fa-circle-info text-info me-2"></i>
-              Payment will automatically <strong>UNLOCK</strong> as soon as <strong>{{ caretaker.user.get_full_name|default:caretaker.user.username }}</strong> accepts your booking request.
-            </div>
-            {% if booking.status == 'PENDING' %}
-              <div class="mb-3">
-                <a href="{% url 'bookings:update_status' booking.id 'accept' %}?next={% url 'bookings:booking_payment' booking.id %}" class="btn btn-sm btn-outline-success w-100 fw-bold py-2">
-                  <i class="fa-solid fa-check-circle me-1"></i> Accept Booking Now (Demo / Testing Helper)
-                </a>
-              </div>
-            {% endif %}
-            <a href="{% url 'bookings:owner_list' %}" class="btn btn-outline-light btn-sm w-100">
-              <i class="fa-solid fa-arrow-left me-1"></i> Back to My Bookings
-            </a>
-          </div>
-
         {% else %}
           <!-- ======================================================= -->
           <!-- PAYMENT AMOUNT SELECTOR: TRIAL RS 10 VS FULL AMOUNT     -->

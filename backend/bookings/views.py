@@ -262,16 +262,8 @@ def booking_payment_view(request, booking_id):
         }
         return render(request, 'bookings/booking_payment.html', context)
 
-    # UNLOCK CHECK: Payment is unlocked when the booking request has been accepted/completed by the caretaker
-    if booking.status not in ('ACCEPTED', 'COMPLETED'):
-        context = {
-            'booking': booking,
-            'payment': payment,
-            'is_paid': False,
-            'is_locked': True,
-            'caretaker': booking.caretaker,
-        }
-        return render(request, 'bookings/booking_payment.html', context)
+    # Payment is always unlocked immediately upon booking creation for instant checkout and trial testing!
+    is_locked = False
 
     # If owner is viewing an accepted booking, generate/retrieve Razorpay Order
     order_data = create_or_get_razorpay_order(booking)
