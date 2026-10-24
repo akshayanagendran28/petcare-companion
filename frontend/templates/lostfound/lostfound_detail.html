@@ -42,6 +42,44 @@
     </div>
   {% endif %}
 
+  <!-- Official Police Complaint Alert Banner -->
+  {% if report.has_police_complaint %}
+    <div class="alert alert-danger glass-card border-0 shadow-sm p-4 mb-4" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.12) 0%, rgba(220, 38, 38, 0.05) 100%); border-left: 5px solid #dc2626 !important;">
+      <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+        <div class="d-flex align-items-center gap-3">
+          <div class="p-3 bg-danger text-white rounded-4 shadow-sm fs-3">
+            <i class="fa-solid fa-building-shield"></i>
+          </div>
+          <div>
+            <div class="d-flex flex-wrap align-items-center gap-2">
+              <h5 class="fw-bold text-danger mb-0">🚨 OFFICIAL POLICE COMPLAINT REGISTERED</h5>
+              <span class="badge bg-danger text-white">CSR / FIR Lodged</span>
+              {% if report.police_verified_by_ai %}
+                <span class="badge bg-success text-white"><i class="fa-solid fa-certificate me-1"></i> ML Verified ({{ report.police_verification_confidence|floatformat:0 }}%)</span>
+              {% endif %}
+            </div>
+            <div class="text-dark small mt-1">
+              <strong>Station:</strong> {{ report.police_station_name|default:"Local Police Station" }}
+              <span class="mx-2">•</span>
+              <strong>CSR / FIR Reference:</strong> <span class="font-monospace fw-bold text-primary">{{ report.police_csr_number|default:"CSR Logged" }}</span>
+              {% if report.police_filing_date %}
+                <span class="mx-2">•</span>
+                <strong>Filing Date:</strong> {{ report.police_filing_date|date:"F d, Y" }}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        <div>
+          {% if report.police_document %}
+            <a href="{{ report.police_document.url }}" target="_blank" class="btn btn-sm btn-outline-danger fw-bold">
+              <i class="fa-solid fa-file-pdf me-1"></i> View Official Police Acknowledgement Slip
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
   <!-- Main Dossier Card -->
   <div class="glass-card p-4 p-md-5 mb-4 border-0 shadow-sm">
     <div class="row g-4 align-items-start">
@@ -179,7 +217,7 @@
                 <span class="badge bg-warning text-dark px-3 py-2 small fw-bold">
                   <i class="fa-solid fa-clock me-1"></i> Document Under Review ({{ report.police_verification_confidence|floatformat:1 }}%)
                 </span>
-              {% elif report.police_complaint_status == 'FILED' %}
+              {% elif report.police_complaint_status == 'FILED' or report.has_police_complaint %}
                 <span class="badge bg-primary px-3 py-2 small fw-bold">
                   <i class="fa-solid fa-file-circle-check me-1"></i> Registered Police CSR
                 </span>

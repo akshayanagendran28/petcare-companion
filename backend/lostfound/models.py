@@ -129,6 +129,23 @@ class LostPetReport(models.Model):
     def __str__(self):
         return f"{self.status}: {self.pet_name} ({self.breed}) at {self.last_seen_location}"
 
+    @property
+    def has_police_complaint(self):
+        """Returns True if an official police complaint / CSR has been registered."""
+        if self.police_complaint_status == 'FILED' or self.police_verified_by_ai:
+            return True
+        if self.police_csr_number and self.police_csr_number.strip():
+            return True
+        if self.police_station_name and self.police_station_name.strip() and self.police_complaint_status != 'NOT_FILED':
+            return True
+        return False
+
+    def save(self, *args, **kwargs):
+        # Auto-update status to FILED if CSR number or station is provided
+        if (self.police_csr_number or self.police_station_name or self.police_document) and self.police_complaint_status == 'NOT_FILED':
+            self.police_complaint_status = 'FILED'
+        super().save(*args, **kwargs)
+
     def get_photo_url(self):
         if self.photo and hasattr(self.photo, 'url'):
             return self.photo.url

@@ -161,7 +161,7 @@ def caretaker_dashboard(request):
     from bookings.models import Booking
     from reviews.models import Review
 
-    bookings = Booking.objects.filter(caretaker=caretaker_profile).select_related('owner', 'pet').order_by('-created_at')
+    bookings = Booking.objects.filter(caretaker=caretaker_profile).select_related('owner', 'pet', 'caretaker__user').prefetch_related('pets').order_by('-created_at')
     
     pending_bookings = bookings.filter(status='PENDING')
     upcoming_bookings = bookings.filter(status='ACCEPTED', start_date__gte=timezone.now().date())
@@ -192,30 +192,51 @@ def caretaker_dashboard(request):
 
 @login_required
 def profile_view(request):
-    """User profile management."""
-    user_form = UserProfileEditForm(instance=request.user)
+    """User profile management with smart hourly rate recommendations for caretakers."""
+    caretaker_profile = None
     caretaker_form = None
+    recommended_rate = None
+    recommended_min = None
+    recommended_max = None
 
     if request.user.is_caretaker_user:
-        profile, _ = CaretakerProfile.objects.get_or_create(user=request.user)
-        caretaker_form = CaretakerProfileEditForm(instance=profile)
+        caretaker_profile, _ = CaretakerProfile.objects.get_or_create(user=request.user)
+        rec_min, rec_max, rec_opt = caretaker_profile.get_recommended_rate_range()
+        recommended_rate = rec_opt
+        recommended_min = rec_min
+        recommended_max = rec_max
 
     if request.method == 'POST':
         user_form = UserProfileEditForm(request.POST, request.FILES, instance=request.user)
-        if user_form.is_valid():
-            user_form.save()
-            if request.user.is_caretaker_user:
-                profile, _ = CaretakerProfile.objects.get_or_create(user=request.user)
-                caretaker_form = CaretakerProfileEditForm(request.POST, instance=profile)
-                if caretaker_form.is_valid():
-                    caretaker_form.save()
-            messages.success(request, "Your profile has been updated successfully!")
-            return redirect('users:profile')
+        if request.user.is_caretaker_user:
+            caretaker_form = CaretakerProfileEditForm(request.POST, instance=caretaker_profile)
+            user_valid = user_form.is_valid()
+            caretaker_valid = caretaker_form.is_valid()
+            if user_valid and caretaker_valid:
+                user_form.save()
+                caretaker_form.save()
+                messages.success(request, "Your profile and caretaker rates have been updated successfully!")
+                return redirect('users:profile')
+            else:
+                messages.error(request, "Please correct the highlighted errors below (e.g. hourly rate must be greater than zero).")
         else:
-            messages.error(request, "Please correct the errors in the form.")
+            if user_form.is_valid():
+                user_form.save()
+                messages.success(request, "Your profile has been updated successfully!")
+                return redirect('users:profile')
+            else:
+                messages.error(request, "Please correct the errors in the form.")
+    else:
+        user_form = UserProfileEditForm(instance=request.user)
+        if request.user.is_caretaker_user:
+            caretaker_form = CaretakerProfileEditForm(instance=caretaker_profile)
 
     context = {
         'user_form': user_form,
         'caretaker_form': caretaker_form,
+        'profile': caretaker_profile,
+        'recommended_rate': recommended_rate,
+        'recommended_min': recommended_min,
+        'recommended_max': recommended_max,
     }
     return render(request, 'users/profile.html', context)

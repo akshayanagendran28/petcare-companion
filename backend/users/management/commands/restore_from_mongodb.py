@@ -139,6 +139,17 @@ class Command(BaseCommand):
                                     instance.user_query = doc.get('query') or doc.get('user_query') or 'Hello'
                                 if not getattr(instance, 'bot_response', None):
                                     instance.bot_response = doc.get('response') or doc.get('bot_response') or 'How can I assist with your pet?'
+                            elif model_name == 'LostPetReport':
+                                if doc.get('police_csr_number') or doc.get('police_station_name'):
+                                    if not getattr(instance, 'police_complaint_status', None) or instance.police_complaint_status == 'NOT_FILED':
+                                        instance.police_complaint_status = 'FILED'
+                                if not getattr(instance, 'police_complaint_status', None):
+                                    instance.police_complaint_status = doc.get('police_complaint_status') or 'NOT_FILED'
+                            elif model_name == 'CaretakerProfile':
+                                if not getattr(instance, 'hourly_rate', None) or instance.hourly_rate <= 0:
+                                    instance.hourly_rate = 350.00
+                                if not getattr(instance, 'experience_years', None) or instance.experience_years < 0:
+                                    instance.experience_years = 2.0
 
                             if isinstance(pk_val, int):
                                 instance.pk = pk_val

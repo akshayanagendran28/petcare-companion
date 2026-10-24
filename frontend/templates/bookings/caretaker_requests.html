@@ -25,86 +25,414 @@
   {% if bookings %}
     <div class="d-flex flex-column gap-3">
       {% for b in bookings %}
-        <div class="glass-card p-4">
-          <div class="row align-items-center g-3">
-            <div class="col-md-5">
+        <div class="glass-card p-4 border-0 shadow-sm" style="border-radius: 16px;">
+          <!-- Top Row: Pets, Owner, Timings, Price & Status -->
+          <div class="row align-items-start g-3">
+            <div class="col-lg-6">
               <div class="d-flex align-items-start gap-3">
-                <img src="{{ b.pet.get_photo_url }}" class="rounded-3 border" width="60" height="60" style="object-fit: cover;">
-                <div>
-                  <div class="d-flex align-items-center gap-2">
-                    <h6 class="fw-bold mb-0">{{ b.get_pets_display }}</h6>
+                <div class="position-relative">
+                  <img src="{{ b.pet.get_photo_url }}" class="rounded-4 border shadow-sm" width="70" height="70" style="object-fit: cover;" alt="{{ b.get_pets_display }}">
+                  {% if b.pet_count > 1 %}
+                    <span class="position-absolute bottom-0 end-0 badge bg-primary shadow-sm rounded-pill" style="font-size: 0.7rem;">
+                      +{{ b.pet_count|add:"-1" }} more
+                    </span>
+                  {% endif %}
+                </div>
+                <div class="flex-grow-1">
+                  <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+                    <h5 class="fw-bold mb-0 text-dark">{{ b.get_pets_display }}</h5>
                     {% if b.pet_count > 1 %}
-                      <span class="badge bg-info-subtle text-info">{{ b.pet_count }} Pets</span>
+                      <span class="badge bg-info-subtle text-info border border-info-subtle small fw-bold">
+                        <i class="fa-solid fa-paw me-1"></i> {{ b.pet_count }} Pets Enrolled
+                      </span>
                     {% else %}
-                      <span class="badge bg-primary-subtle text-primary">{{ b.pet.breed }}</span>
+                      <span class="badge bg-primary-subtle text-primary border border-primary-subtle small fw-bold">
+                        {{ b.pet.breed }}
+                      </span>
                     {% endif %}
                     {% if b.is_emergency %}
-                      <span class="badge bg-danger text-white"><i class="fa-solid fa-bolt me-1"></i> EMERGENCY</span>
+                      <span class="badge bg-danger text-white shadow-sm fw-bold">
+                        <i class="fa-solid fa-bolt me-1"></i> URGENT EMERGENCY CARE
+                      </span>
                     {% endif %}
                   </div>
-                  <div class="small text-muted">{{ b.service_type }} • {{ b.duration_days }} days</div>
-                  <div class="text-xs text-secondary mt-1">
-                    <i class="fa-regular fa-calendar me-1"></i> {{ b.start_date|date:"M d" }} - {{ b.end_date|date:"M d, Y" }} ({{ b.start_time }} to {{ b.end_time }})
+
+                  <div class="text-secondary small fw-semibold">
+                    <i class="fa-solid fa-hand-holding-heart text-primary me-1"></i> {{ b.service_type }} • {{ b.duration_days }} Day{{ b.duration_days|pluralize }} Stay
                   </div>
-                  <div class="text-xs text-muted mt-1">
-                    <i class="fa-solid fa-user me-1"></i> Client: {{ b.owner.get_full_name|default:b.owner.username }} ({{ b.owner.phone|default:'No phone' }})
+
+                  <div class="text-xs text-dark mt-1 p-2 rounded-3 bg-light border d-inline-block">
+                    <i class="fa-regular fa-calendar-days text-primary me-1"></i>
+                    <strong>Dates:</strong> {{ b.start_date|date:"M d, Y" }} – {{ b.end_date|date:"M d, Y" }}
+                    <span class="text-muted ms-1">|</span>
+                    <i class="fa-regular fa-clock text-primary ms-1 me-1"></i>
+                    <strong>Hours:</strong> {{ b.start_time }} to {{ b.end_time }}
                   </div>
-                  {% if b.is_emergency and b.emergency_phone %}
-                    <div class="text-xs text-danger mt-1">
-                      <i class="fa-solid fa-phone me-1"></i> <strong>Urgent Phone:</strong> {{ b.emergency_phone }} • <strong>Arrival:</strong> {{ b.arrival_time }}
-                      {% if b.emergency_reason %}<br><strong>Reason:</strong> {{ b.emergency_reason }}{% endif %}
-                    </div>
-                  {% endif %}
-                  {% if b.notes %}
-                    <div class="small text-secondary mt-1 fst-italic">"{{ b.notes }}"</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pricing & Payment Status Column -->
+            <div class="col-sm-6 col-lg-3">
+              <div class="p-3 rounded-4 bg-light border">
+                <div class="text-xs text-muted text-uppercase fw-bold">Your Total Earnings</div>
+                <div class="fw-extrabold text-success fs-4 mt-1">₹{{ b.total_price }}</div>
+                <div class="mt-2">
+                  {% if b.is_paid %}
+                    <span class="badge bg-success text-white shadow-sm py-1 px-2" title="Payment Confirmed via Razorpay / Google Pay">
+                      <i class="fa-solid fa-circle-check me-1"></i> Paid & Confirmed
+                    </span>
+                    <a href="{% url 'bookings:booking_payment' b.id %}" class="btn btn-xs btn-outline-success py-0 px-2 ms-1 text-nowrap" style="font-size: 0.72rem;">
+                      <i class="fa-solid fa-file-invoice"></i> Receipt
+                    </a>
+                  {% elif b.payment_status == 'FAILED' %}
+                    <span class="badge bg-danger text-white py-1 px-2">
+                      <i class="fa-solid fa-triangle-exclamation me-1"></i> Payment Failed
+                    </span>
+                  {% else %}
+                    <span class="badge bg-warning-subtle text-dark border border-warning-subtle py-1 px-2">
+                      <i class="fa-regular fa-clock me-1"></i> Payment Pending
+                    </span>
                   {% endif %}
                 </div>
               </div>
             </div>
 
-            <div class="col-md-2">
-              <div class="small text-muted">Your Earnings</div>
-              <div class="fw-extrabold text-success fs-5">₹{{ b.total_price }}</div>
-              {% if b.is_paid %}
-                <span class="badge bg-success-subtle text-success border border-success-subtle mt-1" title="Real-time Razorpay Payment Verified">
-                  <i class="fa-solid fa-shield-check me-1"></i> Paid Verified
-                </span>
-              {% elif b.payment_status == 'FAILED' %}
-                <span class="badge bg-danger-subtle text-danger border border-danger-subtle mt-1">
-                  <i class="fa-solid fa-triangle-exclamation me-1"></i> Pay Failed
-                </span>
-              {% else %}
-                <span class="badge bg-warning-subtle text-dark border border-warning-subtle mt-1">
-                  <i class="fa-regular fa-clock me-1"></i> Unpaid
-                </span>
-              {% endif %}
-            </div>
+            <!-- Booking Status & Quick Actions -->
+            <div class="col-sm-6 col-lg-3 text-lg-end">
+              <div class="mb-2">
+                {% if b.status == 'ACCEPTED' %}
+                  <span class="badge bg-success-subtle text-success border border-success-subtle fs-6 px-3 py-1 fw-bold">
+                    <i class="fa-solid fa-check-double me-1"></i> Booking Accepted
+                  </span>
+                {% elif b.status == 'PENDING' %}
+                  <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle fs-6 px-3 py-1 fw-bold">
+                    <i class="fa-solid fa-hourglass-half me-1"></i> Pending Your Action
+                  </span>
+                {% elif b.status == 'COMPLETED' %}
+                  <span class="badge bg-primary-subtle text-primary border border-primary-subtle fs-6 px-3 py-1 fw-bold">
+                    <i class="fa-solid fa-circle-check me-1"></i> Job Completed
+                  </span>
+                {% elif b.status == 'CANCELLED' %}
+                  <span class="badge bg-secondary-subtle text-secondary border fs-6 px-3 py-1">Cancelled</span>
+                {% else %}
+                  <span class="badge bg-danger-subtle text-danger border fs-6 px-3 py-1">Declined</span>
+                {% endif %}
+              </div>
 
-            <div class="col-md-2">
-              {% if b.status == 'ACCEPTED' %}
-                <span class="badge bg-success-subtle text-success fs-6 px-3 py-1">Accepted</span>
-              {% elif b.status == 'PENDING' %}
-                <span class="badge bg-warning-subtle text-dark fs-6 px-3 py-1">Pending</span>
-              {% elif b.status == 'COMPLETED' %}
-                <span class="badge bg-primary-subtle text-primary fs-6 px-3 py-1">Completed</span>
-              {% elif b.status == 'CANCELLED' %}
-                <span class="badge bg-secondary-subtle text-secondary fs-6 px-3 py-1">Cancelled</span>
-              {% else %}
-                <span class="badge bg-danger-subtle text-danger fs-6 px-3 py-1">Declined</span>
-              {% endif %}
-            </div>
+              <!-- Action Buttons -->
+              <div class="d-flex flex-column gap-2 align-items-lg-end">
+                {% if b.status == 'PENDING' %}
+                  <div class="d-flex gap-2">
+                    <a href="{% url 'bookings:update_status' b.id 'accept' %}" class="btn btn-sm btn-success fw-bold px-3 shadow-sm">
+                      <i class="fa-solid fa-check me-1"></i> Accept
+                    </a>
+                    <a href="{% url 'bookings:update_status' b.id 'reject' %}" class="btn btn-sm btn-outline-danger px-3">
+                      Decline
+                    </a>
+                  </div>
+                {% elif b.status == 'ACCEPTED' %}
+                  <a href="{% url 'bookings:update_status' b.id 'complete' %}" class="btn btn-sm btn-primary-custom fw-bold px-3 shadow-sm" onclick="return confirm('Mark this booking as successfully completed?')">
+                    <i class="fa-solid fa-circle-check me-1"></i> Mark as Completed
+                  </a>
+                {% endif %}
 
-            <div class="col-md-3 text-md-end">
-              {% if b.status == 'PENDING' %}
-                <div class="d-flex justify-content-md-end gap-2">
-                  <a href="{% url 'bookings:update_status' b.id 'accept' %}" class="btn btn-sm btn-success px-3 fw-bold">Accept</a>
-                  <a href="{% url 'bookings:update_status' b.id 'reject' %}" class="btn btn-sm btn-outline-danger px-3">Decline</a>
+                <button type="button" class="btn btn-sm btn-outline-dark fw-bold d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#bookingDossierModal{{ b.id }}">
+                  <i class="fa-solid fa-clipboard-list text-primary"></i>
+                  <span>Full Booking Description</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Middle Dossier Section: Emergency Card (if emergency) & Owner Care Instructions -->
+          <div class="mt-3 pt-3 border-top">
+            <div class="row g-3">
+              <!-- Emergency details if active -->
+              {% if b.is_emergency %}
+                <div class="col-12">
+                  <div class="p-3 rounded-3 bg-danger bg-opacity-10 border border-danger border-opacity-30">
+                    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-1">
+                      <div class="text-danger fw-bold text-xs text-uppercase d-flex align-items-center gap-1">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <span>Urgent Emergency Care Alert (₹400 Emergency Surcharge Included)</span>
+                      </div>
+                      {% if b.arrival_time %}
+                        <div class="text-xs text-dark fw-bold">
+                          <i class="fa-solid fa-stopwatch text-danger me-1"></i> Expected Arrival: <span class="badge bg-danger">{{ b.arrival_time }}</span>
+                        </div>
+                      {% endif %}
+                    </div>
+                    <div class="row g-2 text-xs">
+                      {% if b.emergency_phone %}
+                        <div class="col-md-4">
+                          <strong class="text-dark">Direct Urgent Phone:</strong>
+                          <a href="tel:{{ b.emergency_phone }}" class="text-danger fw-bold text-decoration-none ms-1">
+                            <i class="fa-solid fa-phone me-1"></i> {{ b.emergency_phone }}
+                          </a>
+                        </div>
+                      {% endif %}
+                      {% if b.emergency_reason %}
+                        <div class="col-md-8">
+                          <strong class="text-dark">Reason / Situation:</strong>
+                          <span class="text-secondary ms-1">{{ b.emergency_reason }}</span>
+                        </div>
+                      {% endif %}
+                    </div>
+                  </div>
                 </div>
-              {% elif b.status == 'ACCEPTED' %}
-                <a href="{% url 'bookings:update_status' b.id 'complete' %}" class="btn btn-sm btn-primary-custom" onclick="return confirm('Mark this booking as completed?')">
-                  <i class="fa-solid fa-circle-check me-1"></i> Complete Booking
-                </a>
               {% endif %}
+
+              <!-- Owner Information & Care Instructions preview -->
+              <div class="col-md-5">
+                <div class="p-2 rounded-3 bg-light border text-xs">
+                  <div class="fw-bold text-dark mb-1">
+                    <i class="fa-solid fa-user-circle text-primary me-1"></i> Pet Owner / Client:
+                    <span class="text-primary">{{ b.owner.get_full_name|default:b.owner.username }}</span>
+                  </div>
+                  <div class="text-muted d-flex flex-wrap gap-3">
+                    <span>
+                      <i class="fa-solid fa-phone text-success me-1"></i>
+                      {% if b.owner.phone %}
+                        <a href="tel:{{ b.owner.phone }}" class="text-success text-decoration-none fw-semibold">{{ b.owner.phone }}</a>
+                      {% else %}
+                        No phone on profile
+                      {% endif %}
+                    </span>
+                    <span>
+                      <i class="fa-solid fa-envelope text-secondary me-1"></i> {{ b.owner.email }}
+                    </span>
+                  </div>
+                  {% if b.owner.address %}
+                    <div class="text-secondary mt-1">
+                      <i class="fa-solid fa-location-dot text-danger me-1"></i> {{ b.owner.address }}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+
+              <!-- Owner's Care Notes & Special Instructions -->
+              <div class="col-md-7">
+                <div class="p-2 rounded-3 bg-light border text-xs h-100">
+                  <strong class="text-dark d-block mb-1">
+                    <i class="fa-solid fa-note-sticky text-warning me-1"></i> Owner's Special Care & Feeding Instructions:
+                  </strong>
+                  {% if b.notes %}
+                    <div class="text-dark fw-medium" style="white-space: pre-line;">{{ b.notes }}</div>
+                  {% else %}
+                    <div class="text-muted fst-italic">No special notes provided. Standard pet sitting and care routine applies.</div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Full Booking Dossier Modal for Caretaker -->
+        <div class="modal fade" id="bookingDossierModal{{ b.id }}" tabindex="-1" aria-labelledby="bookingDossierModalLabel{{ b.id }}" aria-hidden="true">
+          <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content glass-card border-0 shadow">
+              <div class="modal-header border-bottom bg-light">
+                <div>
+                  <h5 class="modal-title fw-bold text-dark mb-0" id="bookingDossierModalLabel{{ b.id }}">
+                    <i class="fa-solid fa-clipboard-check text-primary me-2"></i> Full Booking Dossier #BK-{{ b.id }}
+                  </h5>
+                  <div class="text-xs text-muted">Created on {{ b.created_at|date:"F d, Y at h:i A" }}</div>
+                </div>
+                <button type="button" class="btn-close" data-bs-toggle="modal" aria-label="Close"></button>
+              </div>
+
+              <div class="modal-body p-4">
+                <!-- Emergency Banner in Modal -->
+                {% if b.is_emergency %}
+                  <div class="alert alert-danger p-3 mb-4 rounded-3 border-0 shadow-sm">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                      <i class="fa-solid fa-bolt fs-5 text-danger"></i>
+                      <strong class="fs-6 text-danger">URGENT EMERGENCY BOOKING</strong>
+                    </div>
+                    <div class="row g-2 text-xs">
+                      <div class="col-sm-6">
+                        <strong>Urgent Emergency Contact Phone:</strong>
+                        <div class="fs-6 fw-bold text-danger">{{ b.emergency_phone|default:"Provided by owner" }}</div>
+                      </div>
+                      <div class="col-sm-6">
+                        <strong>Requested Arrival Time:</strong>
+                        <div class="fs-6 fw-bold text-dark">{{ b.arrival_time|default:"Immediate / Within 1 hr" }}</div>
+                      </div>
+                      {% if b.emergency_reason %}
+                        <div class="col-12 mt-2 pt-2 border-top">
+                          <strong>Emergency Reason / Urgency Context:</strong>
+                          <p class="mb-0 text-dark">{{ b.emergency_reason }}</p>
+                        </div>
+                      {% endif %}
+                    </div>
+                  </div>
+                {% endif %}
+
+                <!-- Enrolled Pets Section -->
+                <h6 class="fw-bold text-dark mb-3"><i class="fa-solid fa-paw text-primary me-2"></i> Pets In This Booking ({{ b.pet_count }})</h6>
+                <div class="row g-3 mb-4">
+                  {% if b.pets.all %}
+                    {% for p in b.pets.all %}
+                      <div class="col-md-6">
+                        <div class="p-3 rounded-4 bg-light border d-flex gap-3 align-items-start">
+                          <img src="{{ p.get_photo_url }}" class="rounded-3 border shadow-sm" width="64" height="64" style="object-fit: cover;" alt="{{ p.name }}">
+                          <div>
+                            <div class="fw-bold text-dark fs-6">{{ p.name }}</div>
+                            <div class="text-xs text-muted">{{ p.species }} • {{ p.breed }}</div>
+                            <div class="text-xs text-secondary mt-1">
+                              {% if p.age %}Age: <strong>{{ p.age }} yrs</strong>{% endif %}
+                              {% if p.weight %} • Weight: <strong>{{ p.weight }} kg</strong>{% endif %}
+                              {% if p.gender %} • {{ p.gender }}{% endif %}
+                            </div>
+                            {% if p.medical_notes %}
+                              <div class="text-xs text-danger mt-1">
+                                <i class="fa-solid fa-notes-medical me-1"></i> {{ p.medical_notes }}
+                              </div>
+                            {% endif %}
+                          </div>
+                        </div>
+                      </div>
+                    {% endfor %}
+                  {% else %}
+                    <div class="col-md-6">
+                      <div class="p-3 rounded-4 bg-light border d-flex gap-3 align-items-start">
+                        <img src="{{ b.pet.get_photo_url }}" class="rounded-3 border shadow-sm" width="64" height="64" style="object-fit: cover;" alt="{{ b.pet.name }}">
+                        <div>
+                          <div class="fw-bold text-dark fs-6">{{ b.pet.name }}</div>
+                          <div class="text-xs text-muted">{{ b.pet.species }} • {{ b.pet.breed }}</div>
+                          <div class="text-xs text-secondary mt-1">
+                            {% if b.pet.age %}Age: <strong>{{ b.pet.age }} yrs</strong>{% endif %}
+                            {% if b.pet.weight %} • Weight: <strong>{{ b.pet.weight }} kg</strong>{% endif %}
+                          </div>
+                          {% if b.pet.medical_notes %}
+                            <div class="text-xs text-danger mt-1">
+                              <i class="fa-solid fa-notes-medical me-1"></i> {{ b.pet.medical_notes }}
+                            </div>
+                          {% endif %}
+                        </div>
+                      </div>
+                    </div>
+                  {% endif %}
+                </div>
+
+                <!-- Schedule & Hours Breakdown -->
+                <h6 class="fw-bold text-dark mb-3"><i class="fa-solid fa-clock text-primary me-2"></i> Schedule, Hours & Service Details</h6>
+                <div class="p-3 rounded-4 bg-light border mb-4">
+                  <div class="row g-2 text-xs">
+                    <div class="col-md-4">
+                      <div class="text-muted text-uppercase fw-semibold">Service Type</div>
+                      <div class="fw-bold text-dark fs-6">{{ b.service_type }}</div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="text-muted text-uppercase fw-semibold">Duration</div>
+                      <div class="fw-bold text-dark fs-6">{{ b.duration_days }} Day{{ b.duration_days|pluralize }}</div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="text-muted text-uppercase fw-semibold">Daily Duty Hours</div>
+                      <div class="fw-bold text-primary fs-6">{{ b.start_time }} to {{ b.end_time }} (4 hrs/day)</div>
+                    </div>
+                    <div class="col-md-6 mt-2 pt-2 border-top">
+                      <div class="text-muted text-uppercase fw-semibold">Start Date</div>
+                      <div class="fw-bold text-dark fs-6">{{ b.start_date|date:"l, F d, Y" }}</div>
+                    </div>
+                    <div class="col-md-6 mt-2 pt-2 border-top">
+                      <div class="text-muted text-uppercase fw-semibold">End Date</div>
+                      <div class="fw-bold text-dark fs-6">{{ b.end_date|date:"l, F d, Y" }}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Owner / Client Profile Information -->
+                <h6 class="fw-bold text-dark mb-3"><i class="fa-solid fa-user-shield text-primary me-2"></i> Client / Pet Parent Contact Info</h6>
+                <div class="p-3 rounded-4 bg-light border mb-4">
+                  <div class="row g-2 text-xs">
+                    <div class="col-md-6">
+                      <div class="text-muted text-uppercase fw-semibold">Client Name</div>
+                      <div class="fw-bold text-dark fs-6">{{ b.owner.get_full_name|default:b.owner.username }}</div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="text-muted text-uppercase fw-semibold">Email Address</div>
+                      <div class="fw-bold text-dark fs-6">{{ b.owner.email }}</div>
+                    </div>
+                    <div class="col-md-6 mt-2 pt-2 border-top">
+                      <div class="text-muted text-uppercase fw-semibold">Direct Mobile Phone</div>
+                      <div class="fs-6 fw-bold">
+                        {% if b.owner.phone %}
+                          <a href="tel:{{ b.owner.phone }}" class="text-success text-decoration-none">
+                            <i class="fa-solid fa-phone me-1"></i> {{ b.owner.phone }}
+                          </a>
+                        {% else %}
+                          <span class="text-muted">Not specified</span>
+                        {% endif %}
+                      </div>
+                    </div>
+                    <div class="col-md-6 mt-2 pt-2 border-top">
+                      <div class="text-muted text-uppercase fw-semibold">Service / Home Address</div>
+                      <div class="fw-semibold text-dark fs-6">
+                        {{ b.owner.address|default:"Address provided directly upon confirmation" }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Owner's Care & Diet Instructions -->
+                <h6 class="fw-bold text-dark mb-3"><i class="fa-solid fa-book-open text-primary me-2"></i> Owner's Care Instructions & Special Notes</h6>
+                <div class="p-3 rounded-4 bg-warning bg-opacity-10 border border-warning border-opacity-30 mb-4">
+                  {% if b.notes %}
+                    <p class="mb-0 text-dark small" style="white-space: pre-line;">{{ b.notes }}</p>
+                  {% else %}
+                    <p class="mb-0 text-muted small fst-italic">No special notes provided. Standard routine care and feeding apply.</p>
+                  {% endif %}
+                </div>
+
+                <!-- Earnings & Payment Status Section -->
+                <h6 class="fw-bold text-dark mb-3"><i class="fa-solid fa-wallet text-success me-2"></i> Payout & Payment Status</h6>
+                <div class="p-3 rounded-4 bg-white border shadow-sm">
+                  <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+                    <div>
+                      <div class="text-xs text-muted text-uppercase fw-bold">Your Total Payout</div>
+                      <div class="fw-extrabold text-success fs-3">₹{{ b.total_price }}</div>
+                      <div class="text-xs text-muted">
+                        {{ b.duration_days }} days × 4 hrs × ₹{{ b.caretaker.hourly_rate }}/hr × {{ b.pet_count }} pet{{ b.pet_count|pluralize }}
+                        {% if b.is_emergency %} + ₹{{ b.emergency_fee }} urgent surcharge{% endif %}
+                      </div>
+                    </div>
+                    <div class="text-end">
+                      {% if b.is_paid %}
+                        <span class="badge bg-success fs-6 px-3 py-2 fw-bold">
+                          <i class="fa-solid fa-circle-check me-1"></i> Paid & Verified
+                        </span>
+                        <div class="mt-2">
+                          <a href="{% url 'bookings:booking_payment' b.id %}" class="btn btn-sm btn-outline-success fw-bold">
+                            <i class="fa-solid fa-receipt me-1"></i> View Receipt
+                          </a>
+                        </div>
+                      {% else %}
+                        <span class="badge bg-warning-subtle text-dark border border-warning-subtle fs-6 px-3 py-2 fw-bold">
+                          <i class="fa-regular fa-clock me-1"></i> Payment Pending
+                        </span>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="modal-footer border-top bg-light">
+                {% if b.status == 'PENDING' %}
+                  <a href="{% url 'bookings:update_status' b.id 'accept' %}" class="btn btn-success fw-bold px-4">
+                    <i class="fa-solid fa-check me-1"></i> Accept Booking
+                  </a>
+                  <a href="{% url 'bookings:update_status' b.id 'reject' %}" class="btn btn-outline-danger px-3">
+                    Decline
+                  </a>
+                {% elif b.status == 'ACCEPTED' %}
+                  <a href="{% url 'bookings:update_status' b.id 'complete' %}" class="btn btn-primary-custom fw-bold px-4" onclick="return confirm('Mark this booking as completed?')">
+                    <i class="fa-solid fa-circle-check me-1"></i> Complete Booking
+                  </a>
+                {% endif %}
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+              </div>
             </div>
           </div>
         </div>

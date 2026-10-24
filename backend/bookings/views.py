@@ -160,7 +160,7 @@ def caretaker_booking_requests(request):
         raise PermissionDenied
 
     caretaker = get_object_or_404(CaretakerProfile, user=request.user)
-    bookings = Booking.objects.filter(caretaker=caretaker).select_related('owner', 'pet').order_by('-created_at')
+    bookings = Booking.objects.filter(caretaker=caretaker).select_related('owner', 'pet', 'caretaker__user').prefetch_related('pets').order_by('-created_at')
 
     status_filter = request.GET.get('status', '')
     if status_filter:

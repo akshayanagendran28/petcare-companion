@@ -210,28 +210,42 @@
 
               <!-- Police Complaint & CSR Tag -->
               <div class="mb-2">
-                {% if rep.police_verified_by_ai %}
-                  <span class="badge bg-success-subtle text-success border border-success-subtle small fw-semibold w-100 text-start py-1 px-2 text-truncate" title="ML Verified Police Record: {{ rep.police_csr_number }} - {{ rep.police_station_name }}">
-                    <i class="fa-solid fa-certificate text-success me-1"></i> <strong>ML Verified CSR:</strong> {{ rep.police_csr_number }} ({{ rep.police_verification_confidence|floatformat:0 }}% Match)
-                  </span>
-                {% elif rep.police_complaint_status == 'FILED' %}
-                  <span class="badge bg-primary-subtle text-primary border border-primary-subtle small fw-semibold w-100 text-start py-1 px-2 text-truncate" title="{{ rep.police_csr_number }} - {{ rep.police_station_name }}">
-                    <i class="fa-solid fa-building-shield me-1"></i> <strong>Police CSR:</strong> {{ rep.police_csr_number }} ({{ rep.police_station_name|truncatechars:26 }})
-                  </span>
+                {% if rep.has_police_complaint %}
+                  <div class="p-2 rounded-3 bg-danger bg-opacity-10 border border-danger border-opacity-25 shadow-sm">
+                    <div class="d-flex align-items-center justify-content-between mb-1">
+                      <span class="text-danger fw-bold text-xs d-flex align-items-center gap-1">
+                        <i class="fa-solid fa-building-shield"></i>
+                        <span>OFFICIAL POLICE COMPLAINT FILED</span>
+                      </span>
+                      {% if rep.police_verified_by_ai %}
+                        <span class="badge bg-success text-white py-0 px-2" style="font-size: 0.68rem;">
+                          <i class="fa-solid fa-certificate me-1"></i> ML Verified
+                        </span>
+                      {% endif %}
+                    </div>
+                    <div class="text-dark small fw-semibold text-truncate">
+                      <strong>Station:</strong> {{ rep.police_station_name|default:"Local Police Station" }}
+                    </div>
+                    <div class="text-primary small font-monospace fw-bold text-truncate">
+                      <strong>CSR/FIR Ref:</strong> {{ rep.police_csr_number|default:"CSR Complaint Recorded" }}
+                    </div>
+                  </div>
                 {% elif rep.police_complaint_status == 'UNDER_REVIEW' %}
-                  <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle small fw-semibold w-100 text-start py-1 px-2">
-                    <i class="fa-solid fa-clock me-1"></i> <strong>Police Complaint:</strong> Under Verification
-                  </span>
+                  <div class="p-2 rounded-3 bg-warning bg-opacity-10 border border-warning border-opacity-30 text-xs">
+                    <span class="text-warning-emphasis fw-bold">
+                      <i class="fa-solid fa-clock me-1"></i> Police Complaint: Under Verification / Pending CSR
+                    </span>
+                  </div>
                 {% else %}
-                  <span class="badge bg-light text-muted border small fw-normal w-100 text-start py-1 px-2">
-                    <i class="fa-solid fa-clipboard-list me-1"></i> Community Alert (No Police CSR)
-                  </span>
+                  <div class="p-2 rounded-3 bg-light border text-muted text-xs">
+                    <i class="fa-solid fa-clipboard-list me-1"></i> Community Alert (No Police CSR Filed)
+                  </div>
                 {% endif %}
               </div>
 
               <!-- Where, When & How Info Box -->
-              <div class="p-2 rounded bg-light border mb-2 small">
-                <div class="text-danger fw-semibold mb-1 text-truncate">
+              <div class="p-2 rounded-3 bg-light border mb-2 small">
+                <div class="text-danger fw-bold mb-1 text-truncate">
                   <i class="fa-solid fa-location-dot me-1"></i> <strong>Where:</strong> {{ rep.last_seen_location }}
                 </div>
                 <div class="text-muted text-xs d-flex justify-content-between">
@@ -241,17 +255,19 @@
               </div>
 
               <!-- Distinct Birthmarks & Identifiers -->
-              {% if rep.distinctive_marks %}
-                <div class="p-2 rounded bg-warning bg-opacity-10 border border-warning border-opacity-25 mb-2 text-xs text-dark" style="min-height: 48px;">
-                  <strong class="text-dark"><i class="fa-solid fa-fingerprint text-warning me-1"></i> Birthmarks & Identifiers:</strong>
-                  <div class="text-secondary mt-1">{{ rep.distinctive_marks|truncatechars:85 }}</div>
-                </div>
-              {% endif %}
+              <div class="p-2 rounded-3 bg-warning bg-opacity-10 border border-warning border-opacity-30 mb-2 text-xs text-dark" style="min-height: 48px;">
+                <strong class="text-dark"><i class="fa-solid fa-fingerprint text-warning me-1"></i> Birthmarks & Identifiers:</strong>
+                {% if rep.distinctive_marks %}
+                  <div class="text-dark fw-medium mt-1">{{ rep.distinctive_marks|truncatechars:85 }}</div>
+                {% else %}
+                  <div class="text-muted mt-1 fst-italic">Standard coat markings without unique scars.</div>
+                {% endif %}
+              </div>
 
               <!-- How Lost / Circumstance -->
               {% if rep.how_lost and rep.status != 'REUNITED' %}
-                <div class="text-xs text-muted mb-2 fst-italic text-truncate" title="{{ rep.how_lost }}">
-                  <i class="fa-solid fa-circle-question text-secondary me-1"></i> <strong>How lost:</strong> {{ rep.how_lost }}
+                <div class="text-xs text-muted mb-2 fst-italic text-truncate p-1 bg-light rounded border" title="{{ rep.how_lost }}">
+                  <i class="fa-solid fa-circle-question text-danger me-1"></i> <strong>How lost:</strong> {{ rep.how_lost }}
                 </div>
               {% endif %}
 
@@ -263,18 +279,20 @@
               {% endif %}
             </div>
 
-            <!-- Footer Action & Sightings Count -->
+            <!-- Footer Action, Contact & Sightings Count -->
             <div class="pt-2 border-top mt-2">
-              <div class="d-flex justify-content-between align-items-center mb-2 text-xs text-muted">
-                <span>
+              <div class="d-flex justify-content-between align-items-center mb-2 text-xs">
+                <span class="text-muted">
                   <i class="fa-solid fa-eye text-primary me-1"></i>
-                  <strong>{{ rep.sightings.count }}</strong> Sighting{{ rep.sightings.count|pluralize }} Reported
+                  <strong>{{ rep.sightings.count }}</strong> Sighting{{ rep.sightings.count|pluralize }}
                 </span>
-                {% if rep.contact_number %}
-                  <span class="text-success fw-semibold">
-                    <i class="fa-solid fa-phone me-1"></i> {{ rep.contact_number|truncatechars:14 }}
-                  </span>
-                {% endif %}
+                <span class="text-dark fw-semibold text-truncate ms-2">
+                  <i class="fa-solid fa-user text-secondary me-1"></i>
+                  {{ rep.contact_name|default:rep.reporter.get_full_name|default:rep.reporter.username }}
+                  {% if rep.contact_number %}
+                    • <a href="tel:{{ rep.contact_number }}" class="text-success text-decoration-none fw-bold"><i class="fa-solid fa-phone ms-1 me-1"></i>{{ rep.contact_number|truncatechars:14 }}</a>
+                  {% endif %}
+                </span>
               </div>
 
               <div class="d-grid gap-2">

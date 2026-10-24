@@ -17,6 +17,26 @@
 
         <form method="post" enctype="multipart/form-data">
           {% csrf_token %}
+
+          {% if user_form.errors or caretaker_form.errors %}
+            <div class="alert alert-danger p-3 mb-4 rounded-3 shadow-sm">
+              <div class="fw-bold mb-1"><i class="fa-solid fa-triangle-exclamation me-1"></i> Please fix the following errors:</div>
+              <ul class="mb-0 small ps-3">
+                {% for field, errors in user_form.errors.items %}
+                  {% for error in errors %}
+                    <li><strong>{{ field|title }}:</strong> {{ error }}</li>
+                  {% endfor %}
+                {% endfor %}
+                {% if caretaker_form %}
+                  {% for field, errors in caretaker_form.errors.items %}
+                    {% for error in errors %}
+                      <li><strong>{{ field|title }}:</strong> {{ error }}</li>
+                    {% endfor %}
+                  {% endfor %}
+                {% endif %}
+              </ul>
+            </div>
+          {% endif %}
           
           <h5 class="fw-bold text-dark mb-3">Account Details</h5>
           <div class="row g-3 mb-4">
@@ -47,15 +67,77 @@
           </div>
 
           {% if caretaker_form %}
-            <h5 class="fw-bold text-success mb-3 pt-3 border-top">Caretaker Professional Settings</h5>
+            <h5 class="fw-bold text-success mb-3 pt-3 border-top">
+              <i class="fa-solid fa-briefcase text-success me-1"></i> Caretaker Professional Settings & Hourly Quote
+            </h5>
+
+            <!-- AI / Smart Hourly Rate Recommendation Engine Card -->
+            <div class="p-3 rounded-4 mb-4 border shadow-sm" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(59, 130, 246, 0.08) 100%); border-color: rgba(16, 185, 129, 0.3) !important;">
+              <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+                <div class="d-flex align-items-center gap-2">
+                  <div class="p-2 bg-success text-white rounded-3">
+                    <i class="fa-solid fa-calculator fs-5"></i>
+                  </div>
+                  <div>
+                    <h6 class="fw-bold text-dark mb-0">AI Salary & Hourly Rate Recommendation</h6>
+                    <div class="text-xs text-muted">Computed from your verified experience and customer feedback ratings</div>
+                  </div>
+                </div>
+                <div>
+                  <button type="button" id="btnApplyRecommended" class="btn btn-sm btn-success fw-bold shadow-sm d-flex align-items-center gap-1" onclick="applyRecommendedQuote()">
+                    <i class="fa-solid fa-bolt"></i>
+                    <span>Apply Quote: ₹<span id="rec-quote-btn-val">{{ recommended_rate|default:'350' }}</span>/hr</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="row g-2 mt-2 pt-2 border-top small text-secondary">
+                <div class="col-sm-4">
+                  <div class="p-2 bg-white rounded-3 border">
+                    <div class="text-xs text-muted text-uppercase fw-semibold">Experience Input</div>
+                    <div class="fw-bold text-dark fs-6"><span id="metric-exp">{{ profile.experience_years|default:'1.0' }}</span> Years</div>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="p-2 bg-white rounded-3 border">
+                    <div class="text-xs text-muted text-uppercase fw-semibold">Customer Feedback</div>
+                    <div class="fw-bold text-warning fs-6">
+                      <i class="fa-solid fa-star"></i> <span id="metric-rating">{{ profile.rating|default:'5.0' }}</span>★
+                      <span class="text-muted text-xs font-normal">({{ profile.total_reviews|default:'0' }} reviews)</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="p-2 bg-white rounded-3 border border-success">
+                    <div class="text-xs text-success text-uppercase fw-bold">Recommended Quote</div>
+                    <div class="fw-extrabold text-success fs-5">
+                      ₹<span id="metric-quote">{{ recommended_rate|default:'350' }}</span>/hr
+                    </div>
+                    <div class="text-xs text-muted">Range: ₹<span id="metric-range-min">{{ recommended_min|default:'300' }}</span> - ₹<span id="metric-range-max">{{ recommended_max|default:'440' }}</span>/hr</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div class="row g-3 mb-4">
               <div class="col-md-4">
-                <label class="form-label fw-semibold">Experience (Years)</label>
+                <label class="form-label fw-semibold">Experience (Years) *</label>
                 {{ caretaker_form.experience_years }}
+                <div class="form-text text-xs text-muted">Total years of pet care experience.</div>
+                {% if caretaker_form.experience_years.errors %}
+                  <div class="text-danger small mt-1">{{ caretaker_form.experience_years.errors.0 }}</div>
+                {% endif %}
               </div>
               <div class="col-md-4">
-                <label class="form-label fw-semibold">Hourly Rate (₹/hr)</label>
+                <label class="form-label fw-semibold d-flex justify-content-between align-items-center">
+                  <span>Hourly Rate (₹/hr) *</span>
+                  <span class="badge bg-danger-subtle text-danger text-xs">Cannot be 0 or -ve</span>
+                </label>
                 {{ caretaker_form.hourly_rate }}
+                <div class="form-text text-xs text-muted">Your quoted fee per hour (minimum ₹50/hr).</div>
+                {% if caretaker_form.hourly_rate.errors %}
+                  <div class="text-danger small mt-1 fw-bold">{{ caretaker_form.hourly_rate.errors.0 }}</div>
+                {% endif %}
               </div>
               <div class="col-md-4">
                 <label class="form-label fw-semibold">Availability Status</label>
@@ -70,6 +152,60 @@
                 {{ caretaker_form.bio }}
               </div>
             </div>
+
+            <script>
+              // Dynamic rate recommendation recalculation
+              function calcRecommendedRate(exp, rating, reviews) {
+                const base = 150.0;
+                const expBonus = Math.min(Math.max(0, exp) * 40.0, 400.0);
+                let ratingBonus = 0.0;
+                if (rating >= 4.8) ratingBonus = 150.0;
+                else if (rating >= 4.4) ratingBonus = 100.0;
+                else if (rating >= 4.0) ratingBonus = 50.0;
+                const reviewBonus = Math.min(reviews * 5.0, 100.0);
+                const rec = base + expBonus + ratingBonus + reviewBonus;
+                return Math.max(150, Math.round(rec / 10.0) * 10);
+              }
+
+              const expInput = document.getElementById('id_experience_years');
+              const rateInput = document.getElementById('id_hourly_rate');
+              const currentRating = parseFloat('{{ profile.rating|default:"5.0" }}') || 5.0;
+              const currentReviews = parseInt('{{ profile.total_reviews|default:"0" }}') || 0;
+
+              function updateRecDisplay() {
+                if (!expInput) return;
+                const exp = parseFloat(expInput.value) || 0;
+                const recRate = calcRecommendedRate(exp, currentRating, currentReviews);
+                const minRate = Math.round((recRate * 0.85) / 10.0) * 10;
+                const maxRate = Math.round((recRate * 1.25) / 10.0) * 10;
+
+                const metricExp = document.getElementById('metric-exp');
+                const metricQuote = document.getElementById('metric-quote');
+                const metricRangeMin = document.getElementById('metric-range-min');
+                const metricRangeMax = document.getElementById('metric-range-max');
+                const recQuoteBtn = document.getElementById('rec-quote-btn-val');
+
+                if (metricExp) metricExp.innerText = exp.toFixed(1);
+                if (metricQuote) metricQuote.innerText = recRate;
+                if (metricRangeMin) metricRangeMin.innerText = minRate;
+                if (metricRangeMax) metricRangeMax.innerText = maxRate;
+                if (recQuoteBtn) recQuoteBtn.innerText = recRate;
+              }
+
+              if (expInput) {
+                expInput.addEventListener('input', updateRecDisplay);
+              }
+
+              function applyRecommendedQuote() {
+                if (!rateInput) return;
+                const exp = parseFloat(expInput ? expInput.value : 0) || 0;
+                const recRate = calcRecommendedRate(exp, currentRating, currentReviews);
+                rateInput.value = recRate.toFixed(2);
+                rateInput.focus();
+                rateInput.classList.add('border-success');
+                setTimeout(() => rateInput.classList.remove('border-success'), 1500);
+              }
+            </script>
           {% endif %}
 
           <div class="d-flex justify-content-end gap-2">

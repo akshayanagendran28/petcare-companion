@@ -13,10 +13,13 @@
           <img src="{{ user.get_photo_url }}" class="rounded-circle border" width="68" height="68" style="object-fit: cover;">
           <div>
             <h3 class="fw-bold mb-1">{{ user.get_full_name|default:user.username }}</h3>
-            <div class="d-flex align-items-center gap-2">
+            <div class="d-flex flex-wrap align-items-center gap-2 mt-1">
               <span class="badge bg-success-subtle text-success"><i class="fa-solid fa-circle-check me-1"></i> Verified Caretaker</span>
               <span class="text-muted small">• {{ profile.experience_years }} yrs experience</span>
-              <span class="text-muted small">• ₹{{ profile.hourly_rate }}/hr</span>
+              <span class="text-dark small fw-bold">• Current: ₹{{ profile.hourly_rate }}/hr</span>
+              <span class="badge bg-primary-subtle text-primary border border-primary-subtle small fw-semibold" title="Calculated based on your {{ profile.experience_years }} yrs experience and {{ profile.rating }}★ customer feedback">
+                <i class="fa-solid fa-calculator me-1"></i> Recommended Quote: ₹{{ profile.get_recommended_hourly_rate }}/hr
+              </span>
             </div>
           </div>
         </div>
@@ -77,27 +80,40 @@
         {% if pending_bookings %}
           <div class="d-flex flex-column gap-3">
             {% for req in pending_bookings %}
-              <div class="p-3 rounded-4 bg-white border d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+              <div class="p-3 rounded-4 bg-white border d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 shadow-sm">
                 <div>
-                  <div class="d-flex align-items-center gap-2 mb-1">
-                    <span class="fw-bold fs-6">{{ req.pet.name }}</span>
-                    <span class="badge bg-light text-dark border">{{ req.pet.breed }}</span>
+                  <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+                    <span class="fw-bold fs-6 text-dark">{{ req.get_pets_display }}</span>
+                    {% if req.pet_count > 1 %}
+                      <span class="badge bg-info-subtle text-info">{{ req.pet_count }} Pets</span>
+                    {% else %}
+                      <span class="badge bg-light text-dark border">{{ req.pet.breed }}</span>
+                    {% endif %}
                     <span class="badge bg-info-subtle text-info">{{ req.service_type }}</span>
+                    {% if req.is_emergency %}
+                      <span class="badge bg-danger text-white"><i class="fa-solid fa-bolt me-1"></i> EMERGENCY</span>
+                    {% endif %}
                   </div>
                   <div class="small text-muted">
-                    <i class="fa-regular fa-calendar me-1"></i> {{ req.start_date|date:"M d" }} to {{ req.end_date|date:"M d, Y" }} ({{ req.duration_days }} days)
+                    <i class="fa-regular fa-calendar me-1"></i> {{ req.start_date|date:"M d" }} to {{ req.end_date|date:"M d, Y" }} ({{ req.duration_days }} days) • <strong>{{ req.start_time }} to {{ req.end_time }}</strong>
                   </div>
-                  <div class="small text-muted">
-                    <i class="fa-regular fa-user me-1"></i> Owner: {{ req.owner.get_full_name|default:req.owner.username }} • Phone: {{ req.owner.phone|default:'Not provided' }}
+                  <div class="small text-muted mt-1">
+                    <i class="fa-regular fa-user me-1"></i> Owner: <strong>{{ req.owner.get_full_name|default:req.owner.username }}</strong>
+                    {% if req.owner.phone %} • <i class="fa-solid fa-phone text-success ms-1 me-1"></i> <a href="tel:{{ req.owner.phone }}" class="text-success text-decoration-none fw-semibold">{{ req.owner.phone }}</a>{% endif %}
                   </div>
+                  {% if req.is_emergency and req.emergency_phone %}
+                    <div class="text-xs text-danger mt-1">
+                      <i class="fa-solid fa-triangle-exclamation me-1"></i> <strong>Urgent Phone:</strong> {{ req.emergency_phone }} • <strong>Arrival:</strong> {{ req.arrival_time }}
+                    </div>
+                  {% endif %}
                   {% if req.notes %}
                     <div class="small text-secondary mt-1 fst-italic">"{{ req.notes }}"</div>
                   {% endif %}
                 </div>
-                <div class="text-md-end">
+                <div class="text-md-end text-nowrap">
                   <div class="fw-bold fs-5 text-success mb-2">₹{{ req.total_price }}</div>
-                  <div class="d-flex gap-2">
-                    <a href="{% url 'bookings:update_status' req.id 'accept' %}" class="btn btn-sm btn-success px-3">Accept</a>
+                  <div class="d-flex gap-2 justify-content-md-end">
+                    <a href="{% url 'bookings:update_status' req.id 'accept' %}" class="btn btn-sm btn-success px-3 fw-bold">Accept</a>
                     <a href="{% url 'bookings:update_status' req.id 'reject' %}" class="btn btn-sm btn-outline-danger px-3">Decline</a>
                   </div>
                 </div>

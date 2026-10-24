@@ -109,7 +109,9 @@ class CaretakerRegistrationForm(forms.ModelForm):
     def clean_hourly_rate(self):
         rate = self.cleaned_data.get('hourly_rate')
         if rate is not None and rate <= 0:
-            raise forms.ValidationError("Hourly rate must be greater than zero.")
+            raise forms.ValidationError("Hourly rate cannot be zero or negative. Minimum rate is ₹50/hr.")
+        if rate is not None and rate < 50:
+            raise forms.ValidationError("Hourly rate must be at least ₹50/hr.")
         return rate if rate is not None else 100.00
 
     def clean(self):
@@ -162,9 +164,27 @@ class CaretakerProfileEditForm(forms.ModelForm):
         model = CaretakerProfile
         fields = ['experience_years', 'hourly_rate', 'services_offered', 'availability_status', 'bio']
         widgets = {
-            'experience_years': forms.NumberInput(attrs={'class': 'form-control'}),
-            'hourly_rate': forms.NumberInput(attrs={'class': 'form-control'}),
+            'experience_years': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.5', 'min': '0'}),
+            'hourly_rate': forms.NumberInput(attrs={'class': 'form-control', 'step': '10', 'min': '50'}),
             'services_offered': forms.TextInput(attrs={'class': 'form-control'}),
             'availability_status': forms.Select(attrs={'class': 'form-select'}),
             'bio': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
         }
+
+    def clean_hourly_rate(self):
+        rate = self.cleaned_data.get('hourly_rate')
+        if rate is None:
+            raise forms.ValidationError("Hourly rate cannot be empty.")
+        if rate <= 0:
+            raise forms.ValidationError("Hourly rate cannot be zero or negative. Caretakers must set a valid positive rate (minimum ₹50/hr).")
+        if rate < 50:
+            raise forms.ValidationError("Hourly rate must be at least ₹50/hr.")
+        return rate
+
+    def clean_experience_years(self):
+        exp = self.cleaned_data.get('experience_years')
+        if exp is None:
+            raise forms.ValidationError("Experience years cannot be empty.")
+        if exp < 0:
+            raise forms.ValidationError("Experience years cannot be negative.")
+        return exp
