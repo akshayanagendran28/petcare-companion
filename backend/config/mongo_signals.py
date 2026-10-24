@@ -6,6 +6,8 @@ and automatically writes changes to MongoDB Atlas in real time.
 
 from django.db.models.signals import post_save, post_delete
 from django.apps import apps
+import sys
+import os
 import logging
 
 logger = logging.getLogger('mongodb')
@@ -19,9 +21,20 @@ APP_LABELS = {
 MONGO_SIGNALS_ENABLED = True
 
 
+def is_test_environment():
+    """Detect if running under test runner to prevent test records from syncing to Atlas."""
+    if 'test' in sys.argv:
+        return True
+    if any('test' in arg for arg in sys.argv):
+        return True
+    if os.getenv('DJANGO_TEST') or os.getenv('TESTING') == '1':
+        return True
+    return False
+
+
 def handle_post_save(sender, instance, **kwargs):
     """Sync model instance to MongoDB on creation or update."""
-    if not MONGO_SIGNALS_ENABLED or kwargs.get('raw', False):
+    if not MONGO_SIGNALS_ENABLED or kwargs.get('raw', False) or is_test_environment():
         return
 
     try:
@@ -37,7 +50,7 @@ def handle_post_save(sender, instance, **kwargs):
 
 def handle_post_delete(sender, instance, **kwargs):
     """Delete document from MongoDB when model instance is removed."""
-    if not MONGO_SIGNALS_ENABLED:
+    if not MONGO_SIGNALS_ENABLED or is_test_environment():
         return
 
     try:

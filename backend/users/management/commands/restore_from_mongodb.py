@@ -7,7 +7,7 @@ import os
 import json
 from django.core.management.base import BaseCommand
 from django.apps import apps
-from django.db import transaction
+from django.db import transaction, models
 
 try:
     from config.mongodb import (
@@ -112,48 +112,95 @@ class Command(BaseCommand):
                         continue
 
                     count = 0
-                    with transaction.atomic():
-                        for doc in docs:
-                            pk_val = doc.get('sql_id', doc.get('id'))
-                            if not isinstance(pk_val, int) and isinstance(doc.get('_id'), int):
-                                pk_val = doc.get('_id')
-                            instance = model()
-                            for f in model._meta.fields:
-                                rel_key = f.name + '_id'
-                                if f.is_relation and rel_key in doc:
-                                    setattr(instance, f.attname, doc[rel_key])
-                                elif f.name in doc and doc[f.name] is not None:
-                                    setattr(instance, f.name, doc[f.name])
+                    for doc in docs:
+                        try:
+                            with transaction.atomic():
+                                pk_val = doc.get('sql_id', doc.get('id'))
+                                if not isinstance(pk_val, int) and isinstance(doc.get('_id'), int):
+                                    pk_val = doc.get('_id')
+                                instance = model()
+                                for f in model._meta.fields:
+                                    rel_key = f.name + '_id'
+                                    if f.is_relation and rel_key in doc:
+                                        setattr(instance, f.attname, doc[rel_key])
+                                    elif f.name in doc and doc[f.name] is not None:
+                                        val = doc[f.name]
+                                        # Normalize DateField if stored as ISO datetime string containing 'T'
+                                        if isinstance(f, models.DateField) and not isinstance(f, models.DateTimeField):
+                                            if isinstance(val, str) and 'T' in val:
+                                                val = val.split('T')[0]
+                                        setattr(instance, f.name, val)
 
-                            # Normalization for telemetry collections in MongoDB
-                            if model_name == 'BreedScanLog':
-                                if not getattr(instance, 'confidence_score', None):
-                                    c_score = doc.get('confidence_score') or doc.get('confidence') or 95.0
-                                    instance.confidence_score = float(c_score)
-                                if not getattr(instance, 'image', None):
-                                    instance.image = doc.get('image') or 'scans/sample_pet.jpg'
-                                if not getattr(instance, 'predicted_breed', None):
-                                    instance.predicted_breed = doc.get('predicted_breed') or 'Golden Retriever'
-                            elif model_name == 'ChatHistory':
-                                if not getattr(instance, 'user_query', None):
-                                    instance.user_query = doc.get('query') or doc.get('user_query') or 'Hello'
-                                if not getattr(instance, 'bot_response', None):
-                                    instance.bot_response = doc.get('response') or doc.get('bot_response') or 'How can I assist with your pet?'
-                            elif model_name == 'LostPetReport':
-                                if doc.get('police_csr_number') or doc.get('police_station_name'):
-                                    if not getattr(instance, 'police_complaint_status', None) or instance.police_complaint_status == 'NOT_FILED':
-                                        instance.police_complaint_status = 'FILED'
-                                if not getattr(instance, 'police_complaint_status', None):
-                                    instance.police_complaint_status = doc.get('police_complaint_status') or 'NOT_FILED'
-                            elif model_name == 'CaretakerProfile':
-                                if not getattr(instance, 'hourly_rate', None) or instance.hourly_rate <= 0:
-                                    instance.hourly_rate = 350.00
-                                if not getattr(instance, 'experience_years', None) or instance.experience_years < 0:
-                                    instance.experience_years = 2.0
+                                # Normalization for specific collections
+                                if model_name == 'BreedScanLog':
+                                    if not getattr(instance, 'confidence_score', None):
+                                        c_score = doc.get('confidence_score') or doc.get('confidence') or 95.0
+                                        instance.confidence_score = float(c_score)
+                                    if not getattr(instance, 'image', None):
+                                        instance.image = doc.get('image') or 'scans/sample_pet.jpg'
+                                    if not getattr(instance, 'predicted_breed', None):
+                                        instance.predicted_breed = doc.get('predicted_breed') or 'Golden Retriever'
+                                elif model_name == 'ChatHistory':
+                                    if not getattr(instance, 'user_query', None):
+                                        instance.user_query = doc.get('query') or doc.get('user_query') or 'Hello'
+                                    if not getattr(instance, 'bot_response', None):
+                                        instance.bot_response = doc.get('response') or doc.get('bot_response') or 'How can I assist with your pet?'
+                                elif model_name == 'LostPetReport':
+                                    if doc.get('police_csr_number') or doc.get('police_station_name'):
+                                        if not getattr(instance, 'police_complaint_status', None) or instance.police_complaint_status == 'NOT_FILED':
+                                            instance.police_complaint_status = 'FILED'
+                                    if not getattr(instance, 'police_complaint_status', None):
+                                        instance.police_complaint_status = doc.get('police_complaint_status') or 'NOT_FILED'
+                                    # Ensure reporter_id exists
+                                    user_model = apps.get_model('users', 'User')
+                                    if not getattr(instance, 'reporter_id', None) or not user_model.objects.filter(pk=instance.reporter_id).exists():
+                                        first_user = user_model.objects.first()
+                                        if first_user:
+                                            instance.reporter_id = first_user.pk
+                                elif model_name == 'LostPetSighting':
+                                    lost_pet_model = apps.get_model('lostfound', 'LostPetReport')
+                                    if not getattr(instance, 'lost_pet_id', None) or not lost_pet_model.objects.filter(pk=instance.lost_pet_id).exists():
+                                        fb_report = lost_pet_model.objects.first()
+                                        if fb_report:
+                                            instance.lost_pet_id = fb_report.pk
+                                elif model_name == 'CaretakerProfile':
+                                    if not getattr(instance, 'hourly_rate', None) or instance.hourly_rate <= 0:
+                                        instance.hourly_rate = 350.00
+                                    if not getattr(instance, 'experience_years', None) or instance.experience_years < 0:
+                                        instance.experience_years = 2.0
+                                elif model_name == 'Booking':
+                                    # Validate foreign keys for Booking
+                                    user_model = apps.get_model('users', 'User')
+                                    pet_model = apps.get_model('pets', 'Pet')
+                                    caretaker_model = apps.get_model('marketplace', 'CaretakerProfile')
+                                    if not getattr(instance, 'owner_id', None) or not user_model.objects.filter(pk=instance.owner_id).exists():
+                                        instance.owner = user_model.objects.first()
+                                    if not getattr(instance, 'pet_id', None) or not pet_model.objects.filter(pk=instance.pet_id).exists():
+                                        instance.pet = pet_model.objects.first()
+                                    if not getattr(instance, 'caretaker_id', None) or not caretaker_model.objects.filter(pk=instance.caretaker_id).exists():
+                                        instance.caretaker = caretaker_model.objects.first()
 
-                            if isinstance(pk_val, int):
-                                instance.pk = pk_val
-                            try:
+                                # Validate all relation foreign keys to prevent SQLite foreign key constraint failures
+                                has_unresolved_fk = False
+                                for f in model._meta.fields:
+                                    if f.is_relation and f.related_model:
+                                        rel_val = getattr(instance, f.attname, None)
+                                        if rel_val is not None and not f.related_model.objects.filter(pk=rel_val).exists():
+                                            fallback_inst = f.related_model.objects.first()
+                                            if fallback_inst:
+                                                setattr(instance, f.attname, fallback_inst.pk)
+                                            elif f.null:
+                                                setattr(instance, f.attname, None)
+                                            else:
+                                                has_unresolved_fk = True
+                                                break
+
+                                if has_unresolved_fk:
+                                    continue
+
+                                if isinstance(pk_val, int):
+                                    instance.pk = pk_val
+
                                 instance.save()
                                 if model_name == 'Booking':
                                     pet_ids = doc.get('pet_ids') or []
@@ -162,8 +209,9 @@ class Command(BaseCommand):
                                     elif instance.pet_id:
                                         instance.pets.set([instance.pet_id])
                                 count += 1
-                            except Exception:
-                                pass
+                        except Exception as doc_err:
+                            if count == 0:
+                                self.stdout.write(self.style.WARNING(f"    [!] Error restoring doc {doc.get('id', doc.get('_id'))} into {model_name}: {doc_err}"))
 
                     self.stdout.write(self.style.SUCCESS(
                         f"  [+] Restored {count:>4} records into '{model_name}' ({col_name})"
