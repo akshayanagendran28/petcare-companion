@@ -188,4 +188,21 @@ class BookingCreateForm(forms.ModelForm):
                     if end_date and conflict_date != start_date:
                         self.add_error('end_date', err_msg)
 
+                # Check if this owner already has an active pending request
+                if self.user and self.caretaker:
+                    user_pending = Booking.objects.filter(
+                        owner=self.user,
+                        caretaker=self.caretaker,
+                        status='PENDING',
+                        start_date__lte=end_date,
+                        end_date__gte=start_date
+                    )
+                    if exclude_id:
+                        user_pending = user_pending.exclude(id=exclude_id)
+                    if user_pending.exists():
+                        self.add_error(
+                            'start_date',
+                            "You already have a pending booking request with this caretaker for these dates. Please wait for the caretaker's response."
+                        )
+
         return cleaned_data

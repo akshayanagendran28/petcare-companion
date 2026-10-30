@@ -9,12 +9,13 @@ MAX_DAILY_BOOKING_CAPACITY = 1
 
 def get_caretaker_daily_pet_count(caretaker, target_date, exclude_booking_id=None):
     """
-    Returns the count of active bookings currently with the caretaker on target_date.
-    Only considers active/confirmed bookings ('ACCEPTED' and 'PENDING').
+    Returns the count of confirmed bookings currently with the caretaker on target_date.
+    Only considers accepted/confirmed bookings ('ACCEPTED', 'COMPLETED').
+    Multiple owners can apply while bookings are 'PENDING'.
     """
     qs = Booking.objects.filter(
         caretaker=caretaker,
-        status__in=['ACCEPTED', 'PENDING'],
+        status__in=['ACCEPTED', 'COMPLETED'],
         start_date__lte=target_date,
         end_date__gte=target_date
     )
@@ -26,7 +27,8 @@ def get_caretaker_daily_pet_count(caretaker, target_date, exclude_booking_id=Non
 def get_caretaker_fully_booked_dates(caretaker, days_ahead=90, exclude_booking_id=None):
     """
     Returns a list of date strings ['YYYY-MM-DD', ...] within the next `days_ahead` days
-    where the caretaker is already booked by another person (strictly 1 booking per day).
+    where the caretaker is already booked and accepted (strictly 1 booking per day).
+    Pending requests do not lock the date so multiple owners can submit requests.
     """
     today = timezone.now().date()
     unavailable_dates = []
@@ -34,7 +36,7 @@ def get_caretaker_fully_booked_dates(caretaker, days_ahead=90, exclude_booking_i
     end_window = today + timedelta(days=days_ahead)
     active_bookings = Booking.objects.filter(
         caretaker=caretaker,
-        status__in=['ACCEPTED', 'PENDING'],
+        status__in=['ACCEPTED', 'COMPLETED'],
         start_date__lte=end_window,
         end_date__gte=today
     )
@@ -56,7 +58,7 @@ def get_caretaker_fully_booked_dates(caretaker, days_ahead=90, exclude_booking_i
 def get_caretaker_next_available_date(caretaker, start_from=None, days_ahead=90):
     """
     Finds the earliest date on or after `start_from` (default: today) where the caretaker
-    has no bookings.
+    has no confirmed bookings.
     """
     if start_from is None:
         start_from = timezone.now().date()
@@ -64,7 +66,7 @@ def get_caretaker_next_available_date(caretaker, start_from=None, days_ahead=90)
     end_window = start_from + timedelta(days=days_ahead)
     active_bookings = list(Booking.objects.filter(
         caretaker=caretaker,
-        status__in=['ACCEPTED', 'PENDING'],
+        status__in=['ACCEPTED', 'COMPLETED'],
         start_date__lte=end_window,
         end_date__gte=start_from
     ).values('id', 'start_date', 'end_date'))
@@ -80,13 +82,13 @@ def get_caretaker_next_available_date(caretaker, start_from=None, days_ahead=90)
 
 def validate_caretaker_capacity_for_range(caretaker, start_date, end_date, exclude_booking_id=None):
     """
-    Validates that every single day in [start_date, end_date] has strictly 0 existing bookings.
-    Caretakers can take a maximum of 1 booking per day.
+    Validates that every single day in [start_date, end_date] has strictly 0 accepted bookings.
+    Caretakers can take a maximum of 1 confirmed booking per day.
     Returns: (is_valid: bool, conflicting_date: date or None, next_available_date: date or None)
     """
     active_bookings = list(Booking.objects.filter(
         caretaker=caretaker,
-        status__in=['ACCEPTED', 'PENDING'],
+        status__in=['ACCEPTED', 'COMPLETED'],
         start_date__lte=end_date,
         end_date__gte=start_date
     ).values('id', 'start_date', 'end_date'))
@@ -146,7 +148,7 @@ def get_caretaker_calendar_grid(caretaker, days_ahead=35, exclude_booking_id=Non
 
     active_bookings = Booking.objects.filter(
         caretaker=caretaker,
-        status__in=['ACCEPTED', 'PENDING'],
+        status__in=['ACCEPTED', 'COMPLETED'],
         start_date__lte=end_window,
         end_date__gte=today
     )

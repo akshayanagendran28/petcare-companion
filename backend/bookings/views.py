@@ -96,8 +96,12 @@ def create_booking(request, caretaker_id):
                 link='/bookings/caretaker/requests/'
             )
 
-            messages.success(request, f"Booking request created for {pets_str}! Total: ₹{booking.total_price:.2f}. Please complete payment below.")
-            return redirect('bookings:booking_payment', booking_id=booking.id)
+            messages.success(
+                request,
+                f"Booking request for {pets_str} sent to {caretaker.user.get_full_name() or caretaker.user.username}! "
+                f"You will be notified once the caretaker accepts your request, after which you can proceed to payment."
+            )
+            return redirect('bookings:owner_list')
         else:
             messages.error(request, "Please fix the booking dates or selection errors below.")
     else:
@@ -180,10 +184,76 @@ def update_booking_status(request, pk, action):
                 raise PermissionDenied
         
         if action == 'accept':
+            # 1. Enforce 1 booking per day limit
+            existing_accepted = Booking.objects.filter(
+                caretaker=booking.caretaker,
+                status__in=['ACCEPTED', 'COMPLETED'],
+                start_date__lte=booking.end_date,
+                end_date__gte=booking.start_date
+            ).exclude(id=booking.id)
+            if existing_accepted.exists():
+                messages.error(
+                    request,
+                    f"Cannot accept Booking #{booking.id}: You already have an accepted booking on this date! (Strict limit: 1 booking per day)."
+                )
+                return redirect('bookings:caretaker_requests')
+
             booking.status = 'ACCEPTED'
-            msg_owner = f"Your booking for {booking.pet.name} was accepted by {booking.caretaker.user.get_full_name() or booking.caretaker.user.username}!"
-            Notification.objects.create(user=booking.owner, title="Booking Confirmed!", message=msg_owner, notification_type='BOOKING', link='/bookings/my-bookings/')
-            messages.success(request, f"Booking #{booking.id} accepted.")
+            booking.save(update_fields=['status'])
+
+            pets_str = booking.get_pets_display()
+            caretaker_name = booking.caretaker.user.get_full_name() or booking.caretaker.user.username
+
+            # 2. Notify accepted pet owner with direct link to payment session
+            msg_owner = (
+                f"🎉 Great news! Caretaker {caretaker_name} has accepted your booking request for {pets_str} "
+                f"({booking.start_date} to {booking.end_date}). Click here to complete your payment via Google Pay."
+            )
+            Notification.objects.create(
+                user=booking.owner,
+                title="Booking Request Accepted! 🎉",
+                message=msg_owner,
+                notification_type='BOOKING',
+                link=f'/bookings/{booking.id}/payment/'
+            )
+
+            # 3. Automatically reject all other conflicting PENDING requests and notify applicants
+            other_pending = Booking.objects.filter(
+                caretaker=booking.caretaker,
+                status='PENDING',
+                start_date__lte=booking.end_date,
+                end_date__gte=booking.start_date
+            ).exclude(id=booking.id)
+
+            declined_count = 0
+            for other_b in other_pending:
+                other_b.status = 'REJECTED'
+                other_b.save(update_fields=['status'])
+                declined_count += 1
+
+                other_pets_str = other_b.get_pets_display()
+                msg_other = (
+                    f"Your booking request for {other_pets_str} ({other_b.start_date} to {other_b.end_date}) "
+                    f"was declined as caretaker {caretaker_name} accepted another client's booking for this date (1 booking per day limit)."
+                )
+                Notification.objects.create(
+                    user=other_b.owner,
+                    title="Booking Request Declined",
+                    message=msg_other,
+                    notification_type='BOOKING',
+                    link='/bookings/my-bookings/'
+                )
+
+            if declined_count > 0:
+                messages.success(
+                    request,
+                    f"Booking #{booking.id} accepted! {declined_count} other conflicting request(s) on this date were automatically declined and notified."
+                )
+            else:
+                messages.success(
+                    request,
+                    f"Booking #{booking.id} accepted! The pet owner has been notified to proceed to payment."
+                )
         elif action == 'reject':
             booking.status = 'REJECTED'
             msg_owner = f"Your booking for {booking.pet.name} was declined by {booking.caretaker.user.get_full_name() or booking.caretaker.user.username}."
@@ -262,8 +332,8 @@ def booking_payment_view(request, booking_id):
         }
         return render(request, 'bookings/booking_payment.html', context)
 
-    # Payment is always unlocked immediately upon booking creation for instant checkout and trial testing!
-    is_locked = False
+    # Payment is unlocked ONLY when caretaker has accepted the booking!
+    is_locked = (booking.status != 'ACCEPTED')
 
     # If owner is viewing an accepted booking, generate/retrieve Razorpay Order
     order_data = create_or_get_razorpay_order(booking)

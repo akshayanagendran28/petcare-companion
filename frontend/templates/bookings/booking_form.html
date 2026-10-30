@@ -488,7 +488,7 @@
               <span>Base Caretaker Rate:</span>
               <span class="fw-bold text-white">₹{{ caretaker.hourly_rate }}/hr</span>
             </div>
-            <div class="d-flex justify-content-between py-2 text-secondary small border-bottom border-secondary border-opacity-25" id="emergencyFeeRow" style="display: none;">
+            <div class="justify-content-between py-2 text-secondary small border-bottom border-secondary border-opacity-25 d-none" id="emergencyFeeRow">
               <span class="text-warning fw-bold"><i class="fa-solid fa-bolt me-1"></i> Emergency Rush Surcharge (Separate):</span>
               <span class="fw-bold text-warning">+₹400.00</span>
             </div>
@@ -687,15 +687,21 @@ document.addEventListener('DOMContentLoaded', function() {
   // 2. EMERGENCY BOOKING TOGGLE
   // ==============================================================
   window.toggleEmergencyFields = function() {
-    const isEmerg = emergencyCheckbox.checked;
+    const isEmerg = !!(emergencyCheckbox && emergencyCheckbox.checked);
     if (isEmerg) {
-      emergencyPanel.classList.remove('d-none');
-      emergencyRow.style.display = 'flex';
+      if (emergencyPanel) emergencyPanel.classList.remove('d-none');
+      if (emergencyRow) {
+        emergencyRow.classList.remove('d-none');
+        emergencyRow.classList.add('d-flex');
+      }
       startDateInput.min = todayStr;
       endDateInput.min = todayStr;
     } else {
-      emergencyPanel.classList.add('d-none');
-      emergencyRow.style.display = 'none';
+      if (emergencyPanel) emergencyPanel.classList.add('d-none');
+      if (emergencyRow) {
+        emergencyRow.classList.remove('d-flex');
+        emergencyRow.classList.add('d-none');
+      }
       startDateInput.min = standardMinStr;
       endDateInput.min = standardMinStr;
     }
@@ -819,7 +825,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const hoursPerDay = 4;
     let basePrice = days * hoursPerDay * caretakerRate * calcPets;
-    let emergencySurcharge = emergencyCheckbox.checked ? 400.00 : 0.00;
+    const isEmerg = !!(emergencyCheckbox && emergencyCheckbox.checked);
+    let emergencySurcharge = isEmerg ? 400.00 : 0.00;
+    if (emergencyRow) {
+      if (isEmerg) {
+        emergencyRow.classList.remove('d-none');
+        emergencyRow.classList.add('d-flex');
+      } else {
+        emergencyRow.classList.remove('d-flex');
+        emergencyRow.classList.add('d-none');
+      }
+    }
     let totalPrice = basePrice + emergencySurcharge;
 
     document.getElementById('calcTotalAmount').innerText = "₹" + totalPrice.toFixed(2);
