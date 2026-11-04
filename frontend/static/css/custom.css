@@ -674,11 +674,11 @@ html[data-bs-theme="light"] .bg-warning-subtle { background-color: #fef3c7 !impo
 html[data-bs-theme="light"] .bg-danger-subtle { background-color: #fee2e2 !important; color: #b91c1c !important; }
 html[data-bs-theme="light"] .bg-secondary-subtle { background-color: #f1f5f9 !important; color: #475569 !important; }
 
-/* 3D Background Canvas in Light Mode */
+/* 3D Background Canvas in Light Mode: Vibrant & Clearly Visible on White */
 html[data-bs-theme="light"] #three-bg-canvas,
 body.light-theme #three-bg-canvas {
-  opacity: 0.08 !important;
-  filter: contrast(0.8) brightness(1.2);
+  opacity: 0.88 !important;
+  filter: none !important;
 }
 
 /* Navbar */
