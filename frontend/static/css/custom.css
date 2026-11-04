@@ -738,10 +738,10 @@ body.light-theme .card {
   border-color: #e2e8f0 !important;
 }
 
-html[data-bs-theme="light"] .bg-dark,
-html[data-bs-theme="light"] .bg-dark[class*="bg-opacity"],
-body.light-theme .bg-dark,
-body.light-theme .bg-dark[class*="bg-opacity"] {
+html[data-bs-theme="light"] .bg-dark:not(.badge),
+html[data-bs-theme="light"] .bg-dark[class*="bg-opacity"]:not(.badge),
+body.light-theme .bg-dark:not(.badge),
+body.light-theme .bg-dark[class*="bg-opacity"]:not(.badge) {
   background-color: #f8fafc !important;
   color: #0f172a !important;
   border-color: #e2e8f0 !important;
@@ -1098,3 +1098,38 @@ body.light-theme .cta-banner-card .text-white,
 body.light-theme .cta-banner-card .text-white-50 {
   color: #ffffff !important;
 }
+
+/* ==========================================================================
+   Pet Cards Color Differentiation & High-Contrast Badges
+   ========================================================================== */
+.badge-gender-male {
+  background: rgba(59, 130, 246, 0.15) !important;
+  color: #2563eb !important;
+  border: 1px solid rgba(59, 130, 246, 0.35) !important;
+}
+
+.badge-gender-female {
+  background: rgba(236, 72, 153, 0.15) !important;
+  color: #db2777 !important;
+  border: 1px solid rgba(236, 72, 153, 0.35) !important;
+}
+
+.card-species-dog {
+  border-top: 4px solid #f59e0b !important;
+}
+
+.card-species-cat {
+  border-top: 4px solid #6366f1 !important;
+}
+
+.card-species-rabbit {
+  border-top: 4px solid #10b981 !important;
+}
+
+.badge-price-glass {
+  background: rgba(15, 23, 42, 0.88) !important;
+  color: #ffffff !important;
+  backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+

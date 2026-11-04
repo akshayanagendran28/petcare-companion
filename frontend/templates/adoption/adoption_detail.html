@@ -5,10 +5,12 @@
 {% block content %}
 <div class="container py-4">
 
-  <div class="glass-card p-4 p-md-5 mb-4">
+  <div class="glass-card p-4 p-md-5 mb-4 shadow-sm" style="border-top: 5px solid {% if listing.species == 'Dog' %}#f59e0b{% elif listing.species == 'Cat' %}#6366f1{% elif listing.species == 'Rabbit' %}#10b981{% else %}#ec4899{% endif %} !important; border-radius: 20px;">
     <div class="row g-4 align-items-center">
       <div class="col-md-5 text-center">
-        <img src="{{ listing.get_photo_url }}" class="rounded-4 border shadow img-fluid w-100" style="max-height: 380px; object-fit: cover;" alt="{{ listing.pet_name }}">
+        <div class="rounded-4 overflow-hidden border shadow" style="background: linear-gradient(135deg, {% if listing.species == 'Dog' %}#fef3c7 0%, #fde68a 100%{% elif listing.species == 'Cat' %}#e0e7ff 0%, #c7d2fe 100%{% elif listing.species == 'Rabbit' %}#d1fae5 0%, #a7f3d0 100%{% else %}#f1f5f9 0%, #e2e8f0 100%{% endif %}); min-height: 250px;">
+          <img src="{{ listing.get_photo_url }}" class="img-fluid w-100" style="max-height: 380px; object-fit: cover;" alt="{{ listing.pet_name }}" onerror="this.onerror=null; this.src='/static/images/default_pet.svg';">
+        </div>
       </div>
 
       <div class="col-md-7">
@@ -219,7 +221,7 @@
       {% for rel in related_listings %}
         <div class="col-md-4">
           <div class="glass-card p-3 d-flex gap-3 align-items-center">
-            <img src="{{ rel.get_photo_url }}" class="rounded-3 border" width="70" height="70" style="object-fit: cover;" alt="{{ rel.pet_name }}">
+            <img src="{{ rel.get_photo_url }}" class="rounded-3 border" width="70" height="70" style="object-fit: cover;" alt="{{ rel.pet_name }}" onerror="this.onerror=null; this.src='/static/images/default_pet.svg';">
             <div>
               <h6 class="fw-bold mb-0 text-white">{{ rel.pet_name }}</h6>
               <div class="text-xs text-muted">{{ rel.breed }} • {{ rel.age }} yrs</div>

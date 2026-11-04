@@ -118,13 +118,22 @@
         <div class="row g-4">
           {% for item in page_obj.object_list %}
             <div class="col-md-6 col-xl-4">
-              <div class="glass-card glass-card-hover p-3 h-100 d-flex flex-column justify-content-between position-relative">
+              <div class="glass-card glass-card-hover p-3 h-100 d-flex flex-column justify-content-between position-relative shadow-sm" style="border-top: 4px solid {% if item.species == 'Dog' %}#f59e0b{% elif item.species == 'Cat' %}#6366f1{% elif item.species == 'Rabbit' %}#10b981{% else %}#ec4899{% endif %} !important; border-radius: 18px;">
                 <div>
-                  <div class="position-relative mb-3">
-                    <img src="{{ item.get_photo_url }}" class="rounded-4 border w-100 shadow-sm" style="height: 200px; object-fit: cover;" alt="{{ item.pet_name }}">
-                    <span class="position-absolute top-0 start-0 m-2 badge {% if item.listing_type == 'ADOPTION' %}bg-success{% else %}bg-primary{% endif %} shadow">
-                      {{ item.get_listing_type_display }}
+                  <!-- Pet Photo Container with Species-Themed Fallback Gradient -->
+                  <div class="position-relative mb-3 rounded-4 overflow-hidden border shadow-sm" style="height: 200px; background: linear-gradient(135deg, {% if item.species == 'Dog' %}#fef3c7 0%, #fde68a 100%{% elif item.species == 'Cat' %}#e0e7ff 0%, #c7d2fe 100%{% elif item.species == 'Rabbit' %}#d1fae5 0%, #a7f3d0 100%{% else %}#f1f5f9 0%, #e2e8f0 100%{% endif %});">
+                    <img src="{{ item.get_photo_url }}" class="w-100 h-100" style="object-fit: cover;" alt="{{ item.pet_name }}" onerror="this.onerror=null; this.src='/static/images/default_pet.svg';">
+                    
+                    <!-- Listing Type Badge Top Left -->
+                    <span class="position-absolute top-0 start-0 m-2 badge {% if item.listing_type == 'ADOPTION' %}bg-success{% else %}bg-primary{% endif %} shadow-sm px-2 py-1">
+                      {% if item.listing_type == 'ADOPTION' %}
+                        <i class="fa-solid fa-hand-holding-heart me-1"></i> Free Adoption
+                      {% else %}
+                        <i class="fa-solid fa-tag me-1"></i> Rehoming / Sale
+                      {% endif %}
                     </span>
+
+                    <!-- Status / Payment Badge Top Right -->
                     {% if item.status != 'ACTIVE' %}
                       <span class="position-absolute top-0 end-0 m-2 badge {% if item.status == 'ADOPTED' %}bg-info{% elif item.status == 'PENDING' %}bg-warning text-dark{% else %}bg-secondary{% endif %} shadow">
                         {{ item.get_status_display }}
@@ -134,31 +143,88 @@
                         <i class="fa-solid fa-bolt me-1"></i> Pay Online
                       </span>
                     {% endif %}
-                    <span class="position-absolute bottom-0 end-0 m-2 badge bg-dark bg-opacity-75 shadow fs-6">
-                      {% if item.price == 0 %}Free Adoption{% else %}₹{{ item.price }}{% endif %}
+
+                    <!-- Price Badge Bottom Right (Always Crisp Glass Contrast) -->
+                    <span class="position-absolute bottom-0 end-0 m-2 badge shadow-lg fs-6 fw-bold text-white" style="background: rgba(15, 23, 42, 0.88); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.2);">
+                      {% if item.price == 0 %}
+                        <span class="text-success"><i class="fa-solid fa-gift me-1"></i> Free</span>
+                      {% else %}
+                        <span class="text-warning">₹{{ item.price }}</span>
+                      {% endif %}
                     </span>
                   </div>
 
-                  <div class="d-flex justify-content-between align-items-start mb-1">
-                    <h5 class="fw-bold mb-0 text-white text-truncate">{{ item.pet_name }}</h5>
-                    <span class="badge bg-secondary-subtle text-secondary small">{{ item.gender }}</span>
+                  <!-- Pet Name & Gender Badge with Gender Color Coding -->
+                  <div class="d-flex justify-content-between align-items-center mb-1">
+                    <h5 class="fw-bold mb-0 text-truncate">{{ item.pet_name }}</h5>
+                    {% if item.gender == 'Male' %}
+                      <span class="badge small fw-bold px-2 py-1" style="background: rgba(59, 130, 246, 0.15); color: #2563eb; border: 1px solid rgba(59, 130, 246, 0.35);">
+                        <i class="fa-solid fa-mars me-1"></i> Male
+                      </span>
+                    {% elif item.gender == 'Female' %}
+                      <span class="badge small fw-bold px-2 py-1" style="background: rgba(236, 72, 153, 0.15); color: #db2777; border: 1px solid rgba(236, 72, 153, 0.35);">
+                        <i class="fa-solid fa-venus me-1"></i> Female
+                      </span>
+                    {% else %}
+                      <span class="badge bg-secondary-subtle text-secondary small px-2 py-1">{{ item.gender }}</span>
+                    {% endif %}
                   </div>
-                  <div class="text-secondary small fw-semibold mb-2">{{ item.breed }} • {{ item.age }} yrs</div>
+
+                  <!-- Species & Breed with Species Color Tag -->
+                  <div class="d-flex align-items-center gap-2 mb-2">
+                    {% if item.species == 'Dog' %}
+                      <span class="badge bg-warning-subtle text-warning border border-warning-subtle small fw-bold px-2 py-1">
+                        <i class="fa-solid fa-dog me-1 text-warning"></i> Dog
+                      </span>
+                    {% elif item.species == 'Cat' %}
+                      <span class="badge bg-info-subtle text-info border border-info-subtle small fw-bold px-2 py-1">
+                        <i class="fa-solid fa-cat me-1 text-info"></i> Cat
+                      </span>
+                    {% elif item.species == 'Rabbit' %}
+                      <span class="badge bg-success-subtle text-success border border-success-subtle small fw-bold px-2 py-1">
+                        <i class="fa-solid fa-paw me-1 text-success"></i> Rabbit
+                      </span>
+                    {% else %}
+                      <span class="badge bg-secondary-subtle text-secondary small fw-bold px-2 py-1">
+                        <i class="fa-solid fa-paw me-1"></i> {{ item.species }}
+                      </span>
+                    {% endif %}
+                    <span class="text-secondary small fw-semibold text-truncate">{{ item.breed }} • {{ item.age }} yrs</span>
+                  </div>
 
                   <div class="small text-muted mb-2">
                     <i class="fa-solid fa-location-dot text-danger me-1"></i> {{ item.location }}
                   </div>
-                  <div class="text-xs text-success mb-2 fw-semibold">
-                    <i class="fa-solid fa-shield-virus me-1"></i> {{ item.vaccination_status|truncatechars:32 }}
+
+                  <!-- Vaccination / Health Status with Color Differentiation -->
+                  <div class="mb-2">
+                    {% if 'Complete' in item.vaccination_status or 'Full' in item.vaccination_status or 'Fully' in item.vaccination_status %}
+                      <span class="badge bg-success-subtle text-success border border-success-subtle small fw-semibold text-truncate d-inline-block" style="max-width: 100%;">
+                        <i class="fa-solid fa-shield-halved me-1"></i> {{ item.vaccination_status }}
+                      </span>
+                    {% elif 'Shot' in item.vaccination_status or 'Deworm' in item.vaccination_status %}
+                      <span class="badge bg-info-subtle text-info border border-info-subtle small fw-semibold text-truncate d-inline-block" style="max-width: 100%;">
+                        <i class="fa-solid fa-shield-virus me-1"></i> {{ item.vaccination_status }}
+                      </span>
+                    {% elif 'Spayed' in item.vaccination_status or 'Checked' in item.vaccination_status %}
+                      <span class="badge bg-primary-subtle text-primary border border-primary-subtle small fw-semibold text-truncate d-inline-block" style="max-width: 100%;">
+                        <i class="fa-solid fa-heart-pulse me-1"></i> {{ item.vaccination_status }}
+                      </span>
+                    {% else %}
+                      <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle small fw-semibold text-truncate d-inline-block" style="max-width: 100%;">
+                        <i class="fa-solid fa-notes-medical me-1"></i> {{ item.vaccination_status }}
+                      </span>
+                    {% endif %}
                   </div>
-                  <p class="small text-secondary mb-3" style="min-height: 40px;">
+
+                  <p class="small text-secondary mb-3" style="min-height: 40px; line-height: 1.4;">
                     {{ item.description|truncatechars:85 }}
                   </p>
                 </div>
 
                 <div class="d-flex gap-2">
-                  <a href="{% url 'adoption:listing_detail' item.pk %}" class="btn btn-sm btn-outline-danger flex-grow-1 fw-bold">
-                    View Details
+                  <a href="{% url 'adoption:listing_detail' item.pk %}" class="btn btn-sm btn-outline-primary flex-grow-1 fw-bold">
+                    <i class="fa-solid fa-circle-info me-1"></i> View Details
                   </a>
                   {% if item.requires_payment %}
                     <a href="{% url 'adoption:payment' item.pk %}" class="btn btn-sm btn-warning text-dark fw-bold px-3 d-flex align-items-center" title="Pay Adoption Fee Online">
@@ -169,7 +235,7 @@
                       <i class="fa-solid fa-check"></i>
                     </span>
                   {% else %}
-                    <a href="{% url 'adoption:listing_detail' item.pk %}#apply" class="btn btn-sm btn-danger px-3" title="Apply to Adopt">
+                    <a href="{% url 'adoption:listing_detail' item.pk %}#apply" class="btn btn-sm btn-danger px-3 shadow-sm" title="Apply to Adopt">
                       <i class="fa-solid fa-heart"></i>
                     </a>
                   {% endif %}

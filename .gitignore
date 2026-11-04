@@ -7,5 +7,9 @@ app_cache.sqlite3*
 venv/
 .env
 .env.*
-media/
+media/*
+!media/listings/
+!media/listings/**
+!media/lost_pets/
+!media/lost_pets/**
 staticfiles/
