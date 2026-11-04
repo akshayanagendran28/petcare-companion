@@ -123,11 +123,11 @@
       particleGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
       const particleMat = new THREE.PointsMaterial({
-        size: isInitialLight ? 4.2 : 3.2,
+        size: isInitialLight ? 2.4 : 2.2,
         map: particleTex,
         vertexColors: true,
         transparent: true,
-        opacity: isInitialLight ? 0.95 : 0.85,
+        opacity: isInitialLight ? 0.45 : 0.55,
         blending: isInitialLight ? THREE.NormalBlending : THREE.AdditiveBlending,
         depthWrite: false
       });
@@ -158,7 +158,7 @@
           color: color,
           wireframe: true,
           transparent: true,
-          opacity: isInitialLight ? 0.65 : 0.28
+          opacity: isInitialLight ? 0.15 : 0.16
         });
 
         const shapeMesh = new THREE.Mesh(geom, wireMat);
@@ -195,11 +195,11 @@
       clusterGeo.setAttribute('position', new THREE.BufferAttribute(clusterPositions, 3));
 
       const clusterMat = new THREE.PointsMaterial({
-        size: isInitialLight ? 5.5 : 4.5,
+        size: isInitialLight ? 3.0 : 2.8,
         color: isInitialLight ? 0x4338ca : 0x38bdf8,
         map: particleTex,
         transparent: true,
-        opacity: isInitialLight ? 0.9 : 0.7,
+        opacity: isInitialLight ? 0.40 : 0.45,
         blending: isInitialLight ? THREE.NormalBlending : THREE.AdditiveBlending,
         depthWrite: false
       });
@@ -228,7 +228,7 @@
       const lineMat = new THREE.LineBasicMaterial({
         color: isInitialLight ? 0x6366f1 : 0x818cf8,
         transparent: true,
-        opacity: isInitialLight ? 0.45 : 0.22,
+        opacity: isInitialLight ? 0.10 : 0.12,
         blending: isInitialLight ? THREE.NormalBlending : THREE.AdditiveBlending
       });
       const constellationLines = new THREE.LineSegments(lineGeo, lineMat);
@@ -263,38 +263,37 @@
         }
         colorAttr.needsUpdate = true;
 
-        // In light mode, NormalBlending ensures particles remain saturated and visible on white!
-        // In dark mode, AdditiveBlending creates a glowing luminous bloom.
+        // Subtle, elegant opacities that never dominate text
         particleMat.blending = isLight ? THREE.NormalBlending : THREE.AdditiveBlending;
-        particleMat.opacity = isLight ? 0.95 : 0.85;
-        particleMat.size = isLight ? 4.2 : 3.2;
+        particleMat.opacity = isLight ? 0.45 : 0.55;
+        particleMat.size = isLight ? 2.4 : 2.2;
         particleMat.needsUpdate = true;
 
         clusterMat.blending = isLight ? THREE.NormalBlending : THREE.AdditiveBlending;
         clusterMat.color.setHex(isLight ? 0x4338ca : 0x38bdf8);
-        clusterMat.opacity = isLight ? 0.9 : 0.7;
-        clusterMat.size = isLight ? 5.5 : 4.5;
+        clusterMat.opacity = isLight ? 0.40 : 0.45;
+        clusterMat.size = isLight ? 3.0 : 2.8;
         clusterMat.needsUpdate = true;
 
         lineMat.blending = isLight ? THREE.NormalBlending : THREE.AdditiveBlending;
         lineMat.color.setHex(isLight ? 0x6366f1 : 0x818cf8);
-        lineMat.opacity = isLight ? 0.45 : 0.22;
+        lineMat.opacity = isLight ? 0.10 : 0.12;
         lineMat.needsUpdate = true;
 
         const currentShapePalette = isLight ? lightShapeColors : darkShapeColors;
         floatingShapes.forEach((mesh, k) => {
           mesh.material.color.setHex(currentShapePalette[k % currentShapePalette.length]);
-          mesh.material.opacity = isLight ? 0.65 : 0.28;
+          mesh.material.opacity = isLight ? 0.15 : 0.16;
           mesh.material.needsUpdate = true;
         });
 
         if (scene.fog) {
           scene.fog.color.setHex(isLight ? 0xffffff : 0x090d16);
-          scene.fog.density = isLight ? 0.0055 : 0.0075;
+          scene.fog.density = isLight ? 0.008 : 0.0085;
         }
 
         ambientLight.color.setHex(isLight ? 0xffffff : 0x818cf8);
-        ambientLight.intensity = isLight ? 0.95 : 0.6;
+        ambientLight.intensity = isLight ? 0.8 : 0.5;
         pointLight1.color.setHex(isLight ? 0x059669 : 0x34d399);
         pointLight2.color.setHex(isLight ? 0x4338ca : 0x818cf8);
       }

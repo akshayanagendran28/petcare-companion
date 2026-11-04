@@ -58,7 +58,7 @@ h1, h2, h3, h4, h5, h6 {
   height: 100vh;
   z-index: -1;
   pointer-events: none;
-  opacity: 0.85;
+  opacity: 0.35;
 }
 
 /* Navbar */
@@ -674,10 +674,10 @@ html[data-bs-theme="light"] .bg-warning-subtle { background-color: #fef3c7 !impo
 html[data-bs-theme="light"] .bg-danger-subtle { background-color: #fee2e2 !important; color: #b91c1c !important; }
 html[data-bs-theme="light"] .bg-secondary-subtle { background-color: #f1f5f9 !important; color: #475569 !important; }
 
-/* 3D Background Canvas in Light Mode: Vibrant & Clearly Visible on White */
+/* 3D Background Canvas in Light Mode: Soft, Ambient & High Text Contrast */
 html[data-bs-theme="light"] #three-bg-canvas,
 body.light-theme #three-bg-canvas {
-  opacity: 0.88 !important;
+  opacity: 0.22 !important;
   filter: none !important;
 }
 

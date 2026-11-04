@@ -65,7 +65,7 @@ class BookingCreateForm(forms.ModelForm):
     )
 
     def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)
+        self.user = kwargs.pop('user', None)
         self.caretaker = kwargs.pop('caretaker', None)
         super().__init__(*args, **kwargs)
 
@@ -83,8 +83,8 @@ class BookingCreateForm(forms.ModelForm):
             'id': 'id_end_date'
         })
 
-        if user:
-            user_pets = Pet.objects.filter(owner=user)
+        if self.user:
+            user_pets = Pet.objects.filter(owner=self.user)
             self.fields['pets'].queryset = user_pets
             self.fields['pet'].queryset = user_pets
             self.fields['pet'].required = False
@@ -171,10 +171,11 @@ class BookingCreateForm(forms.ModelForm):
                             continue
 
             # 4. Caretaker 1 Booking Per Day Limit
-            if self.caretaker and start_date >= today and end_date >= start_date:
+            caretaker = getattr(self, 'caretaker', None)
+            if caretaker and start_date >= today and end_date >= start_date:
                 exclude_id = self.instance.pk if (self.instance and self.instance.pk) else None
                 is_valid, conflict_date, next_avail = validate_caretaker_capacity_for_range(
-                    self.caretaker, start_date, end_date, exclude_booking_id=exclude_id
+                    caretaker, start_date, end_date, exclude_booking_id=exclude_id
                 )
                 if not is_valid:
                     conflict_str = conflict_date.strftime('%B %d, %Y')
@@ -189,10 +190,11 @@ class BookingCreateForm(forms.ModelForm):
                         self.add_error('end_date', err_msg)
 
                 # Check if this owner already has an active pending request
-                if self.user and self.caretaker:
+                user = getattr(self, 'user', None)
+                if user and caretaker:
                     user_pending = Booking.objects.filter(
-                        owner=self.user,
-                        caretaker=self.caretaker,
+                        owner=user,
+                        caretaker=caretaker,
                         status='PENDING',
                         start_date__lte=end_date,
                         end_date__gte=start_date
