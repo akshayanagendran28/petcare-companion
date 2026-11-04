@@ -573,3 +573,528 @@ h1, h2, h3, h4, h5, h6 {
     height: 480px;
   }
 }
+
+/* ==========================================================================
+   LIGHT THEME: PURE WHITE BACKGROUND & HIGH CONTRAST TYPOGRAPHY
+   Activated by: html[data-bs-theme="light"], [data-theme="light"], .light-theme
+   ========================================================================== */
+
+html[data-bs-theme="light"],
+[data-theme="light"],
+body.light-theme {
+  --primary-navy: #ffffff;
+  --secondary-navy: #f8fafc;
+  --surface-navy: #f1f5f9;
+  --bg-gradient: #ffffff;
+  --glass-bg: #ffffff;
+  --glass-bg-inner: #f8fafc;
+  --glass-border: #e2e8f0;
+  --glass-shadow: 0 4px 20px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+html[data-bs-theme="light"] body,
+body.light-theme {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  background-image: none !important;
+  color: #1e293b !important;
+}
+
+/* Headings in Light Mode */
+html[data-bs-theme="light"] h1,
+html[data-bs-theme="light"] h2,
+html[data-bs-theme="light"] h3,
+html[data-bs-theme="light"] h4,
+html[data-bs-theme="light"] h5,
+html[data-bs-theme="light"] h6,
+body.light-theme h1,
+body.light-theme h2,
+body.light-theme h3,
+body.light-theme h4,
+body.light-theme h5,
+body.light-theme h6 {
+  color: #0f172a !important;
+}
+
+/* Text Colors */
+html[data-bs-theme="light"] .text-dark,
+body.light-theme .text-dark {
+  color: #0f172a !important;
+}
+
+html[data-bs-theme="light"] .text-secondary,
+html[data-bs-theme="light"] .text-muted,
+body.light-theme .text-secondary,
+body.light-theme .text-muted {
+  color: #64748b !important;
+}
+
+/* General white text elements outside solid colored buttons/badges */
+html[data-bs-theme="light"] p.text-white,
+html[data-bs-theme="light"] span.text-white:not(.badge):not(.btn *),
+html[data-bs-theme="light"] strong.text-white:not(.btn *),
+html[data-bs-theme="light"] div.text-white:not(.badge):not(.alert):not(.btn *),
+html[data-bs-theme="light"] h1.text-white,
+html[data-bs-theme="light"] h2.text-white,
+html[data-bs-theme="light"] h3.text-white,
+html[data-bs-theme="light"] h4.text-white,
+html[data-bs-theme="light"] h5.text-white,
+html[data-bs-theme="light"] h6.text-white,
+html[data-bs-theme="light"] .text-light:not(.badge):not(.btn):not(.btn *) {
+  color: #0f172a !important;
+}
+
+/* Ensure solid buttons & badges maintain crisp white text */
+html[data-bs-theme="light"] .btn-primary,
+html[data-bs-theme="light"] .btn-success,
+html[data-bs-theme="light"] .btn-danger,
+html[data-bs-theme="light"] .btn-dark,
+html[data-bs-theme="light"] .btn-primary-custom,
+html[data-bs-theme="light"] .btn-success-custom,
+html[data-bs-theme="light"] .badge.bg-primary,
+html[data-bs-theme="light"] .badge.bg-success,
+html[data-bs-theme="light"] .badge.bg-danger,
+html[data-bs-theme="light"] .badge.bg-dark,
+html[data-bs-theme="light"] .btn-primary *,
+html[data-bs-theme="light"] .btn-success *,
+html[data-bs-theme="light"] .btn-danger *,
+html[data-bs-theme="light"] .btn-primary-custom *,
+html[data-bs-theme="light"] .btn-success-custom *,
+html[data-bs-theme="light"] .badge.bg-primary *,
+html[data-bs-theme="light"] .badge.bg-success *,
+html[data-bs-theme="light"] .badge.bg-danger * {
+  color: #ffffff !important;
+}
+
+/* Subtle Badges */
+html[data-bs-theme="light"] .bg-primary-subtle { background-color: #e0e7ff !important; color: #4338ca !important; }
+html[data-bs-theme="light"] .bg-success-subtle { background-color: #d1fae5 !important; color: #047857 !important; }
+html[data-bs-theme="light"] .bg-info-subtle { background-color: #cffafe !important; color: #0e7490 !important; }
+html[data-bs-theme="light"] .bg-warning-subtle { background-color: #fef3c7 !important; color: #b45309 !important; }
+html[data-bs-theme="light"] .bg-danger-subtle { background-color: #fee2e2 !important; color: #b91c1c !important; }
+html[data-bs-theme="light"] .bg-secondary-subtle { background-color: #f1f5f9 !important; color: #475569 !important; }
+
+/* 3D Background Canvas in Light Mode */
+html[data-bs-theme="light"] #three-bg-canvas,
+body.light-theme #three-bg-canvas {
+  opacity: 0.08 !important;
+  filter: contrast(0.8) brightness(1.2);
+}
+
+/* Navbar */
+html[data-bs-theme="light"] .navbar-custom,
+body.light-theme .navbar-custom {
+  background: rgba(255, 255, 255, 0.96) !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  box-shadow: 0 2px 15px rgba(15, 23, 42, 0.05) !important;
+}
+
+html[data-bs-theme="light"] .nav-link,
+body.light-theme .nav-link {
+  color: #475569 !important;
+}
+
+html[data-bs-theme="light"] .nav-link:hover,
+html[data-bs-theme="light"] .nav-link.active,
+body.light-theme .nav-link:hover,
+body.light-theme .nav-link.active {
+  color: #4f46e5 !important;
+  background: rgba(99, 102, 241, 0.08) !important;
+}
+
+html[data-bs-theme="light"] .navbar-brand-text .text-dark,
+body.light-theme .navbar-brand-text .text-dark {
+  color: #0f172a !important;
+}
+
+html[data-bs-theme="light"] .navbar-toggler i,
+body.light-theme .navbar-toggler i {
+  color: #0f172a !important;
+}
+
+/* Glass Cards & Containers in Light Mode */
+html[data-bs-theme="light"] .glass-card,
+body.light-theme .glass-card {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.04) !important;
+  color: #1e293b !important;
+}
+
+html[data-bs-theme="light"] .glass-card-hover:hover,
+body.light-theme .glass-card-hover:hover {
+  border-color: #818cf8 !important;
+  box-shadow: 0 12px 30px rgba(99, 102, 241, 0.15) !important;
+}
+
+html[data-bs-theme="light"] .bg-white,
+html[data-bs-theme="light"] .bg-light,
+html[data-bs-theme="light"] .card,
+body.light-theme .bg-white,
+body.light-theme .bg-light,
+body.light-theme .card {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+  border-color: #e2e8f0 !important;
+}
+
+html[data-bs-theme="light"] .bg-dark,
+html[data-bs-theme="light"] .bg-dark[class*="bg-opacity"],
+body.light-theme .bg-dark,
+body.light-theme .bg-dark[class*="bg-opacity"] {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+  border-color: #e2e8f0 !important;
+}
+
+html[data-bs-theme="light"] .card-header,
+html[data-bs-theme="light"] .card-footer,
+body.light-theme .card-header,
+body.light-theme .card-footer {
+  background: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+/* Quick Action Cards */
+html[data-bs-theme="light"] .quick-action-card,
+body.light-theme .quick-action-card {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #0f172a !important;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04) !important;
+}
+
+html[data-bs-theme="light"] .quick-action-card:hover,
+body.light-theme .quick-action-card:hover {
+  background: #f1f5f9 !important;
+  color: #4f46e5 !important;
+  border-color: #818cf8 !important;
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.15) !important;
+}
+
+html[data-bs-theme="light"] .quick-action-icon,
+body.light-theme .quick-action-icon {
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+/* Form Controls */
+html[data-bs-theme="light"] .form-control,
+html[data-bs-theme="light"] .form-select,
+body.light-theme .form-control,
+body.light-theme .form-select {
+  background-color: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+html[data-bs-theme="light"] .form-control:focus,
+html[data-bs-theme="light"] .form-select:focus,
+body.light-theme .form-control:focus,
+body.light-theme .form-select:focus {
+  background-color: #ffffff !important;
+  border-color: #6366f1 !important;
+  color: #0f172a !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15) !important;
+}
+
+html[data-bs-theme="light"] .form-label,
+body.light-theme .form-label {
+  color: #334155 !important;
+}
+
+html[data-bs-theme="light"] .form-control::placeholder,
+body.light-theme .form-control::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* Dropdown Menus */
+html[data-bs-theme="light"] .dropdown-menu,
+body.light-theme .dropdown-menu {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #0f172a !important;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08) !important;
+}
+
+html[data-bs-theme="light"] .dropdown-item,
+body.light-theme .dropdown-item {
+  color: #334155 !important;
+}
+
+html[data-bs-theme="light"] .dropdown-item:hover,
+body.light-theme .dropdown-item:hover {
+  background: #f1f5f9 !important;
+  color: #4f46e5 !important;
+}
+
+html[data-bs-theme="light"] .dropdown-divider,
+body.light-theme .dropdown-divider {
+  border-color: #e2e8f0 !important;
+}
+
+/* Tables */
+html[data-bs-theme="light"] .table,
+body.light-theme .table {
+  color: #1e293b !important;
+  border-color: #e2e8f0 !important;
+}
+
+html[data-bs-theme="light"] .table thead th,
+html[data-bs-theme="light"] .table-light,
+body.light-theme .table thead th,
+body.light-theme .table-light {
+  background: #f8fafc !important;
+  color: #0f172a !important;
+  border-color: #e2e8f0 !important;
+}
+
+html[data-bs-theme="light"] .table td,
+html[data-bs-theme="light"] .table th,
+body.light-theme .table td,
+body.light-theme .table th {
+  border-color: #f1f5f9 !important;
+}
+
+html[data-bs-theme="light"] .table-hover tbody tr:hover,
+body.light-theme .table-hover tbody tr:hover {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+/* Modals */
+html[data-bs-theme="light"] .modal-content,
+body.light-theme .modal-content {
+  background-color: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #1e293b !important;
+  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.15) !important;
+}
+
+html[data-bs-theme="light"] .modal-header,
+html[data-bs-theme="light"] .modal-footer,
+body.light-theme .modal-header,
+body.light-theme .modal-footer {
+  background-color: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+html[data-bs-theme="light"] .btn-close,
+body.light-theme .btn-close {
+  filter: none !important;
+}
+
+/* Footer in Light Mode */
+html[data-bs-theme="light"] footer,
+body.light-theme footer {
+  background: #f8fafc !important;
+  border-top: 1px solid #e2e8f0 !important;
+  color: #64748b !important;
+}
+
+html[data-bs-theme="light"] footer h6,
+html[data-bs-theme="light"] footer .text-white,
+body.light-theme footer h6,
+body.light-theme footer .text-white {
+  color: #0f172a !important;
+}
+
+html[data-bs-theme="light"] footer a.text-secondary,
+body.light-theme footer a.text-secondary {
+  color: #64748b !important;
+}
+
+html[data-bs-theme="light"] footer a.text-secondary:hover,
+body.light-theme footer a.text-secondary:hover {
+  color: #4f46e5 !important;
+}
+
+/* Outlines & Secondary Buttons */
+html[data-bs-theme="light"] .btn-outline-custom,
+html[data-bs-theme="light"] .btn-outline-light,
+html[data-bs-theme="light"] .btn-outline-secondary,
+html[data-bs-theme="light"] .btn-outline-dark,
+body.light-theme .btn-outline-custom,
+body.light-theme .btn-outline-light,
+body.light-theme .btn-outline-secondary,
+body.light-theme .btn-outline-dark {
+  border-color: #cbd5e1 !important;
+  color: #334155 !important;
+  background-color: #ffffff !important;
+}
+
+html[data-bs-theme="light"] .btn-outline-custom:hover,
+html[data-bs-theme="light"] .btn-outline-light:hover,
+html[data-bs-theme="light"] .btn-outline-secondary:hover,
+html[data-bs-theme="light"] .btn-outline-dark:hover,
+body.light-theme .btn-outline-custom:hover,
+body.light-theme .btn-outline-light:hover,
+body.light-theme .btn-outline-secondary:hover,
+body.light-theme .btn-outline-dark:hover {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+  border-color: #94a3b8 !important;
+}
+
+/* Chatbot in Light Mode */
+html[data-bs-theme="light"] .chatbot-window,
+body.light-theme .chatbot-window {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.15) !important;
+}
+
+html[data-bs-theme="light"] .chatbot-messages-container,
+body.light-theme .chatbot-messages-container {
+  background: #f8fafc !important;
+}
+
+html[data-bs-theme="light"] .chat-bubble-bot,
+body.light-theme .chat-bubble-bot {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+}
+
+html[data-bs-theme="light"] .chat-bubble-bot strong,
+body.light-theme .chat-bubble-bot strong {
+  color: #0f172a !important;
+}
+
+html[data-bs-theme="light"] .chatbot-input-area,
+body.light-theme .chatbot-input-area {
+  background: #ffffff !important;
+  border-top: 1px solid #e2e8f0 !important;
+}
+
+html[data-bs-theme="light"] .chatbot-input-area input,
+body.light-theme .chatbot-input-area input {
+  background: #f8fafc !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+html[data-bs-theme="light"] .query-btn,
+body.light-theme .query-btn {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #475569 !important;
+}
+
+html[data-bs-theme="light"] .query-btn:hover,
+body.light-theme .query-btn:hover {
+  background: #6366f1 !important;
+  color: #ffffff !important;
+  border-color: #6366f1 !important;
+}
+
+/* Borders & Separators */
+html[data-bs-theme="light"] .border,
+html[data-bs-theme="light"] .border-top,
+html[data-bs-theme="light"] .border-bottom,
+html[data-bs-theme="light"] .border-start,
+html[data-bs-theme="light"] .border-end,
+body.light-theme .border,
+body.light-theme .border-top,
+body.light-theme .border-bottom,
+body.light-theme .border-start,
+body.light-theme .border-end {
+  border-color: #e2e8f0 !important;
+}
+
+html[data-bs-theme="light"] .border-secondary {
+  border-color: #cbd5e1 !important;
+}
+
+html[data-bs-theme="light"] .vr {
+  background-color: #cbd5e1 !important;
+}
+
+/* Calendar in Light Mode (booking_form.html) */
+html[data-bs-theme="light"] .calendar-container {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06) !important;
+}
+
+html[data-bs-theme="light"] .calendar-header {
+  background: #f8fafc !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+html[data-bs-theme="light"] .calendar-grid-weekdays {
+  background: #f1f5f9 !important;
+  color: #64748b !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+html[data-bs-theme="light"] .cal-day-cell.available {
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+html[data-bs-theme="light"] .cal-day-cell.past {
+  background: #f1f5f9 !important;
+  color: #94a3b8 !important;
+}
+
+/* Theme Toggle Button Styles */
+.theme-toggle-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--glass-border);
+  color: #e2e8f0;
+  transition: all 0.25s ease;
+  cursor: pointer;
+  user-select: none;
+}
+
+.theme-toggle-btn:hover {
+  background: rgba(129, 140, 248, 0.2);
+  border-color: #818cf8;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+html[data-bs-theme="light"] .theme-toggle-btn,
+body.light-theme .theme-toggle-btn {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #0f172a !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05) !important;
+}
+
+html[data-bs-theme="light"] .theme-toggle-btn:hover,
+body.light-theme .theme-toggle-btn:hover {
+  background: #f1f5f9 !important;
+  border-color: #94a3b8 !important;
+  color: #4f46e5 !important;
+}
+
+/* Call to Action Banner */
+.cta-banner-card {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  color: #ffffff !important;
+  border-radius: var(--card-radius);
+}
+
+html[data-bs-theme="light"] .cta-banner-card,
+body.light-theme .cta-banner-card {
+  background: linear-gradient(135deg, #4f46e5 0%, #059669 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 14px 35px rgba(79, 70, 229, 0.25) !important;
+}
+
+html[data-bs-theme="light"] .cta-banner-card h2,
+html[data-bs-theme="light"] .cta-banner-card p,
+html[data-bs-theme="light"] .cta-banner-card .text-white,
+html[data-bs-theme="light"] .cta-banner-card .text-white-50,
+body.light-theme .cta-banner-card h2,
+body.light-theme .cta-banner-card p,
+body.light-theme .cta-banner-card .text-white,
+body.light-theme .cta-banner-card .text-white-50 {
+  color: #ffffff !important;
+}

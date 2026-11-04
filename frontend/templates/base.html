@@ -3,6 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Instant Anti-FOUC Theme Initialization (Prevents Dark/Light Flickering) -->
+  <script>
+    (function() {
+      try {
+        var savedTheme = localStorage.getItem('petcare_theme_preference');
+        if (savedTheme === 'light') {
+          document.documentElement.setAttribute('data-bs-theme', 'light');
+          document.documentElement.setAttribute('data-theme', 'light');
+          document.documentElement.classList.add('light-theme');
+        } else {
+          document.documentElement.setAttribute('data-bs-theme', 'dark');
+          document.documentElement.setAttribute('data-theme', 'dark');
+          document.documentElement.classList.remove('light-theme');
+        }
+      } catch (e) {}
+    })();
+  </script>
   <title>{% block title %}Pet Care Companion – AI-Powered Pet Care Platform{% endblock %}</title>
 
   <!-- Google Fonts: Plus Jakarta Sans -->
@@ -244,10 +262,236 @@
       box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6);
       transform: translateY(-2px);
     }
+
+    /* =========================================================================
+       LIGHT THEME CORE: PURE WHITE BACKGROUND & HIGH CONTRAST DARK TEXT
+       ========================================================================= */
+    html[data-bs-theme="light"],
+    [data-theme="light"],
+    body.light-theme {
+      --primary-navy: #ffffff;
+      --secondary-navy: #f8fafc;
+      --surface-navy: #f1f5f9;
+      --bg-gradient: #ffffff;
+      --glass-bg: #ffffff;
+      --glass-bg-inner: #f8fafc;
+      --glass-border: #e2e8f0;
+      --glass-shadow: 0 4px 20px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.04);
+    }
+
+    html[data-bs-theme="light"] body,
+    body.light-theme {
+      background: #ffffff !important;
+      background-color: #ffffff !important;
+      background-image: none !important;
+      color: #1e293b !important;
+    }
+
+    html[data-bs-theme="light"] h1,
+    html[data-bs-theme="light"] h2,
+    html[data-bs-theme="light"] h3,
+    html[data-bs-theme="light"] h4,
+    html[data-bs-theme="light"] h5,
+    html[data-bs-theme="light"] h6,
+    body.light-theme h1,
+    body.light-theme h2,
+    body.light-theme h3,
+    body.light-theme h4,
+    body.light-theme h5,
+    body.light-theme h6 {
+      color: #0f172a !important;
+    }
+
+    html[data-bs-theme="light"] .text-dark,
+    body.light-theme .text-dark {
+      color: #0f172a !important;
+    }
+
+    html[data-bs-theme="light"] .text-secondary,
+    html[data-bs-theme="light"] .text-muted,
+    body.light-theme .text-secondary,
+    body.light-theme .text-muted {
+      color: #64748b !important;
+    }
+
+    html[data-bs-theme="light"] p.text-white,
+    html[data-bs-theme="light"] span.text-white:not(.badge):not(.btn *),
+    html[data-bs-theme="light"] strong.text-white:not(.btn *),
+    html[data-bs-theme="light"] div.text-white:not(.badge):not(.alert):not(.btn *),
+    html[data-bs-theme="light"] h1.text-white,
+    html[data-bs-theme="light"] h2.text-white,
+    html[data-bs-theme="light"] h3.text-white,
+    html[data-bs-theme="light"] h4.text-white,
+    html[data-bs-theme="light"] h5.text-white,
+    html[data-bs-theme="light"] h6.text-white,
+    html[data-bs-theme="light"] .text-light:not(.badge):not(.btn):not(.btn *) {
+      color: #0f172a !important;
+    }
+
+    html[data-bs-theme="light"] .navbar-custom,
+    body.light-theme .navbar-custom {
+      background: rgba(255, 255, 255, 0.96) !important;
+      border-bottom: 1px solid #e2e8f0 !important;
+      box-shadow: 0 2px 15px rgba(15, 23, 42, 0.05) !important;
+    }
+
+    html[data-bs-theme="light"] .nav-link,
+    body.light-theme .nav-link {
+      color: #475569 !important;
+    }
+
+    html[data-bs-theme="light"] .nav-link:hover,
+    html[data-bs-theme="light"] .nav-link.active,
+    body.light-theme .nav-link:hover,
+    body.light-theme .nav-link.active {
+      color: #4f46e5 !important;
+      background: rgba(99, 102, 241, 0.1) !important;
+    }
+
+    html[data-bs-theme="light"] .glass-card,
+    body.light-theme .glass-card {
+      background: #ffffff !important;
+      border-color: #e2e8f0 !important;
+      color: #1e293b !important;
+      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.04) !important;
+    }
+
+    html[data-bs-theme="light"] .bg-white,
+    html[data-bs-theme="light"] .bg-light,
+    html[data-bs-theme="light"] .card,
+    body.light-theme .bg-white,
+    body.light-theme .bg-light,
+    body.light-theme .card {
+      background-color: #ffffff !important;
+      color: #1e293b !important;
+      border-color: #e2e8f0 !important;
+    }
+
+    html[data-bs-theme="light"] .form-control,
+    html[data-bs-theme="light"] .form-select,
+    body.light-theme .form-control,
+    body.light-theme .form-select {
+      background-color: #ffffff !important;
+      border-color: #cbd5e1 !important;
+      color: #0f172a !important;
+    }
+
+    html[data-bs-theme="light"] .form-control:focus,
+    html[data-bs-theme="light"] .form-select:focus,
+    body.light-theme .form-control:focus,
+    body.light-theme .form-select:focus {
+      background-color: #ffffff !important;
+      border-color: #6366f1 !important;
+      color: #0f172a !important;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.18) !important;
+    }
+
+    html[data-bs-theme="light"] .dropdown-menu,
+    body.light-theme .dropdown-menu {
+      background: #ffffff !important;
+      border-color: #e2e8f0 !important;
+      color: #1e293b !important;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.1) !important;
+    }
+
+    html[data-bs-theme="light"] .dropdown-item,
+    body.light-theme .dropdown-item {
+      color: #334155 !important;
+    }
+
+    html[data-bs-theme="light"] .dropdown-item:hover,
+    body.light-theme .dropdown-item:hover {
+      background: #f1f5f9 !important;
+      color: #4f46e5 !important;
+    }
+
+    html[data-bs-theme="light"] .table,
+    body.light-theme .table {
+      color: #1e293b !important;
+      border-color: #e2e8f0 !important;
+    }
+
+    html[data-bs-theme="light"] .table thead th,
+    body.light-theme .table thead th {
+      background-color: #f8fafc !important;
+      color: #0f172a !important;
+      border-color: #e2e8f0 !important;
+    }
+
+    html[data-bs-theme="light"] .table-hover tbody tr:hover,
+    body.light-theme .table-hover tbody tr:hover {
+      background-color: #f1f5f9 !important;
+      color: #0f172a !important;
+    }
+
+    html[data-bs-theme="light"] #three-bg-canvas,
+    body.light-theme #three-bg-canvas {
+      opacity: 0.08 !important;
+      filter: contrast(0.8) brightness(1.2);
+    }
+
+    html[data-bs-theme="light"] footer,
+    body.light-theme footer {
+      background: #f8fafc !important;
+      color: #64748b !important;
+      border-top: 1px solid #e2e8f0 !important;
+    }
+
+    html[data-bs-theme="light"] footer h6,
+    body.light-theme footer h6 {
+      color: #0f172a !important;
+    }
+
+    html[data-bs-theme="light"] footer .text-white,
+    body.light-theme footer .text-white {
+      color: #0f172a !important;
+    }
+
+    html[data-bs-theme="light"] footer a.text-secondary,
+    body.light-theme footer a.text-secondary {
+      color: #64748b !important;
+    }
+
+    html[data-bs-theme="light"] footer a.text-secondary:hover,
+    body.light-theme footer a.text-secondary:hover {
+      color: #4f46e5 !important;
+    }
+
+    /* Theme Toggle Button Styles */
+    .theme-toggle-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--glass-border);
+      color: #e2e8f0;
+      transition: all 0.25s ease;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .theme-toggle-btn:hover {
+      background: rgba(129, 140, 248, 0.2);
+      border-color: #818cf8;
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    html[data-bs-theme="light"] .theme-toggle-btn,
+    body.light-theme .theme-toggle-btn {
+      background: #ffffff !important;
+      border: 1px solid #cbd5e1 !important;
+      color: #0f172a !important;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05) !important;
+    }
+
+    html[data-bs-theme="light"] .theme-toggle-btn:hover,
+    body.light-theme .theme-toggle-btn:hover {
+      background: #f1f5f9 !important;
+      border-color: #94a3b8 !important;
+      color: #4f46e5 !important;
+    }
   </style>
 
   <!-- Custom Stylesheet (with cache-busting timestamp) -->
-  <link rel="stylesheet" href="/static/css/custom.css?v=20260914_dark_v2">
+  <link rel="stylesheet" href="/static/css/custom.css?v=20261104_theme_v3">
   {% block extra_css %}{% endblock %}
 </head>
 <body>
@@ -341,6 +585,15 @@
 
         <!-- Right Side Nav (Notifications & Profile / Auth) -->
         <ul class="navbar-nav ms-auto align-items-center gap-2">
+          <!-- One-Touch Dark / Light Theme Toggle Switcher -->
+          <li class="nav-item">
+            <button class="btn btn-sm theme-toggle-btn rounded-pill px-3 py-1.5 d-flex align-items-center gap-2 shadow-sm" id="themeToggleBtn" type="button" aria-label="Toggle Theme" title="Switch Theme (Dark / Light White Background)">
+              <i class="fa-solid fa-moon theme-icon-dark text-indigo"></i>
+              <i class="fa-solid fa-sun theme-icon-light text-warning d-none"></i>
+              <span class="small fw-bold theme-mode-text" id="themeModeText">Dark</span>
+            </button>
+          </li>
+
           {% if user.is_authenticated %}
             <!-- Notifications Dropdown -->
             <li class="nav-item dropdown me-2">
@@ -391,6 +644,13 @@
                 {% else %}
                   <li><a class="dropdown-item py-2" href="{% url 'bookings:caretaker_requests' %}"><i class="fa-solid fa-calendar-days me-2 text-primary"></i> Booking Requests</a></li>
                 {% endif %}
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                  <button class="dropdown-item py-2 d-flex align-items-center justify-content-between" type="button" onclick="window.togglePetCareTheme && window.togglePetCareTheme()">
+                    <span><i class="fa-solid fa-circle-half-stroke me-2 text-warning"></i> Theme Mode</span>
+                    <span class="badge bg-secondary-subtle text-secondary small" id="dropdownThemeBadge">Dark</span>
+                  </button>
+                </li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item py-2 text-danger" href="{% url 'users:logout' %}"><i class="fa-solid fa-right-from-bracket me-2"></i> Logout</a></li>
               </ul>
@@ -443,6 +703,12 @@
             <a href="#" class="text-secondary text-hover-white"><i class="fa-brands fa-twitter"></i></a>
             <a href="#" class="text-secondary text-hover-white"><i class="fa-brands fa-instagram"></i></a>
             <a href="#" class="text-secondary text-hover-white"><i class="fa-brands fa-linkedin"></i></a>
+          </div>
+          <div class="mt-3">
+            <button class="btn btn-sm theme-toggle-btn rounded-pill px-3 py-1 d-inline-flex align-items-center gap-2" type="button" onclick="window.togglePetCareTheme && window.togglePetCareTheme()">
+              <i class="fa-solid fa-circle-half-stroke text-warning"></i>
+              <span class="small" id="footerThemeText">Theme: Dark</span>
+            </button>
           </div>
         </div>
         <div class="col-6 col-lg-2">
@@ -740,6 +1006,106 @@
         });
       }
     });
+  </script>
+
+  <!-- =========================================================================
+       GLOBAL THEME ENGINE (Dark / Pure White Background Light Theme)
+       ========================================================================= -->
+  <script>
+    (function initPetCareThemeEngine() {
+      const THEME_STORAGE_KEY = 'petcare_theme_preference';
+
+      function applyTheme(theme, save) {
+        if (save === undefined) save = true;
+        const isLight = theme === 'light';
+        const root = document.documentElement;
+        const body = document.body;
+
+        if (isLight) {
+          root.setAttribute('data-bs-theme', 'light');
+          root.setAttribute('data-theme', 'light');
+          root.classList.add('light-theme');
+          if (body) {
+            body.classList.add('light-theme');
+          }
+        } else {
+          root.setAttribute('data-bs-theme', 'dark');
+          root.setAttribute('data-theme', 'dark');
+          root.classList.remove('light-theme');
+          if (body) {
+            body.classList.remove('light-theme');
+          }
+        }
+
+        if (save) {
+          try {
+            localStorage.setItem(THEME_STORAGE_KEY, isLight ? 'light' : 'dark');
+          } catch(e) {}
+        }
+
+        // Update UI Icons & Labels across navbar, dropdowns, and footer
+        const darkIcons = document.querySelectorAll('.theme-icon-dark');
+        const lightIcons = document.querySelectorAll('.theme-icon-light');
+        const modeTexts = document.querySelectorAll('#themeModeText, .theme-mode-text');
+        const dropdownBadges = document.querySelectorAll('#dropdownThemeBadge');
+        const footerTexts = document.querySelectorAll('#footerThemeText');
+
+        darkIcons.forEach(function(icon) {
+          if (isLight) {
+            icon.classList.add('d-none');
+          } else {
+            icon.classList.remove('d-none');
+          }
+        });
+
+        lightIcons.forEach(function(icon) {
+          if (isLight) {
+            icon.classList.remove('d-none');
+          } else {
+            icon.classList.add('d-none');
+          }
+        });
+
+        modeTexts.forEach(function(el) {
+          el.textContent = isLight ? 'Light' : 'Dark';
+        });
+
+        dropdownBadges.forEach(function(el) {
+          el.textContent = isLight ? 'Light (White)' : 'Dark';
+        });
+
+        footerTexts.forEach(function(el) {
+          el.textContent = isLight ? 'Theme: Light (White)' : 'Theme: Dark';
+        });
+
+        // Dispatch custom event for Chart.js or dynamic components to adjust colors if needed
+        window.dispatchEvent(new CustomEvent('petcareThemeChanged', { detail: { theme: isLight ? 'light' : 'dark' } }));
+      }
+
+      window.togglePetCareTheme = function() {
+        const current = document.documentElement.getAttribute('data-bs-theme') || 'dark';
+        const next = current === 'light' ? 'dark' : 'light';
+        applyTheme(next, true);
+      };
+
+      window.setPetCareTheme = function(theme) {
+        applyTheme(theme, true);
+      };
+
+      // Synchronize immediately on DOMContentLoaded
+      document.addEventListener('DOMContentLoaded', function() {
+        var currentTheme = localStorage.getItem(THEME_STORAGE_KEY) || 'dark';
+        applyTheme(currentTheme, false);
+
+        var toggleBtn = document.getElementById('themeToggleBtn');
+        if (toggleBtn) {
+          toggleBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.togglePetCareTheme();
+          });
+        }
+      });
+    })();
   </script>
 
   {% block extra_js %}{% endblock %}
