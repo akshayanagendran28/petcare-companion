@@ -28,6 +28,33 @@ from notifications.models import Notification
 from pets.models import Pet
 
 
+def calculate_booking_hours(start_time_str, end_time_str):
+    """
+    Parses start_time and end_time strings (e.g. '09:00 AM', '10:00 AM')
+    and returns total hours as float. Ensures minimum of 1.0 hour.
+    """
+    if not start_time_str or not end_time_str:
+        return 1.0
+    from datetime import datetime
+    t1, t2 = None, None
+    for fmt in ('%I:%M %p', '%H:%M', '%I:%M%p', '%I %p', '%H:%M:%S'):
+        if not t1:
+            try:
+                t1 = datetime.strptime(start_time_str.strip().upper(), fmt).time()
+            except ValueError:
+                pass
+        if not t2:
+            try:
+                t2 = datetime.strptime(end_time_str.strip().upper(), fmt).time()
+            except ValueError:
+                pass
+    if t1 and t2:
+        minutes = (t2.hour * 60 + t2.minute) - (t1.hour * 60 + t1.minute)
+        if minutes > 0:
+            return max(1.0, round(minutes / 60.0, 2))
+    return 1.0
+
+
 @login_required
 def create_booking(request, caretaker_id):
     """Creates a booking with a selected caretaker, enforcing 1 booking/day limit, multi-pet, and emergency bookings."""
@@ -61,14 +88,26 @@ def create_booking(request, caretaker_id):
             if selected_pets:
                 booking.pet = selected_pets[0]
 
-            # Price calculation (days * 4 hrs/day * hourly rate * pet_count + emergency surcharge)
-            days = booking.duration_days
-            hours_per_day = 4
+            # Practical, Real-Time Time-Based Price Calculation:
+            # 1. Single-day booking (start_date == end_date):
+            #    Calculated strictly by actual hours booked (minimum 1.0 hour).
+            # 2. Multi-day booking (start_date != end_date):
+            #    Moved to day-based booking (days * daily_hours * rate * pets).
             num_pets = len(selected_pets) if selected_pets else 1
-            base_price = round(float(days * hours_per_day * float(caretaker.hourly_rate) * num_pets), 2)
+            hourly_rate = float(caretaker.hourly_rate)
+            is_single_day = (booking.start_date == booking.end_date)
+            booked_hours = calculate_booking_hours(booking.start_time, booking.end_time)
+
+            if is_single_day:
+                duration_hours = max(1.0, booked_hours)
+                base_price = round(float(duration_hours * hourly_rate * num_pets), 2)
+            else:
+                days = (booking.end_date - booking.start_date).days + 1
+                daily_hours = min(8.0, max(1.0, booked_hours)) if booked_hours > 1.0 else 4.0
+                base_price = round(float(days * daily_hours * hourly_rate * num_pets), 2)
 
             if booking.is_emergency:
-                emergency_surcharge = 400.00
+                emergency_surcharge = 100.00  # Realistic, affordable emergency rush fee (Rs. 100)
                 booking.emergency_fee = emergency_surcharge
                 booking.emergency_phone = form.cleaned_data.get('emergency_phone')
                 booking.emergency_reason = form.cleaned_data.get('emergency_reason')

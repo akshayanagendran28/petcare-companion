@@ -64,6 +64,33 @@ class Booking(models.Model):
         return max(1, delta + 1)
 
     @property
+    def is_single_day(self):
+        return self.start_date == self.end_date
+
+    @property
+    def booked_hours(self):
+        if not self.start_time or not self.end_time:
+            return 1.0
+        from datetime import datetime
+        t1, t2 = None, None
+        for fmt in ('%I:%M %p', '%H:%M', '%I:%M%p', '%I %p', '%H:%M:%S'):
+            if not t1:
+                try:
+                    t1 = datetime.strptime(self.start_time.strip().upper(), fmt).time()
+                except ValueError:
+                    pass
+            if not t2:
+                try:
+                    t2 = datetime.strptime(self.end_time.strip().upper(), fmt).time()
+                except ValueError:
+                    pass
+        if t1 and t2:
+            mins = (t2.hour * 60 + t2.minute) - (t1.hour * 60 + t1.minute)
+            if mins > 0:
+                return max(1.0, round(mins / 60.0, 1))
+        return 1.0 if self.is_single_day else 4.0
+
+    @property
     def pet_count(self):
         c = self.pets.count()
         return c if c > 0 else 1

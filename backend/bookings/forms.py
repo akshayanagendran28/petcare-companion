@@ -51,17 +51,39 @@ class BookingCreateForm(forms.ModelForm):
         }),
         label="Preferred Arrival Time"
     )
-    start_time = forms.CharField(
+    TIME_CHOICES = [
+        ('06:00 AM', '06:00 AM (Early Morning)'),
+        ('07:00 AM', '07:00 AM'),
+        ('08:00 AM', '08:00 AM'),
+        ('09:00 AM', '09:00 AM (Morning)'),
+        ('10:00 AM', '10:00 AM'),
+        ('11:00 AM', '11:00 AM'),
+        ('12:00 PM', '12:00 PM (Noon)'),
+        ('01:00 PM', '01:00 PM (Afternoon)'),
+        ('02:00 PM', '02:00 PM'),
+        ('03:00 PM', '03:00 PM'),
+        ('04:00 PM', '04:00 PM (Evening)'),
+        ('05:00 PM', '05:00 PM'),
+        ('06:00 PM', '06:00 PM'),
+        ('07:00 PM', '07:00 PM (Night)'),
+        ('08:00 PM', '08:00 PM'),
+        ('09:00 PM', '09:00 PM'),
+        ('10:00 PM', '10:00 PM'),
+    ]
+
+    start_time = forms.ChoiceField(
+        choices=TIME_CHOICES,
         required=False,
-        max_length=10,
         initial='09:00 AM',
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. 09:00 AM', 'id': 'id_start_time'})
+        widget=forms.Select(attrs={'class': 'form-select', 'id': 'id_start_time', 'onchange': 'if(window.updateEstimatedPrice) updateEstimatedPrice();'}),
+        label="Service Start Time"
     )
-    end_time = forms.CharField(
+    end_time = forms.ChoiceField(
+        choices=TIME_CHOICES,
         required=False,
-        max_length=10,
-        initial='05:00 PM',
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. 05:00 PM', 'id': 'id_end_time'})
+        initial='10:00 AM',
+        widget=forms.Select(attrs={'class': 'form-select', 'id': 'id_end_time', 'onchange': 'if(window.updateEstimatedPrice) updateEstimatedPrice();'}),
+        label="Service End Time"
     )
 
     def __init__(self, *args, **kwargs):
@@ -101,8 +123,6 @@ class BookingCreateForm(forms.ModelForm):
             'service_type': forms.Select(attrs={'class': 'form-select', 'id': 'id_service_type'}),
             'start_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date', 'id': 'id_start_date'}),
             'end_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date', 'id': 'id_end_date'}),
-            'start_time': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. 09:00 AM', 'id': 'id_start_time'}),
-            'end_time': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. 05:00 PM', 'id': 'id_end_time'}),
             'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Feeding schedule, emergency vet notes, medicine timings...'}),
         }
 
